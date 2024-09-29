@@ -1,0 +1,15 @@
+member.scan();
+member.scanBook();
+system.fetchBook();
+if (!system.checkInDueDate()) {
+	system.calculateFine();
+	system.createTransaction();
+	system.collectFine();
+}
+if (!book.reserved()){
+	createCheckOutTransaction();
+} else {
+	showError();
+	UpdateBook("Reserved");
+	system.sendNoti();
+}

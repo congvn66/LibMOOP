@@ -1,0 +1,14 @@
+member.scanBook();
+system.fetchBook();
+if(!system.checkInDueDate()) {
+	system.calculateFine();
+	system.createTransaction();
+	system.collectFine();
+}
+member.noOfBook--;
+if (!bookIsReserved()) {
+	UpdateBook("Available");
+} else {
+	UpdateBook("Reserved");
+	system.sendNoti();
+}

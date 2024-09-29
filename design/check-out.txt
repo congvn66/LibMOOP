@@ -1,0 +1,18 @@
+member.scan();
+member.scanBook();
+if (book.canIssue() && !book.isReference()) {
+	if(member.noOfBook < limit) {
+		if (!book.reserved()){
+			createCheckOutTransaction();
+			UpdateBook("Loaned");
+			member.noOfBook++;
+			MarkTransaction("Completed");
+		} else {
+			ShowError();
+		}
+	} else {
+		ShowError();
+	}
+} else {
+	ShowError();
+}
