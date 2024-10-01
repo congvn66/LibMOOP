@@ -7,4 +7,4 @@
 7. thu tiền phạt cho các cuốn sách bị trả quá hạn.
 8. thành viên có thể đặt trước sách không có sẵn.
 9. gửi thông báo khi sách đặt trước khả dụng, khi sách không được trả đúng hạn.
-10. có thể đọc barcode từ thẻ thành viên và sách.
+10. có thể đọc id từ thẻ thành viên và sách.
