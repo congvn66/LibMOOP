@@ -5,13 +5,12 @@ import java.util.List;
 
 public class SystemTestDrive {
     public static void main(String[] args) {
+        Librarian newAccount = new Librarian("congdz", AccountStatus.ACTIVE, "congdz");
 
-        Library library = new Library("City Library");
+        List<BookItem> list  = newAccount.findBooksByAuthor("hawking");
 
-        library.LoadFromFile();
-
-        library.displayLibraryInfo();
-
-
+        for (BookItem i : list) {
+            i.displayInfo();
+        }
     }
 }

@@ -103,12 +103,18 @@ public class Catalog {
 
 
     public List<BookItem> findBooksByAuthor(String author) {
-        return bookAuthors.getOrDefault(author, new ArrayList<>());
+        List<BookItem> matchingBooks = new ArrayList<>();
+        for (String innerAuthor  : bookAuthors.keySet()) {
+            if (innerAuthor.toLowerCase().contains(author.toLowerCase())) {
+                matchingBooks.addAll(bookAuthors.get(innerAuthor));
+            }
+        }
+        return matchingBooks;
     }
 
 
     public List<BookItem> findBooksBySubject(String subject) {
-        return bookSubjects.getOrDefault(subject, new ArrayList<>());
+        return bookSubjects.getOrDefault(subject.toLowerCase(), new ArrayList<>());
     }
 
 
@@ -262,8 +268,8 @@ public class Catalog {
     public void displayCatalogInfo() {
         System.out.println("Catalog Creation Date: " + creationDate);
         System.out.println("Total Books in Catalog: " + totalBooks);
-        for (String i : this.bookId.keySet()) {
-            this.bookId.get(i).displayInfo();
-        }
+//        for (String i : this.bookId.keySet()) {
+//            this.bookId.get(i).displayInfo();
+//        }
     }
 }
