@@ -1,5 +1,7 @@
 package com.example.proj;
 
+import java.sql.SQLOutput;
+import java.sql.SQLSyntaxErrorException;
 import java.util.Date;
 
 public class BookItem extends Book {
@@ -21,7 +23,8 @@ public class BookItem extends Book {
     public BookItem(String ISBN, String title, String subject, String publisher, String language,
                     String numberOfPage, String authorName, String authorDescription,
                     String id, boolean isReferenceOnly, double price,
-                    BookFormat format, BookStatus status, Date dateOfPurchase, Date publicationDate, int number, String location) {
+                    BookFormat format, BookStatus status, Date dateOfPurchase, Date publicationDate,
+                    int number, String location) {
         super(ISBN, title, subject, publisher, language, numberOfPage, authorName, authorDescription);
         this.id = id;
         this.isReferenceOnly = isReferenceOnly;
@@ -117,13 +120,21 @@ public class BookItem extends Book {
 
     @Override
     public void displayInfo() {
-        System.out.println("Barcode: " + id);
+        System.out.println("ISBN: " + this.getISBN());
+        System.out.println("Title: " + this.getTitle());
+        System.out.println("Subject: " + this.getSubject());
+        System.out.println("Publisher: " + this.getPublisher());
+        System.out.println("Language: " + this.getLanguage());
+        System.out.println("Number of pages: " + this.getNumberOfPage());
+        System.out.println("Author name: " + this.getAuthor().getName());
+        System.out.println("Author description: " + this.getAuthor().getDescription());
+        System.out.println("Id: " + id);
         System.out.println("Reference Only: " + isReferenceOnly);
         System.out.println("Price: " + price);
         System.out.println("Format: " + format);
         System.out.println("Status: " + status);
         System.out.println("Date of Purchase: " + dateOfPurchase);
         System.out.println("Publication Date: " + publicationDate);
-
+        System.out.println("\n");
     }
 }

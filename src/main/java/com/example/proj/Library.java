@@ -15,6 +15,10 @@ public class Library {
         this.catalog = new Catalog();
     }
 
+    public void LoadFromFile(String path) {
+        this.catalog.ImportFromFile(path);
+    }
+
     public void addBookItem(BookItem bookItem) {
         catalog.addBookItem(bookItem);
     }
