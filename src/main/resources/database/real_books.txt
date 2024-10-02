@@ -1,14 +1,10 @@
-ISBN,Title,Subject,Publisher,Language,NumberOfPages,AuthorName,AuthorDescription,id,IsReferenceOnly,Price,Format,Status,DateOfPurchase,PublicationDate,Number,Location
-978-0743273565,The Great Gatsby,Fiction,Scribner,English,180,F. Scott Fitzgerald,A novel set in the Roaring Twenties.,1,false,10.99,Hardcover,Available,2023-01-01,1925-04-10,1,Rack 1
-978-0061120084,To Kill a Mockingbird,Fiction,Harper Perennial Modern Classics,English,336,Harper Lee,A novel about the serious issues of rape and racial inequality.,2,false,7.19,Paperback,Available,2023-01-02,1960-07-11,2,Rack 1
-978-0451524935,1984,Dystopian,Signet Classics,English,328,George Orwell,A dystopian social science fiction novel and cautionary tale.,3,false,9.99,Paperback,Loaned,2023-01-03,1949-06-08,1,Rack 2
-978-1503280786,Moby Dick,Adventure,CreateSpace Independent Publishing Platform,English,720,Herman Melville,The narrative of the obsessive quest of Ahab.,4,false,12.99,Hardcover,Available,2023-01-04,1851-10-18,3,Rack 2
-978-0451526342,The Catcher in the Rye,Fiction,Little, Brown and Company,English,277,J.D. Salinger,A novel about teenage angst and alienation.,5,false,9.99,Paperback,Available,2023-01-06,1951-07-16,1,Rack 1
-978-0307269751,The Road,Dystopian,Knopf,English,287,Cormac McCarthy,A post-apocalyptic novel about survival.,6,false,14.99,Hardcover,Available,2023-01-07,2006-09-26,1,Rack 2
-978-0452284234,The Bell Jar,Fiction,Plume,English,288,Sylvia Plath,A semi-autobiographical novel about mental illness.,7,false,11.99,Paperback,Loaned,2023-01-08,1963-01-14,1,Rack 3
-978-0143105985,The Handmaid's Tale,Dystopian,Penguin Books,English,311,Margaret Atwood,A dystopian novel set in a totalitarian society.,8,false,12.99,Paperback,Available,2023-01-09,1985-04-17,1,Rack 1
-978-0547248281,The Hobbit,Fantasy,Houghton Mifflin Harcourt,English,304,J.R.R. Tolkien,A fantasy novel about the journey of Bilbo Baggins.,9,false,10.99,Hardcover,Available,2023-01-10,1937-09-21,1,Rack 2
-978-0553212419,Fahrenheit 451,Dystopian,Bantam Books,English,158,Ray Bradbury,A dystopian novel about a future society where books are banned.,10,false,8.99,Paperback,Available,2023-01-11,1953-10-19,1,Rack 3
-978-0679783275,Brave New World,Dystopian,Modern Library,English,268,Aldous Huxley,A dystopian novel that explores a technologically advanced future.,11,false,11.99,Paperback,Available,2023-01-12,1932-09-01,1,Rack 1
-978-0553297335,The Grapes of Wrath,Fiction,Penguin Books,English,464,John Steinbeck,A novel about the struggles of a family during the Great Depression.,12,false,12.99,Paperback,Loaned,2023-01-13,1939-04-14,1,Rack 2
-978-0451524935,Slaughterhouse-Five,Science Fiction,Delta,English,275,Kurt Vonnegut,A science fiction novel that blends elements of autobiography and fiction.,13,false,10.99,Paperback,Available,2023-01-14,1969-03-31,1,Rack 3
+978-0743273565;The Great Gatsby;Fiction;Scribner;English;180;F. Scott Fitzgerald;A novel set in the Roaring Twenties.;1;false;10.99;Hardcover;Available;2023-01-01;1925-04-10;1;Rack 1
+978-0061120084;To Kill a Mockingbird;Fiction;Harper Perennial Modern Classics;English;336;Harper Lee;A novel about the serious issues of rape and racial inequality.;2;false;7.19;Paperback;Available;2023-01-02;1960-07-11;2;Rack 1
+978-0451524935;1984;Dystopian;Signet Classics;English;328;George Orwell;A dystopian social science fiction novel and cautionary tale.;3;false;9.99;Paperback;Loaned;2023-01-03;1949-06-08;1;Rack 2
+978-1503280786;Moby Dick;Adventure;CreateSpace Independent Publishing Platform;English;720;Herman Melville;The narrative of the obsessive quest of Ahab.;4;false;12.99;Hardcover;Available;2023-01-04;1851-10-18;3;Rack 2
+978-0451526342;The Catcher in the Rye;Fiction;Little, Brown and Company;English;277;J.D. Salinger;A novel about teenage angst and alienation.;5;false;9.99;Paperback;Available;2023-01-06;1951-07-16;1;Rack 1
+978-0307269751;The Road;Dystopian;Knopf;English;287;Cormac McCarthy;A post-apocalyptic novel about survival.;6;false;14.99;Hardcover;Available;2023-01-07;2006-09-26;1;Rack 2
+978-0452284234;The Bell Jar;Fiction;Plume;English;288;Sylvia Plath;A semi-autobiographical novel about mental illness.;7;false;11.99;Paperback;Loaned;2023-01-08;1963-01-14;1;Rack 3
+978-0143105985;The Handmaid's Tale;Dystopian;Penguin Books;English;311;Margaret Atwood;A dystopian novel set in a totalitarian society.;8;false;12.99;Paperback;Available;2023-01-09;1985-04-17;1;Rack 1
+978-0547248281;The Hobbit;Fantasy;Houghton Mifflin Harcourt;English;304;J.R.R. Tolkien;A fantasy novel about the journey of Bilbo Baggins.;9;false;10.99;Hardcover;Available;2023-01-10;1937-09-21;1;Rack 2
+978-0553212419;Fahrenheit 451;Dystopian;Bantam Books;English;158;Ray Bradbury;A dystopian novel about a future society where books are banned.;10;false;8.99;Paperback;Available;2023-01-11;1953-10-19;1;Rack 3

@@ -15,12 +15,13 @@ public class Library {
         this.catalog = new Catalog();
     }
 
-    public void LoadFromFile(String path) {
-        this.catalog.ImportFromFile(path);
+    public void LoadFromFile() {
+        this.catalog.ImportFromFile();
     }
 
     public void addBookItem(BookItem bookItem) {
-        catalog.addBookItem(bookItem);
+        this.catalog.addBookItem(bookItem);
+        this.catalog.writeBookItemToFile(bookItem);
     }
 
     public List<BookItem> findBooksByTitle(String title) {
@@ -37,6 +38,10 @@ public class Library {
 
     public List<BookItem> findBooksByPublicationDate(Date publicationDate) {
         return catalog.findBooksByPublicationDate(publicationDate);
+    }
+
+    public void removeBook(String id) {
+        this.catalog.removeBookById(id);
     }
 
     public void displayLibraryInfo() {

@@ -19,6 +19,10 @@ public class BookItem extends Book {
     private Rack rack;
 
 
+
+
+
+
     // Constructor
     public BookItem(String ISBN, String title, String subject, String publisher, String language,
                     String numberOfPage, String authorName, String authorDescription,
@@ -115,6 +119,15 @@ public class BookItem extends Book {
             return true;
         }
         return false;
+    }
+
+    public Rack getRack() {
+        return this.rack;
+    }
+
+    public void setRack(int number, String locate) {
+        this.rack.setNumber(number);
+        this.rack.setLocationIdentifier(locate);
     }
 
 

@@ -1,14 +1,12 @@
 package com.example.proj;
 
-import java.io.BufferedReader;
-import java.io.FileNotFoundException;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 
 public class Catalog {
+    private String filePath;
     private Date creationDate;
     private int totalBooks;
     private Map<String, List<BookItem>> bookTitles;
@@ -18,6 +16,11 @@ public class Catalog {
     private Map<String, BookItem> bookId;
     // Constructor
     public Catalog() {
+        File file = new File("src/main/resources/database/real_books.txt");
+        if (file.exists()) {
+            String absolute = file.getAbsolutePath();
+            this.filePath = absolute;
+        }
         this.creationDate = new Date(); // Ngày tạo là ngày hiện tại
         this.totalBooks = 0;
         this.bookTitles = new HashMap<>();
@@ -33,21 +36,55 @@ public class Catalog {
         bookTitles.computeIfAbsent(bookItem.getTitle().toLowerCase(), k -> new ArrayList<>()).add(bookItem);
 
 
-        String author = bookItem.getAuthor().getName().toLowerCase();   // Giả định rằng BookItem có phương thức getAuthor()
+        String author = bookItem.getAuthor().getName().toLowerCase();
         bookAuthors.computeIfAbsent(author, k -> new ArrayList<>()).add(bookItem);
 
 
-        String subject = bookItem.getSubject().toLowerCase(); // Giả định rằng BookItem có phương thức getSubject()
+        String subject = bookItem.getSubject().toLowerCase();
         bookSubjects.computeIfAbsent(subject, k -> new ArrayList<>()).add(bookItem);
 
 
-        Date publicationDate = bookItem.getPublicationDate(); // Giả định rằng BookItem có phương thức getPublicationDate()
+        Date publicationDate = bookItem.getPublicationDate();
         bookPublicationDates.computeIfAbsent(publicationDate, k -> new ArrayList<>()).add(bookItem);
 
         String id = bookItem.getId();
         bookId.put(id, bookItem);
 
         totalBooks++;
+    }
+
+    public void writeBookItemToFile(BookItem bookItem) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        String filePath = this.filePath;
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+            File file = new File(filePath);
+            if (file.length() > 0) {
+                writer.newLine();
+            }
+            writer.write(bookItem.getISBN() + ";" +
+                    bookItem.getTitle() + ";" +
+                    bookItem.getSubject() + ";" +
+                    bookItem.getPublisher() + ";" +
+                    bookItem.getLanguage() + ";" +
+                    bookItem.getNumberOfPage() + ";" +
+                    bookItem.getAuthor().getName() + ";" +
+                    bookItem.getAuthor().getDescription() + ";" +
+                    bookItem.getId() + ";" +
+                    bookItem.isReferenceOnly() + ";" +
+                    bookItem.getPrice() + ";" +
+                    bookItem.getFormat() + ";" +
+                    bookItem.getStatus() + ";" +
+                    dateFormat.format(bookItem.getDateOfPurchase()) + ";" +
+                    dateFormat.format(bookItem.getPublicationDate()) + ";" +
+                    bookItem.getRack().getNumber() + ";" +
+                    bookItem.getRack().getLocationIdentifier());
+
+            //writer.newLine();
+        } catch (IOException e) {
+            System.out.println("Error writing to file: " + e.getMessage());
+        }
     }
 
     public BookItem findBookById(String id) {
@@ -98,12 +135,12 @@ public class Catalog {
             return null; // Handle error appropriately
         }
     }
-    public void ImportFromFile(String path) {
-        try (BufferedReader br  = new BufferedReader(new FileReader(path))) {
+    public void ImportFromFile() {
+        try (BufferedReader br  = new BufferedReader(new FileReader(this.filePath))) {
             String line;
-            br.readLine();
+            //br.readLine();
             while ((line = br.readLine()) != null) {
-                String[] tmp = line.split(",");
+                String[] tmp = line.split(";");
                 if (tmp.length != 17) {
                     continue;
                 }
@@ -135,6 +172,90 @@ public class Catalog {
             throw new RuntimeException("Cannot open file!");
         } catch (IOException e) {
             throw new RuntimeException(e);
+        }
+    }
+
+    public boolean removeBookById(String id) {
+        if (!bookId.containsKey(id)) {
+            return false;
+        }
+
+        BookItem bookToRemove = this.bookId.get(id);
+
+        String title = bookToRemove.getTitle();
+        List<BookItem> rmFromTitle = this.bookTitles.get(title);
+        if (rmFromTitle != null) {
+            rmFromTitle.remove(bookToRemove);
+            if (rmFromTitle.isEmpty()) {
+                bookTitles.remove(title);
+            }
+        }
+
+        String author = bookToRemove.getAuthor().getName();
+        List<BookItem> rmFromAuthor = bookAuthors.get(author);
+        if (rmFromAuthor != null) {
+            rmFromAuthor.remove(bookToRemove);
+            if (rmFromAuthor.isEmpty()) {
+                bookAuthors.remove(author);
+            }
+        }
+
+        String subject = bookToRemove.getSubject();
+        List<BookItem> rmFromSubject = bookAuthors.get(author);
+        if (rmFromSubject != null) {
+            rmFromSubject.remove(bookToRemove);
+            if (rmFromSubject.isEmpty()) {
+                bookAuthors.remove(author);
+            }
+        }
+
+        Date date = bookToRemove.getPublicationDate();
+        List<BookItem> rmFromDate = bookAuthors.get(author);
+        if (rmFromDate != null) {
+            rmFromDate.remove(bookToRemove);
+            if (rmFromDate.isEmpty()) {
+                bookAuthors.remove(author);
+            }
+        }
+
+        this.removeBookFromFile(id);
+
+        totalBooks--;
+        return true;
+    }
+
+    private void removeBookFromFile(String id) {
+        File inputFile = new File(this.filePath);
+        File tempFile = new File("temp_book_items.txt");
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
+             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
+
+            String currentLine;
+
+            while ((currentLine = reader.readLine()) != null) {
+                String[] fields = currentLine.split(";");
+                String idt = fields[8];
+
+                if (idt.equals(id)) {
+                    continue;
+                }
+
+                writer.write(currentLine);
+                writer.newLine();
+            }
+
+
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (!inputFile.delete()) {
+            System.out.println("Could not delete the original file");
+            return;
+        }
+        if (!tempFile.renameTo(inputFile)) {
+            System.out.println("Could not rename the temp file to the original file");
+            return;
         }
     }
 
