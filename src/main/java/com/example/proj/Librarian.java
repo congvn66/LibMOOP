@@ -11,6 +11,18 @@ public class Librarian extends Account{
     private Map<String, Member> memberMap;
     private String filePath;
 
+    public Librarian() {
+        super("admin", AccountStatus.ACTIVE, "admin");
+        this.getCatalog().ImportFromFile();
+        File file = new File("src/main/resources/database/members.txt");
+        if (file.exists()) {
+            String absolute = file.getAbsolutePath();
+            this.filePath = absolute;
+        }
+        this.memberMap = new HashMap<>();
+        this.loadMemberFromFile();
+    }
+
     public Librarian(String id, AccountStatus status, String password) {
         super(id, status, password);
         this.getCatalog().ImportFromFile();
@@ -23,9 +35,10 @@ public class Librarian extends Account{
         this.loadMemberFromFile();
     }
 
-    public void LoadFromFile() {
-        this.getCatalog().ImportFromFile();
+    public Map<String,Member> getMemberMap() {
+        return this.memberMap;
     }
+
 
     private void putMemberInMap(Member member) {
         this.memberMap.put(member.getId(), member);

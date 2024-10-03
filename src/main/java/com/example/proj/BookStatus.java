@@ -6,3 +6,4 @@ public enum BookStatus {
     LOANED,
     LOST
 }
+
