@@ -1,8 +1,12 @@
 package com.example.proj;
 
-public class Member extends Account{
+import java.util.Date;
+import java.util.Map;
 
+public class Member extends Account{
     private int totalBooksCheckedOut;
+    private LibraryLogger logger;
+    private Map<String, String> listOfBook;
 
     public Member() {
         super("none", AccountStatus.NONE, "1234");
@@ -14,6 +18,8 @@ public class Member extends Account{
         super(id, status, password);
         this.totalBooksCheckedOut = totalBooksCheckOut;
         this.getCatalog().ImportFromFile();
+        this.logger = new LibraryLogger();
+        this.logger.generateMemberLog("src/main/resources/database/members.txt", this.getId());
     }
 
     public int getTotalBooksCheckedOut() {
@@ -22,6 +28,24 @@ public class Member extends Account{
 
     public void setTotalBooksCheckedOut(int totalBooksCheckedOut) {
         this.totalBooksCheckedOut = totalBooksCheckedOut;
+    }
+
+    public void lendBook(String id, Date creationDate) {
+        if (this.getCatalog().findBookById(id) == null) {
+            System.out.println("Book not found.");
+            return;
+        }
+        BookItem book = this.getCatalog().findBookById(id);
+        if (book.getStatus() == BookStatus.AVAILABLE && !book.isReferenceOnly()) {
+            if (this.getTotalBooksCheckedOut() < 5) {
+                // create lending transaction.
+
+
+                Librarian admin = new Librarian();
+                admin.updateBook(id, 12, "LOANED");
+
+            }
+        }
     }
 
     public void printInfo() {

@@ -5,7 +5,6 @@ import java.util.List;
 
 public class SystemTestDrive {
     public static void main(String[] args) {
-        CmdLine cmdLine = new CmdLine();
-        cmdLine.run();
+        Member member = new Member("bruh", AccountStatus.ACTIVE, "vv", 1);
     }
 }

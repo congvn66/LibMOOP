@@ -141,6 +141,65 @@ public class Catalog {
             return null; // Handle error appropriately
         }
     }
+
+    public void editBook(String bookId, int fieldToEdit, String newValue) {
+        List<String> lines = new ArrayList<>();
+        boolean bookFound = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] fields = line.split(";");
+                if (fields[8].equals(bookId)) {
+                    bookFound = true;
+                    switch (fieldToEdit) {
+                        case 1: fields[0] = newValue; break;  // ISBN
+                        case 2: fields[1] = newValue; break;  // title
+                        case 3: fields[2] = newValue; break;  // subject
+                        case 4: fields[3] = newValue; break;  // publisher
+                        case 5: fields[4] = newValue; break;  // language
+                        case 6: fields[5] = newValue; break;  // numberOfPage
+                        case 7: fields[6] = newValue; break;  // authorName
+                        case 8: fields[7] = newValue; break;  // authorDescription
+                        case 9: fields[8] = newValue; break;  // id
+                        case 10: fields[9] = newValue; break; // isReferenceOnly
+                        case 11: fields[10] = newValue; break; // price
+                        case 12: fields[11] = newValue; break; // format
+                        case 13: fields[12] = newValue; break; // status
+                        case 14: fields[13] = newValue; break; // dateOfPurchase
+                        case 15: fields[14] = newValue; break; // publicationDate
+                        case 16: fields[15] = newValue; break; // number
+                        case 17: fields[16] = newValue; break; // location
+                        default:
+                            System.out.println("Invalid field.");
+                            return;
+                    }
+                }
+                lines.add(String.join(";", fields));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // Ghi lại file với thông tin đã chỉnh sửa
+        if (bookFound) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+                for (String line : lines) {
+                    writer.write(line);
+                    writer.newLine();
+                }
+                System.out.println("Book " + bookId + " has been updated.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            this.totalBooks = 0;
+            // load again.
+            this.ImportFromFile();
+        } else {
+            System.out.println("Book with ID " + bookId + " not found.");
+        }
+    }
+
     public void ImportFromFile() {
         try (BufferedReader br  = new BufferedReader(new FileReader(this.filePath))) {
             String line;
@@ -181,8 +240,11 @@ public class Catalog {
         }
     }
 
+
+
     public boolean removeBookById(String id) {
         if (!bookId.containsKey(id)) {
+            System.out.println("Book not found!");
             return false;
         }
 
@@ -268,8 +330,5 @@ public class Catalog {
     public void displayCatalogInfo() {
         System.out.println("Catalog Creation Date: " + creationDate);
         System.out.println("Total Books in Catalog: " + totalBooks);
-//        for (String i : this.bookId.keySet()) {
-//            this.bookId.get(i).displayInfo();
-//        }
     }
 }

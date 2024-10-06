@@ -92,11 +92,92 @@ public class CmdLine {
                     return;
             }
             if (this.currentMember != null) {
+                this.MemberMenu();
                 break;
             }
             if (this.currentLibrarian != null) {
                 this.LibrarianMenu();
                 break;
+            }
+        }
+    }
+
+    private void MemberMenu() {
+        int option = 0;
+        boolean exit = false;
+
+        while (!exit) {
+            boolean validInput = false;
+
+            while (!validInput) {
+                System.out.println("===== Library Management System =====");
+                System.out.println("1. find book by title.");
+                System.out.println("2. find book by author.");
+                System.out.println("3. find book by subject.");
+                System.out.println("4. lend book.");
+                System.out.println("5. return book.");
+                System.out.println("6. reserve book.");
+                System.out.println("7. renew book.");
+                System.out.println("8. exit.");
+                System.out.print("Please select an option: ");
+
+                if (scanner.hasNextInt()) {
+                    option = scanner.nextInt();
+                    scanner.nextLine();
+                    if (option >= 1 && option <= 8) {
+                        validInput = true;
+                    } else {
+                        System.out.println("Invalid option. Please enter a number between 1 and 6 :( ");
+                    }
+                } else {
+                    System.out.println("Invalid input. Please enter a number :( ");
+                    scanner.next();
+                }
+            }
+
+            switch (option) {
+                case 1:
+                    System.out.println("Title of book: ");
+                    String title = this.scanner.nextLine();
+                    //Librarian admin1 = new Librarian();
+                    List<BookItem> bookItemList1 = this.currentMember.findBooksByTitle(title);
+                    if (bookItemList1.isEmpty()) {
+                        System.out.println("no books found :(");
+                    } else {
+                        for (BookItem item : bookItemList1) {
+                            item.displayInfo();
+                        }
+                    }
+                    break;
+                case 2:
+                    System.out.println("Author of book: ");
+                    String author = this.scanner.nextLine();
+                    //Librarian admin2 = new Librarian();
+                    List<BookItem> bookItemList2 = this.currentMember.findBooksByAuthor(author);
+                    if (bookItemList2.isEmpty()) {
+                        System.out.println("no books found :(");
+                    } else {
+                        for (BookItem item : bookItemList2) {
+                            item.displayInfo();
+                        }
+                    }
+                    break;
+                case 3:
+                    System.out.println("Subject of book: ");
+                    String subject = this.scanner.nextLine();
+                    List<BookItem> bookItemList3 = this.currentMember.findBooksBySubject(subject);
+                    if (bookItemList3.isEmpty()) {
+                        System.out.println("no books found :(");
+                    } else {
+                        for (BookItem item : bookItemList3) {
+                            item.displayInfo();
+                        }
+                    }
+                    break;
+                case 4:
+                    break;
+                case 5:
+                    break;
             }
         }
     }
@@ -112,10 +193,12 @@ public class CmdLine {
     }
 
     private void LibrarianMenu() {
-        int option = 0;
-        boolean exit = false;  // Biến để kiểm soát việc thoát menu
 
-        while (!exit) {  // Vòng lặp chính để giữ menu Librarian
+        this.currentLibrarian.getCatalog().displayCatalogInfo();
+        int option = 0;
+        boolean exit = false;
+
+        while (!exit) {
             boolean validInput = false;
 
             while (!validInput) {
@@ -265,18 +348,158 @@ public class CmdLine {
                     System.out.println("Adding a new book...");
                     this.currentLibrarian.addBookItem(addin);
                     System.out.println("Book added successfully!");
+                    this.currentLibrarian.getCatalog().displayCatalogInfo();
                     break;
                 case 5:
                     // Thêm logic khóa thành viên theo id ở đây
+                    System.out.println("Id: ");
+                    String idToBlock = this.scanner.nextLine();
                     System.out.println("Blocking a member...");
+                    this.currentLibrarian.blockMember(idToBlock);
                     break;
                 case 6:
-                    // Thêm logic xóa sách theo id ở đây
+                    System.out.println("Id: ");
+                    String idBookToRemove = this.scanner.nextLine();
                     System.out.println("Removing a book...");
+                    this.currentLibrarian.removeBook(idBookToRemove);
+                    this.currentLibrarian.getCatalog().displayCatalogInfo();
                     break;
                 case 7:
-                    // Thêm logic cập nhật sách theo id ở đây
+                    System.out.println("Id: ");
+                    String idBookToUpdate = this.scanner.nextLine();
+                    if (this.currentLibrarian.getCatalog().findBookById(idBookToUpdate) == null) {
+                        System.out.println("Book not found.");
+                        break;
+                    }
+                    System.out.println("What do you want to update? ");
+                    System.out.println("1. ISBN");
+                    System.out.println("2. Title");
+                    System.out.println("3. Subject");
+                    System.out.println("4. Publisher");
+                    System.out.println("5. Language");
+                    System.out.println("6. Number of pages");
+                    System.out.println("7. Author's name");
+                    System.out.println("8. Author's description");
+                    System.out.println("9. Id");
+                    System.out.println("10. Is Reference Only");
+                    System.out.println("11. Price");
+                    System.out.println("12. Format");
+                    System.out.println("13. Status");
+                    System.out.println("14. Date of purchase");
+                    System.out.println("15. Publication date");
+                    System.out.println("16. Number");
+                    System.out.println("17. Location");
+                    String tmp = this.scanner.nextLine();
+                    int field = Integer.parseInt(tmp);
+                    switch (field) {
+                        case 1:
+                            System.out.println("ISBN to change:");
+                            String newISBN = this.scanner.nextLine();
+                            this.currentLibrarian.updateBook(idBookToUpdate, 1, newISBN);
+                            break;
+                        case 2:
+                            System.out.println("Title to change:");
+                            String newTitle = this.scanner.nextLine();
+                            this.currentLibrarian.updateBook(idBookToUpdate, 2, newTitle);
+                            break;
+                        case 3:
+                            System.out.println("Subject to change:");
+                            String newSubject = this.scanner.nextLine();
+                            this.currentLibrarian.updateBook(idBookToUpdate, 3, newSubject);
+                            break;
+                        case 4:
+                            System.out.println("Publisher to change:");
+                            String newPublisher = this.scanner.nextLine();
+                            this.currentLibrarian.updateBook(idBookToUpdate, 4, newPublisher);
+                            break;
+                        case 5:
+                            System.out.println("Language to change:");
+                            String newLanguage = this.scanner.nextLine();
+                            this.currentLibrarian.updateBook(idBookToUpdate, 5, newLanguage);
+                            break;
+                        case 6:
+                            System.out.println("Number of Pages to change:");
+                            String newNumberOfPages = this.scanner.nextLine();
+                            this.currentLibrarian.updateBook(idBookToUpdate, 6, newNumberOfPages);
+                            break;
+                        case 7:
+                            System.out.println("Author Name to change:");
+                            String newAuthorName = this.scanner.nextLine();
+                            this.currentLibrarian.updateBook(idBookToUpdate, 7, newAuthorName);
+                            break;
+                        case 8:
+                            System.out.println("Author Description to change:");
+                            String newAuthorDescription = this.scanner.nextLine();
+                            this.currentLibrarian.updateBook(idBookToUpdate, 8, newAuthorDescription);
+                            break;
+                        case 9:
+                            System.out.println("Book ID to change:");
+                            String newBookId = this.scanner.nextLine();
+                            this.currentLibrarian.updateBook(idBookToUpdate, 9, newBookId);
+                            break;
+                        case 10:
+                            System.out.println("Reference Status (true/false):");
+                            boolean newIsReferenceOnly = Boolean.parseBoolean(this.scanner.nextLine());
+                            this.currentLibrarian.updateBook(idBookToUpdate, 10, String.valueOf(newIsReferenceOnly));
+                            break;
+                        case 11:
+                            System.out.println("Price to change:");
+                            String newPrice = this.scanner.nextLine();
+                            this.currentLibrarian.updateBook(idBookToUpdate, 11, newPrice);
+                            break;
+                        case 12:
+                            BookFormat newFormat = null;
+                            while (newFormat == null) {
+                                System.out.println("Format to change (Valid options: " + Arrays.toString(BookFormat.values()) + "):");
+                                try {
+                                    String formatInput = this.scanner.nextLine().toUpperCase();
+                                    newFormat = BookFormat.valueOf(formatInput);
+                                } catch (IllegalArgumentException e) {
+                                    System.out.println("Invalid format. Please enter one of the valid options.");
+                                }
+                            }
+                            this.currentLibrarian.updateBook(idBookToUpdate, 12, newFormat.toString());
+                            break;
+                        case 13:
+                            BookStatus newStatus = null;
+                            while (newStatus == null) {
+                                System.out.println("Status to change (Valid options: " + Arrays.toString(BookStatus.values()) + "):");
+                                try {
+                                    String statusInput = this.scanner.nextLine().toUpperCase();
+                                    newStatus = BookStatus.valueOf(statusInput);
+                                } catch (IllegalArgumentException e) {
+                                    System.out.println("Invalid status. Please enter one of the valid options.");
+                                }
+                            }
+                            this.currentLibrarian.updateBook(idBookToUpdate, 13, newStatus.toString());
+                            break;
+                        case 14:
+                            System.out.println("Date of Purchase to change (yyyy-MM-dd):");
+                            String newDateOfPurchase = this.scanner.nextLine();
+                            this.currentLibrarian.updateBook(idBookToUpdate, 14, newDateOfPurchase);
+                            break;
+                        case 15:
+                            System.out.println("Publication Date to change (yyyy-MM-dd):");
+                            String newPublicationDate = this.scanner.nextLine();
+                            this.currentLibrarian.updateBook(idBookToUpdate, 15, newPublicationDate);
+                            break;
+                        case 16:
+                            System.out.println("Number to change:");
+                            String newNumber = this.scanner.nextLine();
+                            this.currentLibrarian.updateBook(idBookToUpdate, 16, newNumber);
+                            break;
+                        case 17:
+                            System.out.println("Location to change:");
+                            String newLocation = this.scanner.nextLine();
+                            this.currentLibrarian.updateBook(idBookToUpdate, 17, newLocation);
+                            break;
+                        default:
+                            System.out.println("Invalid field selected.");
+                            break;
+                    }
+
                     System.out.println("Updating a book...");
+                    this.currentLibrarian.getCatalog().displayCatalogInfo();
                     break;
                 case 8:
                     System.out.println("Goodbye!");

@@ -1,4 +1,5 @@
-cong;ACTIVE;congdz;5
+cong;BLACKLISTED;congdz;5
 duc;BLACKLISTED;ducdz;4
 cuong;ACTIVE;cuongdz;3
-khoa;ACTIVE;taodeotaodau;
+khoa;ACTIVE;taodeotaodau;0
+bruh;ACTIVE;vv;1

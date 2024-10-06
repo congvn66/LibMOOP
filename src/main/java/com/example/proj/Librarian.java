@@ -1,10 +1,7 @@
 package com.example.proj;
 
 import java.io.*;
-import java.util.Date;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 public class Librarian extends Account{
 
@@ -42,6 +39,10 @@ public class Librarian extends Account{
 
     private void putMemberInMap(Member member) {
         this.memberMap.put(member.getId(), member);
+    }
+
+    public void updateBook(String id, int field, String newValue) {
+        this.getCatalog().editBook(id, field, newValue);
     }
 
     private void loadMemberFromFile() {
@@ -82,7 +83,41 @@ public class Librarian extends Account{
     }
 
     public void blockMember(String id) {
+        // lines container.
+        List<String> lines = new ArrayList<>();
+        boolean memberFound = false;
 
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] fields = line.split(";");
+                if (fields[0].equals(id)) {
+                    fields[1] = "BLACKLISTED";
+                    memberFound = true;
+                    //change in that time.
+                    this.getMemberMap().get(fields[0]).setStatus(AccountStatus.BLACKLISTED);
+                }
+                //put every line in the list.
+                lines.add(String.join(";", fields));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // write to a new file
+        if (memberFound) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+                for (String line : lines) {
+                    writer.write(line);
+                    writer.newLine();
+                }
+                System.out.println("Member " + id + " has been blocked.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Member with ID " + id + " not found.");
+        }
     }
 
     public void removeBook(String id) {
