@@ -41,9 +41,7 @@ public class Librarian extends Account{
         this.memberMap.put(member.getId(), member);
     }
 
-    public void updateBook(String id, int field, String newValue) {
-        this.getCatalog().editBook(id, field, newValue);
-    }
+
 
     private void loadMemberFromFile() {
         try (BufferedReader br = new BufferedReader(new FileReader(this.filePath))) {
@@ -51,20 +49,16 @@ public class Librarian extends Account{
             String line;
             while ((line = br.readLine()) != null) {
                 String[] tmp = line.split(";");
-                if (tmp.length != 4) {
+                if (tmp.length != 5) {
                     continue;
                 }
                 String id = tmp[0].trim();
-                //System.out.println(id);
                 String accountStatus = tmp[1].trim();
-                //System.out.println(accountStatus);
                 String password = tmp[2].trim();
-                //System.out.println(password);
-                //Boolean isLibrarian = Boolean.parseBoolean(tmp[3]);
                 int totalBooksCheckedOut = Integer.parseInt(tmp[3].trim());
-                //System.out.println(totalBooksCheckedOut);
+                int point = Integer.parseInt(tmp[4].trim());
 
-                Member member = new Member(id, AccountStatus.valueOf(accountStatus.toUpperCase()), password, totalBooksCheckedOut);
+                Member member = new Member(id, AccountStatus.valueOf(accountStatus.toUpperCase()), password, totalBooksCheckedOut, point);
 
                 this.putMemberInMap(member);
 
@@ -104,6 +98,7 @@ public class Librarian extends Account{
             e.printStackTrace();
         }
 
+
         // write to a new file
         if (memberFound) {
             try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
@@ -112,6 +107,144 @@ public class Librarian extends Account{
                     writer.newLine();
                 }
                 System.out.println("Member " + id + " has been blocked.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Member with ID " + id + " not found.");
+        }
+    }
+
+    public void reducePointMember(String id) {
+        // lines container.
+        List<String> lines = new ArrayList<>();
+        boolean memberFound = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] fields = line.split(";");
+                if (fields[0].equals(id)) {
+                    fields[4] = String.valueOf(Integer.parseInt(fields[4]) - 1);
+                    memberFound = true;
+
+                    //change in that time.
+                    int point = this.getMemberMap().get(fields[0]).getPoint() - 1;
+                    this.getMemberMap().get(fields[0]).setPoint(point);
+                }
+                //put every line in the list.
+                lines.add(String.join(";", fields));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // write to a new file
+        if (memberFound) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+                for (String line : lines) {
+                    writer.write(line);
+                    writer.newLine();
+                }
+                System.out.println("Member " + id + " has lost 1 reputation.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Member with ID " + id + " not found.");
+        }
+    }
+
+    public void addNewMember(Member member) {
+        String filePath = "src/main/resources/database/members.txt";
+        String memberData = member.getId() + ";" +
+                member.getStatus() + ";" +
+                member.getPassword() + ";" +
+                member.getTotalBooksCheckedOut() + ";" +
+                member.getPoint() + ";";
+
+        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
+            writer.write(memberData);
+            writer.newLine();
+            System.out.println("Member added: " + memberData);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
+
+
+    public void increaseBookForMember(String id) {
+        // lines container.
+        List<String> lines = new ArrayList<>();
+        boolean memberFound = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] fields = line.split(";");
+                if (fields[0].equals(id)) {
+                    fields[3] = String.valueOf(Integer.parseInt(fields[3]) + 1);
+                    memberFound = true;
+
+                    //change in that time.
+                    int nob = this.getMemberMap().get(fields[0]).getTotalBooksCheckedOut() + 1;
+                    this.getMemberMap().get(fields[0]).setTotalBooksCheckedOut(nob);
+                }
+                //put every line in the list.
+                lines.add(String.join(";", fields));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // write to a new file
+        if (memberFound) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+                for (String line : lines) {
+                    writer.write(line);
+                    writer.newLine();
+                }
+                System.out.println("Member " + id + " has borrowed 1 book.");
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        } else {
+            System.out.println("Member with ID " + id + " not found.");
+        }
+    }
+
+    public void decreaseBookForMember(String id) {
+        // lines container.
+        List<String> lines = new ArrayList<>();
+        boolean memberFound = false;
+
+        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
+            String line;
+            while ((line = reader.readLine()) != null) {
+                String[] fields = line.split(";");
+                if (fields[0].equals(id)) {
+                    fields[3] = String.valueOf(Integer.parseInt(fields[3]) - 1);
+                    memberFound = true;
+
+                    //change in that time.
+                    int nob = this.getMemberMap().get(fields[0]).getTotalBooksCheckedOut() - 1;
+                    this.getMemberMap().get(fields[0]).setTotalBooksCheckedOut(nob);
+                }
+                //put every line in the list.
+                lines.add(String.join(";", fields));
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        // write to a new file
+        if (memberFound) {
+            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
+                for (String line : lines) {
+                    writer.write(line);
+                    writer.newLine();
+                }
+                System.out.println("Member " + id + " has returned 1 book.");
             } catch (IOException e) {
                 e.printStackTrace();
             }

@@ -8,7 +8,6 @@ public abstract class Account {
     private String password;
     private Catalog catalog;
     private AccountStatus status;
-    //private Boolean isLibrarian;
 
 
     public Account(String id, AccountStatus status, String password) {
@@ -16,17 +15,12 @@ public abstract class Account {
         this.status = status;
         this.password = password;
         this.catalog = new Catalog();
-        //this.isLibrarian = isLibrarian;
-        //this.totalBooksCheckedOut = totalBooksCheckedOut;
+
     }
 
-//    public int getTotalBooksCheckedOut() {
-//        return this.totalBooksCheckedOut;
-//    }
-//
-//    public void setTotalBooksCheckedOut(int num) {
-//        this.totalBooksCheckedOut = num;
-//    }
+    public void updateBook(String id, int field, String newValue) {
+        this.getCatalog().editBook(id, field, newValue);
+    }
 
     public String getId() {
         return id;

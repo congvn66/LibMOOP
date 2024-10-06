@@ -142,6 +142,8 @@ public class Catalog {
         }
     }
 
+
+
     public void editBook(String bookId, int fieldToEdit, String newValue) {
         List<String> lines = new ArrayList<>();
         boolean bookFound = false;
@@ -175,6 +177,7 @@ public class Catalog {
                             return;
                     }
                 }
+
                 lines.add(String.join(";", fields));
             }
         } catch (IOException e) {
@@ -194,6 +197,11 @@ public class Catalog {
             }
             this.totalBooks = 0;
             // load again.
+            this.bookSubjects = new HashMap<>();
+            this.bookAuthors = new HashMap<>();
+            this.bookTitles = new HashMap<>();
+            this.bookId = new HashMap<>();
+            this.bookPublicationDates = new HashMap<>();
             this.ImportFromFile();
         } else {
             System.out.println("Book with ID " + bookId + " not found.");

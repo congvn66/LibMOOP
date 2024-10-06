@@ -53,7 +53,7 @@ public class CmdLine {
         }
     }
 
-    public void run() {
+    public void run() throws ParseException {
         while (true) {
             int option = 0;
             boolean validInput = false;
@@ -63,16 +63,17 @@ public class CmdLine {
                 System.out.println("===== Library Management System =====");
                 System.out.println("1. login as member");
                 System.out.println("2. login as librarian");
-                System.out.println("3. Exit");
+                System.out.println("3. register as member");
+                System.out.println("4. Exit");
                 System.out.print("Please select an option: ");
 
                 if (scanner.hasNextInt()) {
                     option = scanner.nextInt();
                     scanner.nextLine();
-                    if (option >= 1 && option <= 3) {
+                    if (option >= 1 && option <= 4) {
                         validInput = true;
                     } else {
-                        System.out.println("Invalid option. Please enter a number between 1 and 3.");
+                        System.out.println("Invalid option. Please enter a number between 1 and 4.");
                     }
                 } else {
                     System.out.println("Invalid input. Please enter a number.");
@@ -88,6 +89,9 @@ public class CmdLine {
                     loginAsLibrarian();
                     break;
                 case 3:
+                    registerAsMember();
+                    break;
+                case 4:
                     System.out.println("Goodbye!");
                     return;
             }
@@ -102,7 +106,7 @@ public class CmdLine {
         }
     }
 
-    private void MemberMenu() {
+    private void MemberMenu() throws ParseException {
         int option = 0;
         boolean exit = false;
 
@@ -116,18 +120,17 @@ public class CmdLine {
                 System.out.println("3. find book by subject.");
                 System.out.println("4. lend book.");
                 System.out.println("5. return book.");
-                System.out.println("6. reserve book.");
-                System.out.println("7. renew book.");
-                System.out.println("8. exit.");
+                System.out.println("6. renew book.");
+                System.out.println("7. exit.");
                 System.out.print("Please select an option: ");
 
                 if (scanner.hasNextInt()) {
                     option = scanner.nextInt();
                     scanner.nextLine();
-                    if (option >= 1 && option <= 8) {
+                    if (option >= 1 && option <= 7) {
                         validInput = true;
                     } else {
-                        System.out.println("Invalid option. Please enter a number between 1 and 6 :( ");
+                        System.out.println("Invalid option. Please enter a number between 1 and 7 :( ");
                     }
                 } else {
                     System.out.println("Invalid input. Please enter a number :( ");
@@ -175,8 +178,30 @@ public class CmdLine {
                     }
                     break;
                 case 4:
+                    System.out.println("Id: ");
+                    String idL = this.scanner.nextLine();
+                    System.out.println("Creation date: ");
+                    String d = this.scanner.nextLine();
+                    this.currentMember.basicActions(idL, parseDate(d), "LEND");
                     break;
                 case 5:
+                    System.out.println("Id: ");
+                    String idR = this.scanner.nextLine();
+                    System.out.println("Creation date: ");
+                    String d2 = this.scanner.nextLine();
+                    this.currentMember.basicActions(idR, parseDate(d2), "RETURN");
+                    break;
+                case 6:
+                    System.out.println("Id: ");
+                    String idRe = this.scanner.nextLine();
+                    System.out.println("Creation date: ");
+                    String d3 = this.scanner.nextLine();
+                    this.currentMember.basicActions(idRe, parseDate(d3), "RENEW");
+                    break;
+                    //break;
+                case 7:
+                    System.out.println("Goodbye!");
+                    exit = true;
                     break;
             }
         }
@@ -503,12 +528,27 @@ public class CmdLine {
                     break;
                 case 8:
                     System.out.println("Goodbye!");
-                    exit = true;  // Thoát menu
+                    exit = true;
                     break;
             }
         }
     }
 
+    private boolean registerAsMember() {
+        System.out.println("id: ");
+        String id = scanner.nextLine();
+        Librarian admin = new Librarian();
+        if (admin.getMemberMap().get(id) != null) {
+            System.out.println("chosen id!");
+            return false;
+        }
+        System.out.println("password: ");
+        String password = this.scanner.nextLine();
+        Member member = new Member(id, AccountStatus.ACTIVE, password, 0, 100);
+        admin.addNewMember(member);
+        this.currentMember = member;
+        return true;
+    }
 
     private boolean loginAsLibrarian() {
         System.out.println("id: ");

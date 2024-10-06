@@ -1,5 +1,5 @@
 9780071379526;Project Management;Business;Gary R. Heerkens;English;unknown;Gary R. Heerkens;legendary contributor to this book.;1;FALSE;34.72;JOURNAL;RESERVED;2014-06-18;2001-11-05;1;Rack 1
-9780071430012;Sales Techniques;Business;William Brooks;English;unknown;William Brooks;legendary contributor to this book.;2;FALSE;39.02;EBOOK;AVAILABLE;2014-06-18;2004-02-10;1;Rack 1
+9780071430012;Sales Techniques;Business;William Brooks;English;unknown;William Brooks;legendary contributor to this book.;2;FALSE;39.02;EBOOK;AVAILABLE;2014-06-18;2004-02-10;1;lolz
 9780071441148;The Negotiation Fieldbook;Business;Grande Lum;English;unknown;Grande Lum;legendary contributor to this book.;3;FALSE;99.62;MAGAZINE;RESERVED;2014-06-18;2004-10-14;1;Rack 1
 9780071463331;Dealing With Difficult People;Business;Rick Brinkman,  Richard E. Kirschner;English;unknown;Rick Brinkman;  Richard E. Kirschner;legendary contributor to this book.;4;FALSE;22.01;NEWSPAPER;RESERVED;2014-06-18;2006-03-23;1;Rack 1
 9780071591386;Getting Organized at Work: 24 Lessons for Setting Goals, Establishing Priorities, and Managing Your Time;Business;Kenneth Zeigler;English;unknown;Kenneth Zeigler;legendary contributor to this book.;5;FALSE;62.83;EBOOK;AVAILABLE;2014-06-18;2008-06-09;1;Rack 1
@@ -2612,4 +2612,4 @@
 9781264854028;The Art of Bouncing Back: Find Your Flow to Thrive at Work and in Life â€” Any Time You're Off Your Game;Business;"Darleen ""Coach Dar"" Santore";English;unknown;"Darleen ""Coach Dar"" Santore";legendary contributor to this book.;2612;FALSE;60.35;HARDCOVER;LOANED;2023-04-12;2023-02-28;1;Rack 1
 9781264698943;Breaking into Venture: An Outsider Turned Venture Capitalist Shares How to Take Risks, Create Power, and Build Life-Changing Wealth;Business;Allison Baum Gates;English;unknown;Allison Baum Gates;legendary contributor to this book.;2613;FALSE;35.73;AUDIOBOOK;LOANED;2023-04-12;2023-03-07;1;Rack 1
 9781264739011;Rapid Mass Engagement: Driving Continuous Improvement Through Employee Culture Creation;Business;Frank Devine;English;unknown;Frank Devine;legendary contributor to this book.;2614;FALSE;44.96;HARDCOVER;AVAILABLE;2023-04-12;2023-03-07;1;Rack 1
-99129381238;congdz;Sex;Cong;English;100000;Cong;dz;100000;false;1.0E8;MAGAZINE;LOANED;2000-11-11;1888-11-11;2;Rack 10
+99129381238;congdz;Sex;Cong;English;100000;Cong;dz;100000;false;1.0E8;MAGAZINE;AVAILABLE;2000-11-11;1888-11-11;2;Rack 10

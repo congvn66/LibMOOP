@@ -10,7 +10,8 @@ import java.util.List;
 public class LibraryLogger {
     private String filePath;
 
-    public void updateLendLog(String filePath, String id, Date date, String type) throws ParseException {
+    public void updateLog(Member member, String id, Date date, String type) throws ParseException {
+        String filePath = "src/main/resources/database/" + member.getId() + ".txt";
         File logFile = new File(filePath);
         List<String> lines = new ArrayList<>();
         boolean found = false;
@@ -26,31 +27,50 @@ public class LibraryLogger {
 
         switch (type.toUpperCase()) {
             case "LEND":
+//                if (member.getStatus() == AccountStatus.BLACKLISTED) {
+//                    System.out.println("You've been blocked for returning books late too many times");
+//                    break;
+//                }
                 String formattedDate = new SimpleDateFormat("yyyy-MM-dd").format(date);
                 String newEntry = id + "," + formattedDate;
                 lines.add(newEntry);
                 break;
 
             case "RETURN":
-
                 for (String entry : lines) {
                     String[] parts = entry.split(",");
                     if (parts[0].equals(id)) {
                         found = true;
                         Date borrowedDate = new SimpleDateFormat("yyyy-MM-dd").parse(parts[1]);
                         long daysBetween = (date.getTime() - borrowedDate.getTime()) / (1000 * 60 * 60 * 24);
-
+                        Librarian admin = new Librarian();
+                        admin.decreaseBookForMember(member.getId());
+                        member.setTotalBooksCheckedOut(member.getTotalBooksCheckedOut() - 1);
+                        member.updateBook(id, 13, "AVAILABLE");
                         if (daysBetween > 15) {
-                            System.out.println("Warning: The return date exceeds the allowable 15 days limit.");
-                        } else {
-                            lines.remove(entry);
+                            System.out.println("Warning: The return date exceeds the allowable 15 days limit!");
+                            int p = member.getPoint() - 1;
+                            member.setPoint(p);
+                            admin.reducePointMember(member.getId());
+                            if (member.getPoint() == 0) {
+                                member.setStatus(AccountStatus.BLACKLISTED);
+                                admin.blockMember(member.getId());
+                            }
                         }
+                        lines.remove(entry);
                         break;
                     }
+                }
+                if (!found) {
+                    System.out.println("You haven't borrowed this book.");
                 }
                 break;
 
             case "RENEW":
+                if (member.getStatus() == AccountStatus.BLACKLISTED) {
+                    System.out.println("You've been blocked for returning books late too many times");
+                    break;
+                }
                 for (int i = 0; i < lines.size(); i++) {
                     String entry = lines.get(i);
                     String[] parts = entry.split(",");
@@ -59,13 +79,24 @@ public class LibraryLogger {
                         Date borrowedDate = new SimpleDateFormat("yyyy-MM-dd").parse(parts[1]);
                         long daysBetween = (date.getTime() - borrowedDate.getTime()) / (1000 * 60 * 60 * 24);
 
-                        if (daysBetween < 15) {
-                            lines.set(i, id + "," + new SimpleDateFormat("yyyy-MM-dd").format(date));
-                        } else {
+                        lines.set(i, id + "," + new SimpleDateFormat("yyyy-MM-dd").format(date));
+                        if (daysBetween > 15) {
                             System.out.println("Warning: The renewal date exceeds the allowable 15 days limit.");
+                            Librarian admin = new Librarian();
+                            int p = member.getPoint() - 1;
+                            member.setPoint(p);
+                            admin.reducePointMember(member.getId());
+                            if (member.getPoint() == 0) {
+                                member.setStatus(AccountStatus.BLACKLISTED);
+                                admin.blockMember(member.getId());
+                            }
                         }
                         break;
                     }
+                }
+                //break;
+                if (!found) {
+                    System.out.println("You haven't borrowed this book.");
                 }
                 break;
 
@@ -74,7 +105,6 @@ public class LibraryLogger {
                 return;
         }
 
-        // Ghi lại các dòng đã cập nhật vào file
         try (BufferedWriter writer = new BufferedWriter(new FileWriter(logFile))) {
             for (String entry : lines) {
                 writer.write(entry);
@@ -103,23 +133,14 @@ public class LibraryLogger {
             }
 
             if (memberExists) {
-                String lendLogFilePath = "src/main/resources/database/" + memberId + "Lend.txt";
-                String reserveLogFilePath = "src/main/resources/database/" + memberId + "Reserve.txt";
+                String memberLogFilePath = "src/main/resources/database/" + memberId + ".txt";
 
-                File lendLogFile = new File(lendLogFilePath);
-                if (!lendLogFile.exists()) {
-                    lendLogFile.createNewFile();
-                    System.out.println("Log file created for member (Lend): " + memberId);
+                File memberLogFile = new File(memberLogFilePath);
+                if (!memberLogFile.exists()) {
+                    memberLogFile.createNewFile();
+                    System.out.println("Log file created for member: " + memberId);
                 } else {
-                    System.out.println("Log file loaded for member (Lend): " + memberId);
-                }
-
-                File reserveLogFile = new File(reserveLogFilePath);
-                if (!reserveLogFile.exists()) {
-                    reserveLogFile.createNewFile();
-                    System.out.println("Log file created for member (Reserve): " + memberId);
-                } else {
-                    System.out.println("Log file loaded for member (Reserve): " + memberId);
+                    System.out.println("Log file loaded for member: " + memberId);
                 }
             } else {
                 System.out.println("Member " + memberId + " does not exist in the member list.");
@@ -137,6 +158,4 @@ public class LibraryLogger {
             }
         }
     }
-
-
 }
