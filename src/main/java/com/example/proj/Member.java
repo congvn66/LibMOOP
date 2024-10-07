@@ -60,7 +60,7 @@ public class Member extends Account{
                     if (this.getTotalBooksCheckedOut() < 5) {
                         this.logger.updateLog(this, book.getId(), creationDate, "LEND");
                         Librarian adminLend = new Librarian();
-                        adminLend.increaseBookForMember(this.getId());
+                        adminLend.increaseBookForMemberDatabase(this.getId());
                         this.updateBook(book.getId(), 13, "LOANED");
                     } else {
                         System.out.println("You have reached maximum number of books!");

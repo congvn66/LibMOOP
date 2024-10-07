@@ -19,7 +19,7 @@ public abstract class Account {
     }
 
     public void updateBook(String id, int field, String newValue) {
-        this.getCatalog().editBook(id, field, newValue);
+        this.getCatalog().editBookInDataBase(id, field, newValue);
     }
 
     public String getId() {

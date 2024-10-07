@@ -1,9 +1,11 @@
 package com.example.proj;
 
 import java.io.*;
+import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 
 public class CmdLine {
     private Scanner scanner = new Scanner(System.in);
@@ -21,11 +23,32 @@ public class CmdLine {
         this.currentLibrarian = null;
         this.currentMember = null;
         this.librarianMap = new HashMap<>();
-        this.LoadLibrarianFromFile();
+        this.loadLibrariansFromDatabase();
     }
 
     private void putLibrarianInMap (Librarian librarian) {
         this.librarianMap.put(librarian.getId(), librarian);
+    }
+
+    private void loadLibrariansFromDatabase() {
+        String sql = "SELECT id, accountStatus, password FROM librarians";
+
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+             Statement statement = connection.createStatement();
+             ResultSet resultSet = statement.executeQuery(sql)) {
+
+            while (resultSet.next()) {
+                String id = resultSet.getString("id").trim();
+                String accountStatus = resultSet.getString("accountStatus").trim();
+                String password = resultSet.getString("password").trim();
+
+                Librarian librarian = new Librarian(id, AccountStatus.valueOf(accountStatus.toUpperCase()), password);
+
+                this.putLibrarianInMap(librarian);
+            }
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
     }
 
     private void LoadLibrarianFromFile() {
@@ -376,11 +399,10 @@ public class CmdLine {
                     this.currentLibrarian.getCatalog().displayCatalogInfo();
                     break;
                 case 5:
-                    // Thêm logic khóa thành viên theo id ở đây
                     System.out.println("Id: ");
                     String idToBlock = this.scanner.nextLine();
                     System.out.println("Blocking a member...");
-                    this.currentLibrarian.blockMember(idToBlock);
+                    this.currentLibrarian.blockMemberDatabase(idToBlock);
                     break;
                 case 6:
                     System.out.println("Id: ");
@@ -545,7 +567,7 @@ public class CmdLine {
         System.out.println("password: ");
         String password = this.scanner.nextLine();
         Member member = new Member(id, AccountStatus.ACTIVE, password, 0, 100);
-        admin.addNewMember(member);
+        admin.addNewMemberDatabase(member);
         this.currentMember = member;
         return true;
     }
@@ -557,13 +579,38 @@ public class CmdLine {
         String password = scanner.nextLine();
 
 
-        if (this.librarianMap.get(id) == null || !this.librarianMap.get(id).getPassword().equals(password)) {
-            System.out.println("You are not a librarian!");
-            return false;
+        String url = "jdbc:mysql://localhost:3306/shibalib";
+        String user = "root";
+        String pass = "";
+
+        String query = "SELECT accountStatus, password FROM librarians WHERE id = ?";
+
+        try (Connection connection = DriverManager.getConnection(url, user, pass);
+             PreparedStatement preparedStatement = connection.prepareStatement(query)) {
+
+            preparedStatement.setString(1, id);
+            ResultSet resultSet = preparedStatement.executeQuery();
+
+            if (resultSet.next()) {
+                String dbPassword = resultSet.getString("password");
+                String accountStatuss = resultSet.getString("accountStatus");
+                AccountStatus accountStatus = AccountStatus.valueOf(accountStatuss);
+
+                if (dbPassword.equals(password)) {
+                    this.currentLibrarian = new Librarian(id, accountStatus, password);
+                    System.out.println("Logged in successfully");
+                    return true;
+                } else {
+                    System.out.println("Invalid password!");
+                }
+            } else {
+                System.out.println("You are not a librarian!");
+            }
+        } catch (SQLException e) {
+            System.out.println("Database error: " + e.getMessage());
         }
-        this.currentLibrarian = this.librarianMap.get(id);
-        System.out.println("Logged in successfully");
-        return true;
+
+        return false;
     }
 
     private boolean loginAsMember() {

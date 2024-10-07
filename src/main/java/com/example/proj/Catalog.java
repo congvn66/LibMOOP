@@ -1,9 +1,11 @@
 package com.example.proj;
 
 import java.io.*;
+import java.sql.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.Date;
 
 public class Catalog {
     private String filePath;
@@ -30,6 +32,49 @@ public class Catalog {
         this.bookId = new HashMap<>();
     }
 
+    public void loadCatalogFromDatabase() {
+        String jdbcURL = "jdbc:mysql://localhost:3306/shibalib";
+        String username = "root";
+        String password = "";
+
+        String query = "SELECT ISBN, title, subject, publisher, language, numberOfPage, authorName, authorDescription, id, isReferenceOnly, price, format, status, dateOfPurchase, publicationDate, number, location FROM bookitem";
+
+        try (Connection connection = DriverManager.getConnection(jdbcURL, username, password);
+             PreparedStatement statement = connection.prepareStatement(query);
+             ResultSet resultSet = statement.executeQuery()) {
+
+            while (resultSet.next()) {
+                String ISBN = resultSet.getString("ISBN");
+                String title = resultSet.getString("title");
+                String subject = resultSet.getString("subject");
+                String publisher = resultSet.getString("publisher");
+                String language = resultSet.getString("language");
+                String numberOfPage = resultSet.getString("numberOfPage");
+                String authorName = resultSet.getString("authorName");
+                String authorDescription = resultSet.getString("authorDescription");
+                String id = resultSet.getString("id");
+                boolean isReferenceOnly = resultSet.getBoolean("isReferenceOnly");
+                double price = resultSet.getDouble("price");
+                BookFormat format = BookFormat.valueOf(resultSet.getString("format"));
+                BookStatus status = BookStatus.valueOf(resultSet.getString("status"));
+                Date dateOfPurchase = resultSet.getDate("dateOfPurchase");
+                Date publicationDate = resultSet.getDate("publicationDate");
+                int number = resultSet.getInt("number");
+                String location = resultSet.getString("location");
+
+                BookItem bookItem = new BookItem(ISBN, title, subject, publisher, language, numberOfPage,
+                        authorName, authorDescription, id, isReferenceOnly, price, format, status,
+                        dateOfPurchase, publicationDate, number, location);
+
+                this.addBookItem(bookItem);
+            }
+
+            //System.out.println("Catalog loaded successfully from the database!");
+
+        } catch (SQLException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void addBookItem(BookItem bookItem) {
 
@@ -51,6 +96,48 @@ public class Catalog {
         bookId.put(id, bookItem);
 
         totalBooks++;
+    }
+
+    public void writeBookItemToDatabase(BookItem bookItem) {
+        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
+
+        // Database connection details
+        String jdbcURL = "jdbc:mysql://localhost:3306/shibalib";
+        String dbUsername = "root";
+        String dbPassword = "";
+
+        String sql = "INSERT INTO bookitem (ISBN, title, subject, publisher, language, numberOfPage, authorName, authorDescription, id, isReferenceOnly, price, format, status, dateOfPurchase, publicationDate, number, location) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+
+        try (Connection connection = DriverManager.getConnection(jdbcURL, dbUsername, dbPassword);
+             PreparedStatement statement = connection.prepareStatement(sql)) {
+
+            statement.setString(1, bookItem.getISBN());
+            statement.setString(2, bookItem.getTitle());
+            statement.setString(3, bookItem.getSubject());
+            statement.setString(4, bookItem.getPublisher());
+            statement.setString(5, bookItem.getLanguage());
+            statement.setString(6, bookItem.getNumberOfPage());
+            statement.setString(7, bookItem.getAuthor().getName());
+            statement.setString(8, bookItem.getAuthor().getDescription());
+            statement.setString(9, bookItem.getId());
+            statement.setString(10, bookItem.isReferenceOnly() ? "true" : "false");
+            statement.setDouble(11, bookItem.getPrice());
+            statement.setString(12, bookItem.getFormat().name());
+            statement.setString(13, bookItem.getStatus().name());
+            statement.setString(14, dateFormat.format(bookItem.getDateOfPurchase()));
+            statement.setString(15, dateFormat.format(bookItem.getPublicationDate()));
+            statement.setInt(16, bookItem.getRack().getNumber());
+            statement.setString(17, bookItem.getRack().getLocationIdentifier());
+
+            int rowsInserted = statement.executeUpdate();
+            if (rowsInserted > 0) {
+                System.out.println("A new book item was inserted successfully!");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error inserting the book item into the database: " + e.getMessage());
+        }
     }
 
     public void writeBookItemToFile(BookItem bookItem) {
@@ -132,6 +219,7 @@ public class Catalog {
     public int getTotalBooks() {
         return totalBooks;
     }
+
     private Date parseDate(String dateString) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd"); // Adjust format as necessary
         try {
@@ -142,6 +230,86 @@ public class Catalog {
         }
     }
 
+    public void editBookInDataBase(String bookId, int fieldToEdit, String newValue) {
+        String query = "";
+
+        switch (fieldToEdit) {
+            case 1: // ISBN
+                query = "UPDATE bookitem SET ISBN = ? WHERE id = ?";
+                break;
+            case 2: // title
+                query = "UPDATE bookitem SET title = ? WHERE id = ?";
+                break;
+            case 3: // subject
+                query = "UPDATE bookitem SET subject = ? WHERE id = ?";
+                break;
+            case 4: // publisher
+                query = "UPDATE bookitem SET publisher = ? WHERE id = ?";
+                break;
+            case 5: // language
+                query = "UPDATE bookitem SET language = ? WHERE id = ?";
+                break;
+            case 6: // numberOfPage
+                query = "UPDATE bookitem SET numberOfPage = ? WHERE id = ?";
+                break;
+            case 7: // authorName
+                query = "UPDATE bookitem SET authorName = ? WHERE id = ?";
+                break;
+            case 8: // authorDescription
+                query = "UPDATE bookitem SET authorDescription = ? WHERE id = ?";
+                break;
+            case 9: // id
+                System.out.println("ID cannot be changed.");
+                return;
+            case 10: // isReferenceOnly
+                query = "UPDATE bookitem SET isReferenceOnly = ? WHERE id = ?";
+                break;
+            case 11: // price
+                query = "UPDATE bookitem SET price = ? WHERE id = ?";
+                break;
+            case 12: // format
+                query = "UPDATE bookitem SET format = ? WHERE id = ?";
+                break;
+            case 13: // status
+                query = "UPDATE bookitem SET status = ? WHERE id = ?";
+                break;
+            case 14: // dateOfPurchase
+                query = "UPDATE bookitem SET dateOfPurchase = ? WHERE id = ?";
+                break;
+            case 15: // publicationDate
+                query = "UPDATE bookitem SET publicationDate = ? WHERE id = ?";
+                break;
+            case 16: // number
+                query = "UPDATE bookitem SET number = ? WHERE id = ?";
+                break;
+            case 17: // location
+                query = "UPDATE bookitem SET location = ? WHERE id = ?";
+                break;
+            default:
+                System.out.println("Invalid field.");
+                return;
+        }
+
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+
+            statement.setString(1, newValue);
+            statement.setString(2, bookId);
+
+
+            int rowsUpdated = statement.executeUpdate();
+
+            if (rowsUpdated > 0) {
+                System.out.println("Book " + bookId + " has been updated.");
+            } else {
+                System.out.println("No book found with ID " + bookId + ".");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error updating the book in the database: " + e.getMessage());
+        }
+    }
 
 
     public void editBook(String bookId, int fieldToEdit, String newValue) {
@@ -248,8 +416,6 @@ public class Catalog {
         }
     }
 
-
-
     public boolean removeBookById(String id) {
         if (!bookId.containsKey(id)) {
             System.out.println("Book not found!");
@@ -294,11 +460,33 @@ public class Catalog {
             }
         }
 
-        this.removeBookFromFile(id);
+        this.removeBookFromDatabase(id);
 
         totalBooks--;
         return true;
     }
+
+    private void removeBookFromDatabase(String id) {
+        String query = "DELETE FROM bookitem WHERE id = ?";
+
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+             PreparedStatement statement = connection.prepareStatement(query)) {
+
+            statement.setString(1, id);
+
+            int rowsDeleted = statement.executeUpdate();
+
+            if (rowsDeleted > 0) {
+                System.out.println("A book was successfully deleted!");
+            } else {
+                System.out.println("No book found with the given ID.");
+            }
+
+        } catch (SQLException e) {
+            System.out.println("Error deleting the book from the database: " + e.getMessage());
+        }
+    }
+
 
     private void removeBookFromFile(String id) {
         File inputFile = new File(this.filePath);
