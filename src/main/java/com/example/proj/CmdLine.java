@@ -343,7 +343,7 @@ public class CmdLine {
                     } else if (ref.trim().equals("N")){
                         isReferenceOnly = false;
                     } else {
-                        System.out.println("wtf did u type? :(");
+                        System.out.println("Wrong call, adding process failed");
                         break;
                     }
                     System.out.println("Price: ");
@@ -360,7 +360,7 @@ public class CmdLine {
                         }
                     }
                     if (fmnotPass) {
-                        System.out.println("tf did u type?");
+                        System.out.println("Wrong call, adding process failed");
                         break;
                     }
                     BookFormat bookFormat = BookFormat.valueOf(format.trim().toUpperCase());
@@ -375,7 +375,7 @@ public class CmdLine {
                         }
                     }
                     if (stnotPass) {
-                        System.out.println("tf did u type?");
+                        System.out.println("Wrong call, adding process failed");
                         break;
                     }
                     BookStatus bookStatus = BookStatus.valueOf(status.trim().toUpperCase());

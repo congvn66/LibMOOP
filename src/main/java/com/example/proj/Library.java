@@ -15,14 +15,6 @@ public class Library {
         this.catalog = new Catalog();
     }
 
-
-
-
-
-
-
-
-
     public void displayLibraryInfo() {
         System.out.println("Library Name: " + name);
         catalog.displayCatalogInfo();
