@@ -22,14 +22,14 @@ public class Member extends Account{
     public Member() {
         super("none", AccountStatus.NONE, "1234");
         this.totalBooksCheckedOut = 0;
-        this.getCatalog().ImportFromFile();
+        this.getCatalog().loadCatalogFromDatabase();
         this.point = 0;
     }
 
     public Member(String id, AccountStatus status, String password, int totalBooksCheckOut, int point) {
         super(id, status, password);
         this.totalBooksCheckedOut = totalBooksCheckOut;
-        this.getCatalog().ImportFromFile();
+        this.getCatalog().loadCatalogFromDatabase();
 
         this.point = point;
     }
@@ -44,7 +44,7 @@ public class Member extends Account{
 
     public void basicActions(String id, Date creationDate, String type) throws ParseException {
         this.logger = new LibraryLogger();
-        this.logger.generateMemberLog("src/main/resources/database/members.txt", this.getId());
+        //this.logger.generateMemberLog("src/main/resources/database/members.txt", this.getId());
         if (this.getCatalog().findBookById(id) == null) {
             System.out.println("Book not found.");
             return;
