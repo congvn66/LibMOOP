@@ -188,6 +188,7 @@ public class Catalog {
         return matchingBooks;
     }
 
+
     public List<BookItem> findBooksByAuthor(String author) {
         List<BookItem> matchingBooks = new ArrayList<>();
         for (String innerAuthor  : bookAuthors.keySet()) {
@@ -198,18 +199,22 @@ public class Catalog {
         return matchingBooks;
     }
 
+
     public List<BookItem> findBooksBySubject(String subject) {
         return bookSubjects.getOrDefault(subject.toLowerCase(), new ArrayList<>());
     }
+
 
     public List<BookItem> findBooksByPublicationDate(Date publicationDate) {
         return bookPublicationDates.getOrDefault(publicationDate, new ArrayList<>());
     }
 
+
     public boolean updateCatalog() {
         // Logic để cập nhật catalog
         return true; // Trả về true nếu thành công
     }
+
 
     public int getTotalBooks() {
         return totalBooks;
@@ -297,12 +302,6 @@ public class Catalog {
 
             if (rowsUpdated > 0) {
                 System.out.println("Book " + bookId + " has been updated.");
-                this.bookSubjects = new HashMap<>();
-                this.bookAuthors = new HashMap<>();
-                this.bookTitles = new HashMap<>();
-                this.bookId = new HashMap<>();
-                this.bookPublicationDates = new HashMap<>();
-                this.loadCatalogFromDatabase();
             } else {
                 System.out.println("No book found with ID " + bookId + ".");
             }

@@ -20,7 +20,6 @@ public abstract class Account {
 
     public void updateBook(String id, int field, String newValue) {
         this.getCatalog().editBookInDataBase(id, field, newValue);
-        //this.getCatalog().editBook();
     }
 
     public String getId() {
