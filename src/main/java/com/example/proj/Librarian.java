@@ -186,7 +186,25 @@ public class Librarian extends Account{
         }
     }
 
+    public void updatePassWord(String id, String password) {
+        String updateQuery = "UPDATE members SET password = ? WHERE id = ?";
 
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+             PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
+
+            // Set the parameter for the query
+            preparedStatement.setString(1, password);
+            preparedStatement.setString(2, id);
+            // Execute the update
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                if (this.getMemberMap().containsKey(id)) {
+                    this.getMemberMap().get(id).setPassword(password);
+                }
+            }
+        } catch (SQLException e) {
+        }
+    }
     public void reducePointMember(String id) {
         // lines container.
         List<String> lines = new ArrayList<>();
@@ -234,9 +252,9 @@ public class Librarian extends Account{
              PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
 
             // Set the parameters for the query
-            preparedStatement.setString(1, member.getId());
+            preparedStatement.setString(1, member.getId().trim());
             preparedStatement.setString(2, member.getStatus().name());
-            preparedStatement.setString(3, member.getPassword());
+            preparedStatement.setString(3, member.getPassword().trim());
             preparedStatement.setInt(4, member.getTotalBooksCheckedOut());
             preparedStatement.setInt(5, member.getPoint());
 
