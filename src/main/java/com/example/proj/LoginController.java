@@ -196,9 +196,9 @@ public class LoginController {
     public void registerTab(ActionEvent event) {
         String idSign = nameReg.getText();
         String passSign = passWordReg.getText();
-        Authorization authorization = new Authorization();
+        Authorization authorization = new Authorization(idSign,passSign);
         if(event.getSource() == signUp) {
-            if (!authorization.checkRegisterMember()) {
+            if (authorization.checkRegisterMember()) {
                 Member member = new Member(idSign, AccountStatus.ACTIVE, passSign, 0, 100);
                 Librarian librarian = new Librarian();
                 librarian.addNewMemberDatabase(member);
@@ -206,6 +206,7 @@ public class LoginController {
             } else {
                 if (nameReg.getText().trim().isEmpty() || passWordReg.getText().trim().isEmpty()) {
                     emptyTextReg.setVisible(true);
+                    nameTakenReg.setVisible(false);
                 } else {
                     nameReg.setText("");
                     passWordReg.setText("");
