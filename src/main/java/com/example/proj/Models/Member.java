@@ -1,6 +1,7 @@
-package com.example.proj;
+package com.example.proj.Models;
 
 import java.text.ParseException;
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.Map;
 
@@ -8,6 +9,7 @@ public class Member extends Account{
     private int totalBooksCheckedOut;
     private LibraryLogger logger;
     private Map<String, String> listOfBook;
+    private java.sql.Date createDate;
 
     public int getPoint() {
         return point;
@@ -24,14 +26,15 @@ public class Member extends Account{
         this.totalBooksCheckedOut = 0;
         this.getCatalog().loadCatalogFromDatabase();
         this.point = 0;
+        this.createDate = java.sql.Date.valueOf(LocalDate.now());
     }
 
     public Member(String id, AccountStatus status, String password, int totalBooksCheckOut, int point) {
         super(id, status, password);
         this.totalBooksCheckedOut = totalBooksCheckOut;
         this.getCatalog().loadCatalogFromDatabase();
-
         this.point = point;
+        this.createDate = java.sql.Date.valueOf(LocalDate.now());
     }
 
     public int getTotalBooksCheckedOut() {
@@ -40,6 +43,14 @@ public class Member extends Account{
 
     public void setTotalBooksCheckedOut(int totalBooksCheckedOut) {
         this.totalBooksCheckedOut = totalBooksCheckedOut;
+    }
+
+    public java.sql.Date getCreateDate() {
+        return createDate;
+    }
+
+    public void setCreateDate(java.sql.Date createDate) {
+        this.createDate = createDate;
     }
 
     public void basicActions(String id, Date creationDate, String type) throws ParseException {

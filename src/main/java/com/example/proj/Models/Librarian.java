@@ -1,4 +1,4 @@
-package com.example.proj;
+package com.example.proj.Models;
 
 import java.io.*;
 import java.sql.*;
@@ -246,7 +246,7 @@ public class Librarian extends Account{
     }
 
     public void addNewMemberDatabase(Member member) {
-        String insertQuery = "INSERT INTO members (id, accountStatus, password, numberOfBooks, point) VALUES (?, ?, ?, ?, ?)";
+        String insertQuery = "INSERT INTO members (id, accountStatus, password, numberOfBooks, point, createDate) VALUES (?, ?, ?, ?, ?, ?)";
 
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
              PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
@@ -257,6 +257,7 @@ public class Librarian extends Account{
             preparedStatement.setString(3, member.getPassword().trim());
             preparedStatement.setInt(4, member.getTotalBooksCheckedOut());
             preparedStatement.setInt(5, member.getPoint());
+            preparedStatement.setDate(6, member.getCreateDate());
 
             // Execute the insert
             preparedStatement.executeUpdate();

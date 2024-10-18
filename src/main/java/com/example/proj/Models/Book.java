@@ -1,4 +1,4 @@
-package com.example.proj;
+package com.example.proj.Models;
 
 public abstract class Book {
     private String ISBN;

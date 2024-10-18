@@ -1,9 +1,4 @@
-package com.example.proj;
-
-import com.example.proj.Catalog;
-
-import java.util.Date;
-import java.util.List;
+package com.example.proj.Models;
 
 public class Library {
     private String name;

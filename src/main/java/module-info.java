@@ -8,4 +8,8 @@ module com.example.proj {
 
     opens com.example.proj to javafx.fxml;
     exports com.example.proj;
+    exports com.example.proj.Models;
+    opens com.example.proj.Models to javafx.fxml;
+    exports com.example.proj.Controller;
+    opens com.example.proj.Controller to javafx.fxml;
 }

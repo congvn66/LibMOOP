@@ -1,4 +1,4 @@
-package com.example.proj;
+package com.example.proj.Models;
 
 import java.io.*;
 import java.sql.*;
@@ -16,6 +16,8 @@ public class Catalog {
     private Map<String, List<BookItem>> bookSubjects;
     private Map<Date, List<BookItem>> bookPublicationDates;
     private Map<String, BookItem> bookId;
+    private Map<BookStatus, List<BookItem>> bookStatus;
+
     // Constructor
     public Catalog() {
         File file = new File("src/main/resources/database/real_books.txt");
@@ -30,6 +32,19 @@ public class Catalog {
         this.bookSubjects = new HashMap<>();
         this.bookPublicationDates = new HashMap<>();
         this.bookId = new HashMap<>();
+        this.bookStatus = new HashMap<>();
+    }
+
+    public Map<String, List<BookItem>> getBookSubjects() {
+        return bookSubjects;
+    }
+
+    public Map<String, BookItem> getBookId() {
+        return bookId;
+    }
+
+    public Map<BookStatus, List<BookItem>> getBookStatus() {
+        return bookStatus;
     }
 
     public void loadCatalogFromDatabase() {
@@ -88,9 +103,11 @@ public class Catalog {
         String subject = bookItem.getSubject().toLowerCase();
         bookSubjects.computeIfAbsent(subject, k -> new ArrayList<>()).add(bookItem);
 
-
         Date publicationDate = bookItem.getPublicationDate();
         bookPublicationDates.computeIfAbsent(publicationDate, k -> new ArrayList<>()).add(bookItem);
+
+        BookStatus status = bookItem.getStatus();
+        bookStatus.computeIfAbsent(status, k-> new ArrayList<>()).add(bookItem);
 
         String id = bookItem.getId();
         bookId.put(id, bookItem);

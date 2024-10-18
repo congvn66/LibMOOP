@@ -1,20 +1,20 @@
-package com.example.proj;
+package com.example.proj.Models;
 
 import java.sql.*;
 import java.util.HashMap;
 import java.util.Map;
 
-public class Authorization {
+public class Authentication {
     private String id;
     private String passWord;
     private Map<String, Librarian> librarianMap;
 
-    public Authorization() {
+    public Authentication() {
         librarianMap = new HashMap<>();
         this.loadLibrariansFromDatabase();
     }
 
-    public Authorization(String id, String passWord) {
+    public Authentication(String id, String passWord) {
         this.id = id;
         this.passWord = passWord;
         librarianMap = new HashMap<>();

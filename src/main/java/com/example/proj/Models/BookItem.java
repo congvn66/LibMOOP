@@ -1,7 +1,5 @@
-package com.example.proj;
+package com.example.proj.Models;
 
-import java.sql.SQLOutput;
-import java.sql.SQLSyntaxErrorException;
 import java.util.Date;
 
 public class BookItem extends Book {

@@ -8,9 +8,9 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@Login.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.proj.LoginController">
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../CSS/Login.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.proj.Controller.LoginController">
    <children>
-      <AnchorPane maxHeight="400.0" minHeight="400.0" prefHeight="400.0" stylesheets="@Login.css">
+      <AnchorPane maxHeight="400.0" minHeight="400.0" prefHeight="400.0" stylesheets="@../CSS/Login.css">
          <children>
             <AnchorPane fx:id="RegisterTab" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #206627;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
                <children>
@@ -31,7 +31,7 @@
                               <Font size="18.0" />
                            </font>
                         </TextField>
-                        <Button id="button" fx:id="signUp" layoutX="132.0" layoutY="256.0" mnemonicParsing="false" onAction="#registerTab" prefHeight="47.0" prefWidth="88.0" style="-fx-background-color: #2ffd02; -fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 2;" stylesheets="@Login.css" text="Sign up">
+                        <Button id="button" fx:id="signUp" layoutX="132.0" layoutY="256.0" mnemonicParsing="false" onAction="#registerTab" prefHeight="47.0" prefWidth="88.0" style="-fx-background-color: #2ffd02; -fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 2;" stylesheets="@../CSS/Login.css" text="Sign up">
                            <font>
                               <Font name="Times New Roman Bold" size="21.0" />
                            </font>
@@ -90,7 +90,7 @@
                               <Font size="18.0" />
                            </font>
                         </TextField>
-                        <Button id="button" fx:id="doneSetPass" layoutX="137.0" layoutY="206.0" mnemonicParsing="false" onAction="#resetPasswordTab" prefHeight="47.0" prefWidth="94.0" style="-fx-background-color: #2ffd02; -fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 2;" stylesheets="@Login.css" text="Continue">
+                        <Button id="button" fx:id="doneSetPass" layoutX="137.0" layoutY="206.0" mnemonicParsing="false" onAction="#resetPasswordTab" prefHeight="47.0" prefWidth="94.0" style="-fx-background-color: #2ffd02; -fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 2;" stylesheets="@../CSS/Login.css" text="Continue">
                            <font>
                               <Font name="Times New Roman Bold" size="21.0" />
                            </font>
@@ -110,7 +110,7 @@
                               <Font size="18.0" />
                            </font>
                         </TextField>
-                        <Button id="button" fx:id="answerButton" layoutX="137.0" layoutY="206.0" mnemonicParsing="false" onAction="#questionTestTab" prefHeight="47.0" prefWidth="94.0" style="-fx-background-color: #2ffd02; -fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 2;" stylesheets="@Login.css" text="Continue">
+                        <Button id="button" fx:id="answerButton" layoutX="137.0" layoutY="206.0" mnemonicParsing="false" onAction="#questionTestTab" prefHeight="47.0" prefWidth="94.0" style="-fx-background-color: #2ffd02; -fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 2;" stylesheets="@../CSS/Login.css" text="Continue">
                            <font>
                               <Font name="Times New Roman Bold" size="21.0" />
                            </font>
@@ -132,7 +132,7 @@
                               <Font size="18.0" />
                            </font>
                         </TextField>
-                        <Button id="button" fx:id="nameForgot" layoutX="137.0" layoutY="206.0" mnemonicParsing="false" onAction="#nameInForgotTab" prefHeight="47.0" prefWidth="94.0" style="-fx-background-color: #2ffd02; -fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 2;" stylesheets="@Login.css" text="Continue">
+                        <Button id="button" fx:id="nameForgot" layoutX="137.0" layoutY="206.0" mnemonicParsing="false" onAction="#nameInForgotTab" prefHeight="47.0" prefWidth="94.0" style="-fx-background-color: #2ffd02; -fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 2;" stylesheets="@../CSS/Login.css" text="Continue">
                            <font>
                               <Font name="Times New Roman Bold" size="21.0" />
                            </font>
@@ -158,7 +158,7 @@
                               <Font size="18.0" />
                            </font>
                         </TextField>
-                        <Button id="button" fx:id="Login" layoutX="132.0" layoutY="256.0" mnemonicParsing="false" onAction="#LoginTab" prefHeight="47.0" prefWidth="88.0" style="-fx-background-color: #2ffd02; -fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 2;" stylesheets="@Login.css" text="Login">
+                        <Button id="button" fx:id="Login" layoutX="132.0" layoutY="256.0" mnemonicParsing="false" onAction="#LoginTab" prefHeight="47.0" prefWidth="88.0" style="-fx-background-color: #2ffd02; -fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 2;" stylesheets="@../CSS/Login.css" text="Login">
                            <font>
                               <Font name="Times New Roman Bold" size="21.0" />
                            </font>

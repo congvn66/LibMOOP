@@ -1,0 +1,172 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.DatePicker?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.TextArea?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1">
+   <children>
+      <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #7efff5;">
+         <children>
+            <ChoiceBox layoutX="577.0" layoutY="90.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-radius: 15; -fx-border-color: black; -fx-border-radius: 15;" />
+            <ChoiceBox layoutX="576.0" layoutY="148.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-radius: 15; -fx-border-color: black; -fx-border-radius: 15;" />
+            <TextField layoutX="575.0" layoutY="453.0" prefHeight="40.0" prefWidth="139.0" promptText="Enter Number" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+               <font>
+                  <Font name="Book Antiqua" size="18.0" />
+               </font>
+            </TextField>
+            <TextField layoutX="575.0" layoutY="513.0" prefHeight="40.0" prefWidth="139.0" promptText="Enter Location" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+               <font>
+                  <Font name="Book Antiqua" size="18.0" />
+               </font>
+            </TextField>
+            <TextField layoutX="577.0" layoutY="269.0" prefHeight="40.0" prefWidth="128.0" promptText="Enter Price" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+               <font>
+                  <Font name="Book Antiqua" size="18.0" />
+               </font>
+            </TextField>
+            <TextField layoutX="577.0" layoutY="26.0" prefHeight="40.0" prefWidth="128.0" promptText="Enter ID" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+               <font>
+                  <Font name="Book Antiqua" size="18.0" />
+               </font>
+            </TextField>
+            <TextField layoutX="65.0" layoutY="30.0" prefHeight="40.0" prefWidth="128.0" promptText="Enter ISBN" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+               <font>
+                  <Font name="Book Antiqua" size="18.0" />
+               </font>
+            </TextField>
+            <TextField layoutX="65.0" layoutY="87.0" prefHeight="40.0" prefWidth="128.0" promptText="Enter Title" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+               <font>
+                  <Font name="Book Antiqua" size="18.0" />
+               </font>
+            </TextField>
+            <TextField layoutX="89.0" layoutY="148.0" prefHeight="40.0" prefWidth="128.0" promptText="Enter Subject" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+               <font>
+                  <Font name="Book Antiqua" size="18.0" />
+               </font>
+            </TextField>
+            <TextField layoutX="103.0" layoutY="197.0" prefHeight="40.0" prefWidth="150.0" promptText="Enter Publisher" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+               <font>
+                  <Font name="Book Antiqua" size="18.0" />
+               </font>
+            </TextField>
+            <TextField layoutX="103.0" layoutY="249.0" prefHeight="40.0" prefWidth="150.0" promptText="Enter Language" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+               <font>
+                  <Font name="Book Antiqua" size="18.0" />
+               </font>
+            </TextField>
+            <TextField layoutX="146.0" layoutY="308.0" prefHeight="40.0" prefWidth="214.0" promptText="Enter Number Of Pages" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+               <font>
+                  <Font name="Book Antiqua" size="18.0" />
+               </font>
+            </TextField>
+            <TextField layoutX="81.0" layoutY="367.0" prefHeight="40.0" prefWidth="194.0" promptText="Enter Author's Name" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+               <font>
+                  <Font name="Book Antiqua" size="18.0" />
+               </font>
+            </TextField>
+            <TextArea layoutX="11.0" layoutY="454.0" prefHeight="135.0" prefWidth="438.0" promptText="Enter Author's Description" style="-fx-border-color: black;" />
+            <DatePicker layoutX="577.0" layoutY="338.0" style="-fx-border-color: black;" />
+            <DatePicker layoutX="577.0" layoutY="390.0" style="-fx-border-color: black;" />
+            <Label layoutY="36.0" text="ISBN: ">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutY="93.0" text="Title:">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutY="151.0" text="Subject:">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutY="204.0" text="Publisher:">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutY="256.0" text="Language:">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutY="315.0" text="Pages Number:">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutY="374.0" text="Author:">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="401.0" layoutY="338.0" text="Date Of Purchase:">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="404.0" layoutY="387.0" text="Publication Date:">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="515.0" layoutY="276.0" text="Price:">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="5.0" layoutY="427.0" text="Author's Description:">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="484.0" layoutY="519.0" text="Location:">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="485.0" layoutY="459.0" text="Number:">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="491.0" layoutY="215.0" text="Format:">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="503.0" layoutY="155.0" text="Status">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="419.0" layoutY="97.0" text="Reference Only:">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="532.0" layoutY="33.0" text="ID: ">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Button layoutX="761.0" layoutY="480.0" mnemonicParsing="false" prefHeight="53.0" prefWidth="102.0" style="-fx-background-color: #4cd137; -fx-background-radius: 50; -fx-border-color: black; -fx-border-radius: 50;" text="Add">
+               <font>
+                  <Font name="Book Antiqua Bold" size="18.0" />
+               </font>
+            </Button>
+            <ChoiceBox layoutX="577.0" layoutY="210.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-radius: 15; -fx-border-color: black; -fx-border-radius: 15;" />
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>

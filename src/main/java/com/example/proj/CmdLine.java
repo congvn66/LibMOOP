@@ -1,5 +1,7 @@
 package com.example.proj;
 
+import com.example.proj.Models.*;
+
 import java.io.*;
 import java.sql.*;
 import java.text.ParseException;

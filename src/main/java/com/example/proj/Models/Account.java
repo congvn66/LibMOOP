@@ -1,5 +1,6 @@
-package com.example.proj;
+package com.example.proj.Models;
 
+import java.time.LocalDate;
 import java.util.Date;
 import java.util.List;
 
@@ -15,7 +16,6 @@ public abstract class Account {
         this.status = status;
         this.password = password;
         this.catalog = new Catalog();
-
     }
 
     public void updateBook(String id, int field, String newValue) {
@@ -50,6 +50,7 @@ public abstract class Account {
     public void setStatus(AccountStatus status) {
         this.status = status;
     }
+
 
     public boolean resetPassword() {
         this.password = "1234";
