@@ -15,7 +15,7 @@ public abstract class Account {
         this.id = id;
         this.status = status;
         this.password = password;
-        this.catalog = new Catalog();
+        //this.catalog = new Catalog();
     }
 
     public void updateBook(String id, int field, String newValue) {
@@ -28,6 +28,10 @@ public abstract class Account {
     }
 
     public Catalog getCatalog() {
+        if (this.catalog == null) {
+            this.catalog = new Catalog();
+            catalog.loadCatalogFromDatabase();
+        }
         return this.catalog;
     }
 

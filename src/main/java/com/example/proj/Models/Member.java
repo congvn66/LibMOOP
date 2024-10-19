@@ -24,7 +24,7 @@ public class Member extends Account{
     public Member() {
         super("none", AccountStatus.NONE, "1234");
         this.totalBooksCheckedOut = 0;
-        this.getCatalog().loadCatalogFromDatabase();
+        //this.getCatalog().loadCatalogFromDatabase();
         this.point = 0;
         this.createDate = java.sql.Date.valueOf(LocalDate.now());
     }
@@ -32,7 +32,7 @@ public class Member extends Account{
     public Member(String id, AccountStatus status, String password, int totalBooksCheckOut, int point) {
         super(id, status, password);
         this.totalBooksCheckedOut = totalBooksCheckOut;
-        this.getCatalog().loadCatalogFromDatabase();
+        //this.getCatalog().loadCatalogFromDatabase();
         this.point = point;
         this.createDate = java.sql.Date.valueOf(LocalDate.now());
     }

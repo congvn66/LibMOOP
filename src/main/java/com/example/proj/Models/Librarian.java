@@ -11,7 +11,7 @@ public class Librarian extends Account{
 
     public Librarian() {
         super("admin", AccountStatus.ACTIVE, "admin");
-        this.getCatalog().loadCatalogFromDatabase();
+        //this.getCatalog().loadCatalogFromDatabase();
         File file = new File("src/main/resources/database/members.txt");
         if (file.exists()) {
             String absolute = file.getAbsolutePath();
@@ -23,19 +23,22 @@ public class Librarian extends Account{
 
     public Librarian(String id, AccountStatus status, String password) {
         super(id, status, password);
-        this.getCatalog().loadCatalogFromDatabase();
+        //this.getCatalog().loadCatalogFromDatabase();
         File file = new File("src/main/resources/database/members.txt");
         if (file.exists()) {
             String absolute = file.getAbsolutePath();
             this.filePath = absolute;
         }
-        this.memberMap = new HashMap<>();
-        this.loadMembersFromDatabase();
     }
 
     public Map<String,Member> getMemberMap() {
+        if(this.memberMap == null) {
+            this.memberMap = new HashMap<>();
+            this.loadMembersFromDatabase();
+        }
         return this.memberMap;
     }
+
 
 
     private void putMemberInMap(Member member) {
@@ -420,7 +423,7 @@ public class Librarian extends Account{
     }
 
     public void removeBook(String id) {
-        this.getCatalog().removeBookById(id);
+        this.getCatalog().removeBookById(id, true);
     }
 
     public void printAllMember() {

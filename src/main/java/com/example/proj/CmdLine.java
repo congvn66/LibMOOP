@@ -22,8 +22,6 @@ public class CmdLine {
             String absolute = file.getAbsolutePath();
             this.filePath = absolute;
         }
-        this.currentLibrarian = null;
-        this.currentMember = null;
         this.librarianMap = new HashMap<>();
         this.loadLibrariansFromDatabase();
     }
@@ -547,7 +545,7 @@ public class CmdLine {
                             break;
                     }
 
-                    System.out.println("Updating a book...");
+                    //System.out.println("Updating a book...");
                     this.currentLibrarian.getCatalog().displayCatalogInfo();
                     break;
                 case 8:
