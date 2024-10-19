@@ -18,8 +18,8 @@ public class Librarian extends Account{
             String absolute = file.getAbsolutePath();
             this.filePath = absolute;
         }
-        this.memberMap = new HashMap<>();
-        this.loadMembersFromDatabase();
+        //this.memberMap = new HashMap<>();
+        //this.loadMembersFromDatabase();
     }
 
     public Librarian(String id, AccountStatus status, String password) {
