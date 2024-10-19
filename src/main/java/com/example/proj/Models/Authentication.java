@@ -61,17 +61,20 @@ public class Authentication {
         }
     }
 
-    public boolean checkLoginMember() {
+    public Member checkLoginMember() {
         Librarian librarian = new Librarian();
         Member member = librarian.getMemberMap().get(this.id);
         if (member == null || !member.getPassword().equals(this.passWord)) {
-            return false;
+            return null;
         }
-        return true;
+        return member;
     }
 
-    public boolean checkLoginasLibrarian() {
-        return librarianMap.containsKey(this.id) && librarianMap.get(this.id.trim()).getPassword().equals(this.passWord);
+    public Librarian checkLoginasLibrarian() {
+        if (librarianMap.containsKey(this.id) && librarianMap.get(this.id.trim()).getPassword().equals(this.passWord)) {
+        return librarianMap.get(this.id);
+        }
+        return null;
     }
 
     public boolean checkRegisterMember() {

@@ -29,6 +29,13 @@ public class Member extends Account{
         this.createDate = java.sql.Date.valueOf(LocalDate.now());
     }
 
+    public Member(String id, AccountStatus status, String password, int totalBooksCheckedOut,int point, java.sql.Date createDate) {
+        super(id, status, password);
+        this.totalBooksCheckedOut = totalBooksCheckedOut;
+        this.createDate = createDate;
+        this.point = point;
+    }
+
     public Member(String id, AccountStatus status, String password, int totalBooksCheckOut, int point) {
         super(id, status, password);
         this.totalBooksCheckedOut = totalBooksCheckOut;

@@ -1,16 +1,16 @@
 package com.example.proj.Controller;
 
-import com.example.proj.Models.BookStatus;
-import com.example.proj.Models.Catalog;
-import com.example.proj.Models.Librarian;
+import com.example.proj.Models.*;
 import javafx.application.Platform;
+import javafx.beans.Observable;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
-import javafx.scene.control.Button;
-import javafx.scene.control.ProgressBar;
+import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
-import javafx.scene.control.Label;
 
 import java.net.URL;
 import java.util.ResourceBundle;
@@ -35,6 +35,15 @@ public class LibMainController implements Initializable {
     private AnchorPane MemberManagementTab;
 
     @FXML
+    private TableColumn<Member, String> accountIdColumn;
+
+    @FXML
+    private TableColumn<Member, AccountStatus> accountStatusColumn;
+
+    @FXML
+    private Button backBut;
+
+    @FXML
     private Label bookLoanedNum;
 
     @FXML
@@ -50,7 +59,22 @@ public class LibMainController implements Initializable {
     private Label booksAvailableNum;
 
     @FXML
+    private TableColumn<Member, Integer> booksNumColumn;
+
+    @FXML
+    private Button cancelBut;
+
+    @FXML
+    private Label checkIdLabel;
+
+    @FXML
+    private Button deleteBut;
+
+    @FXML
     private Button diaryBut;
+
+    @FXML
+    private TextField enterIdTextField;
 
     @FXML
     private Button loggerManageBut;
@@ -59,10 +83,19 @@ public class LibMainController implements Initializable {
     private Button memberManageBut;
 
     @FXML
+    private TableView<Member> memberTable;
+
+    @FXML
     private Label percentage;
 
     @FXML
+    private TableColumn<Member, Integer> pointsColumn;
+
+    @FXML
     private ProgressBar progressBar;
+
+    @FXML
+    private ChoiceBox<AccountStatus> statusChoiceBox;
 
     @FXML
     private Label totalBooks;
@@ -71,10 +104,21 @@ public class LibMainController implements Initializable {
     private Label totalMemNum;
 
     @FXML
+    private Button updateBut;
+
+    @FXML
     private Label welcomeText;
 
     @FXML
-    private Button backBut;
+    private Button searchMemBut;
+
+    public void setMemberTable(ObservableList a) {
+        accountIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        accountStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+        booksNumColumn.setCellValueFactory(new PropertyValueFactory<>("totalBooksCheckedOut"));
+        pointsColumn.setCellValueFactory(new PropertyValueFactory<>("point"));
+        memberTable.setItems(a);
+    }
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
@@ -93,28 +137,54 @@ public class LibMainController implements Initializable {
         totalMemNum.setText(String.valueOf(librarian.getMemberMap().size()));
         progressBar.setProgress((double) catalog.getBookId().size() / 5000);
         percentage.setText(String.valueOf((double) catalog.getBookId().size() / 50 + "%"));
-        welcomeText.setText("Hello " + CurrentAccount.getName());
+        welcomeText.setText("Hello " + CurrentLibrarian.getLibrarian().getId());
+        setMemberTable(CurrentLibrarian.getMemberObservableList());
     }
 
     public void setMainTab(ActionEvent event) {
-                if (event.getSource() == memberManageBut) {
-                    MemberManagementTab.toFront();
-                    backBut.toFront();
-                } else if (event.getSource() == bookManageBut) {
-                    BookManagementTab.toFront();
-                    backBut.toFront();
-                } else if (event.getSource() == loggerManageBut) {
-                    LoggerManagementTab.toFront();
-                    backBut.toFront();
-                } else if (event.getSource() == diaryBut) {
-                    LibraryDiaryTab.toFront();
-                    backBut.toFront();
-                } else if (event.getSource() == backBut) {
-                    MainTab.toFront();
-                    ExitBut.toFront();
-                } else if (event.getSource() == ExitBut) {
-                    Platform.exit();
-                }
+        if (event.getSource() == memberManageBut) {
+            MemberManagementTab.toFront();
+            backBut.toFront();
+        } else if (event.getSource() == bookManageBut) {
+            BookManagementTab.toFront();
+            backBut.toFront();
+        } else if (event.getSource() == loggerManageBut) {
+            LoggerManagementTab.toFront();
+            backBut.toFront();
+        } else if (event.getSource() == diaryBut) {
+            LibraryDiaryTab.toFront();
+            backBut.toFront();
+        } else if (event.getSource() == backBut) {
+            MainTab.toFront();
+            ExitBut.toFront();
+        } else if (event.getSource() == ExitBut) {
+            Platform.exit();
         }
-}
+    }
 
+    public void setMemberManagementTab(ActionEvent event) {
+        if (event.getSource() == searchMemBut) {
+            String id = enterIdTextField.getText().trim();
+            if (id.isEmpty()) {
+                checkIdLabel.setText("Please enter ID");
+                checkIdLabel.setVisible(true);
+            } else {
+                if (CurrentLibrarian.getLibrarian().getMemberMap().containsKey(id)) {
+                    ObservableList tmp = FXCollections.observableArrayList();
+                    tmp.add(CurrentLibrarian.getLibrarian().getMemberMap().get(id));
+                    setMemberTable(tmp);
+                    checkIdLabel.setVisible(false);
+                } else {
+                    enterIdTextField.setText("");
+                    checkIdLabel.setText("Id doesn't exist");
+                    checkIdLabel.setVisible(true);
+                }
+            }
+        } else if (event.getSource() == memberTable) {
+            if (memberTable.getSelectionModel().getSelectedItems().size() != 0) {
+                ObservableList<AccountStatus> statusList = FXCollections.observableArrayList(AccountStatus.ACTIVE, AccountStatus.BLACKLISTED, AccountStatus.NONE);
+                statusChoiceBox.setItems(statusList);
+            }
+        }
+    }
+}
