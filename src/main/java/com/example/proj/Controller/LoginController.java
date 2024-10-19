@@ -107,20 +107,12 @@ public class LoginController extends Application {
     @FXML
     private Button exit;
 
-    private String validLogin(String id, String passWord) {
-        Authentication authentication = new Authentication(id, passWord);
-        if(authentication.checkLoginMember()) {
-            return "memLog";
-        } else if(authentication.checkLoginasLibrarian()) {
-            return "libLog";
-        } else {return "invalid";}
-    }
-
     public void LoginTab(ActionEvent event) throws IOException {
         if (event.getSource() != null) {
             if (event.getSource() == Login) {
-                if (validLogin(name_log.getText(), password_log.getText()) == "libLog") {
-                    CurrentAccount currentLib = new CurrentAccount(name_log.getText());
+                Authentication authentication = new Authentication(name_log.getText(), password_log.getText());
+                if (authentication.checkLoginasLibrarian() != null) {
+                    CurrentLibrarian currentLib = new CurrentLibrarian(name_log.getText(), authentication.checkLoginasLibrarian().getStatus(), authentication.checkLoginasLibrarian().getPassword());
                     wrong.setVisible(false);
                     System.out.println("Librarian logged in");
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/proj/FXML/LibMain.fxml"));
@@ -130,7 +122,7 @@ public class LoginController extends Application {
                     stage.setScene(scene);
                     Login.getScene().getWindow().hide();
                     stage.show();
-                } else if (validLogin(name_log.getText(), password_log.getText()) == "memLog") {
+                } else if (authentication.checkLoginMember() != null) {
                     wrong.setVisible(false);
                     System.out.println("Login successfully");
                 } else {
@@ -244,7 +236,7 @@ public class LoginController extends Application {
 
     @Override
     public void start(Stage stage) throws Exception {
-        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/proj/FXML/LibMain.fxml"));
+        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/proj/FXML/Login.fxml"));
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Library Management System");
         stage.setScene(scene);

@@ -2,6 +2,7 @@ package com.example.proj.Models;
 
 import java.io.*;
 import java.sql.*;
+import java.sql.Date;
 import java.util.*;
 
 public class Librarian extends Account{
@@ -46,7 +47,7 @@ public class Librarian extends Account{
     }
 
     private void loadMembersFromDatabase() {
-        String query = "SELECT id, accountStatus, password, numberOfBooks, point FROM members";
+        String query = "SELECT id, accountStatus, password, numberOfBooks, point, createDate FROM members";
 
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
              PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -58,8 +59,9 @@ public class Librarian extends Account{
                 String password = resultSet.getString("password").trim();
                 int totalBooksCheckedOut = resultSet.getInt("numberOfBooks");
                 int point = resultSet.getInt("point");
+                Date date = resultSet.getDate("createDate");
 
-                Member member = new Member(id, AccountStatus.valueOf(accountStatusString.toUpperCase()), password, totalBooksCheckedOut, point);
+                Member member = new Member(id, AccountStatus.valueOf(accountStatusString.toUpperCase()), password, totalBooksCheckedOut, point, date);
 
                 this.putMemberInMap(member);
             }
