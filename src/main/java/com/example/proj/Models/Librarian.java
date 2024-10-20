@@ -40,8 +40,6 @@ public class Librarian extends Account{
         return this.memberMap;
     }
 
-
-
     private void putMemberInMap(Member member) {
         this.memberMap.put(member.getId(), member);
     }
