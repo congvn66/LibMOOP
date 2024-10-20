@@ -6,6 +6,9 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+import java.util.concurrent.TimeUnit;
 
 public class Catalog {
     private String filePath;
@@ -48,6 +51,7 @@ public class Catalog {
     }
 
     public void loadCatalogFromDatabase() {
+        long startTime = System.currentTimeMillis();
         String jdbcURL = "jdbc:mysql://localhost:3306/shibalib";
         String username = "root";
         String password = "";
@@ -89,29 +93,35 @@ public class Catalog {
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        long endTime = System.currentTimeMillis();
+        System.out.println("load catalog from db elapsed time: " + (endTime - startTime) + " ms");
     }
 
     public void addBookItem(BookItem bookItem) {
-
+        // Update titles
         bookTitles.computeIfAbsent(bookItem.getTitle().toLowerCase(), k -> new ArrayList<>()).add(bookItem);
 
-
+        // Update authors
         String author = bookItem.getAuthor().getName().toLowerCase();
         bookAuthors.computeIfAbsent(author, k -> new ArrayList<>()).add(bookItem);
 
-
+        // Update subjects
         String subject = bookItem.getSubject().toLowerCase();
         bookSubjects.computeIfAbsent(subject, k -> new ArrayList<>()).add(bookItem);
 
+        // Update publication dates
         Date publicationDate = bookItem.getPublicationDate();
         bookPublicationDates.computeIfAbsent(publicationDate, k -> new ArrayList<>()).add(bookItem);
 
+        // Update status
         BookStatus status = bookItem.getStatus();
-        bookStatus.computeIfAbsent(status, k-> new ArrayList<>()).add(bookItem);
+        bookStatus.computeIfAbsent(status, k -> new ArrayList<>()).add(bookItem);
 
+        // Update ID
         String id = bookItem.getId();
         bookId.put(id, bookItem);
 
+        // Increment totalBooks
         totalBooks++;
     }
 
@@ -243,6 +253,7 @@ public class Catalog {
     }
 
     public void editBookInDataBase(String bookId, int fieldToEdit, String newValue) {
+        long startTime = System.currentTimeMillis();
         String query = "";
 
         switch (fieldToEdit) {
@@ -313,13 +324,169 @@ public class Catalog {
             int rowsUpdated = statement.executeUpdate();
 
             if (rowsUpdated > 0) {
+                BookItem updatedBookItem = this.bookId.get(bookId);
+                BookItem oldBook = this.bookId.get(bookId);
+                if (updatedBookItem != null) {
+                    // Update the specific fields in the relevant maps
+                    switch (fieldToEdit) {
+                        case 1: // ISBN
+                            updatedBookItem.setISBN(newValue);
+                            this.removeBookById(oldBook.getId(), false);
+                            this.addBookItem(updatedBookItem);
+                            break;
+
+                        case 2: // title
+                            String oldTitle = updatedBookItem.getTitle();
+                            updatedBookItem.setTitle(newValue);
+
+                            // Remove the book by ID and add it back with updated title
+                            this.removeBookById(oldBook.getId(), false);
+                            this.addBookItem(updatedBookItem);
+                            break;
+
+                        case 3: // subject
+                            String oldSubject = updatedBookItem.getSubject();
+                            updatedBookItem.setSubject(newValue);
+
+                            // Remove the book by ID and add it back with updated subject
+                            this.removeBookById(oldBook.getId(), false);
+                            this.addBookItem(updatedBookItem);
+                            break;
+
+                        case 4: // publisher
+                            updatedBookItem.setPublisher(newValue);
+
+                            // Remove the book by ID and add it back with updated publisher
+                            this.removeBookById(oldBook.getId(), false);
+                            this.addBookItem(updatedBookItem);
+                            break;
+
+                        case 5: // language
+                            updatedBookItem.setLanguage(newValue);
+
+                            // Remove the book by ID and add it back with updated language
+                            this.removeBookById(oldBook.getId(), false);
+                            this.addBookItem(updatedBookItem);
+                            break;
+
+                        case 6: // numberOfPage
+                            updatedBookItem.setNumberOfPage(newValue); // Assuming newValue is a valid integer string
+
+                            // Remove the book by ID and add it back with updated numberOfPage
+                            this.removeBookById(oldBook.getId(), false);
+                            this.addBookItem(updatedBookItem);
+                            break;
+
+                        case 7: // authorName
+                            String oldAuthorName = updatedBookItem.getAuthor().getName();
+                            updatedBookItem.getAuthor().setName(newValue); // Assuming Author has a method to set name
+
+                            // Remove the book by ID and add it back with updated authorName
+                            this.removeBookById(oldBook.getId(), false);
+                            this.addBookItem(updatedBookItem);
+                            break;
+
+                        case 8: // authorDescription
+                            updatedBookItem.getAuthor().setDescription(newValue); // Assuming Author has a method to set description
+
+                            // Remove the book by ID and add it back with updated authorDescription
+                            this.removeBookById(oldBook.getId(), false);
+                            this.addBookItem(updatedBookItem);
+                            break;
+
+                        case 9: // id
+                            System.out.println("ID cannot be changed.");
+                            return;
+
+                        case 10: // isReferenceOnly
+                            updatedBookItem.setReferenceOnly(Boolean.parseBoolean(newValue)); // Assuming newValue is a valid boolean string
+
+                            // Remove the book by ID and add it back with updated isReferenceOnly
+                            this.removeBookById(oldBook.getId(), false);
+                            this.addBookItem(updatedBookItem);
+                            break;
+
+                        case 11: // price
+                            updatedBookItem.setPrice(Double.parseDouble(newValue)); // Assuming newValue is a valid double string
+
+                            // Remove the book by ID and add it back with updated price
+                            this.removeBookById(oldBook.getId(), false);
+                            this.addBookItem(updatedBookItem);
+                            break;
+
+                        case 12: // format
+                            updatedBookItem.setFormat(BookFormat.valueOf(newValue));
+
+                            // Remove the book by ID and add it back with updated format
+                            this.removeBookById(oldBook.getId(), false);
+                            this.addBookItem(updatedBookItem);
+                            break;
+
+                        case 13: // status
+                            BookStatus newStatus = BookStatus.valueOf(newValue.toUpperCase()); // Assuming newValue corresponds to a valid enum value
+                            updatedBookItem.setStatus(newStatus);
+
+                            // Remove the book by ID and add it back with updated status
+                            this.removeBookById(oldBook.getId(), false);
+                            this.addBookItem(updatedBookItem);
+                            break;
+
+                        case 14: // dateOfPurchase
+                            try {
+                                updatedBookItem.setDateOfPurchase(java.sql.Date.valueOf(newValue)); // Assuming newValue is in the format "yyyy-mm-dd"
+                            } catch (IllegalArgumentException e) {
+                                System.out.println("Invalid date format for dateOfPurchase. Please use 'yyyy-mm-dd'.");
+                                return;
+                            } // Assuming newValue is in valid format
+
+                            // Remove the book by ID and add it back with updated dateOfPurchase
+                            this.removeBookById(oldBook.getId(), false);
+                            this.addBookItem(updatedBookItem);
+                            break;
+
+                        case 15: // publicationDate
+                            try {
+                                updatedBookItem.setPublicationDate(java.sql.Date.valueOf(newValue)); // Assuming newValue is in the format "yyyy-mm-dd"
+                            } catch (IllegalArgumentException e) {
+                                System.out.println("Invalid date format for publicationDate. Please use 'yyyy-mm-dd'.");
+                                return;
+                            } // Assuming newValue is in valid format
+
+                            // Remove the book by ID and add it back with updated publicationDate
+                            this.removeBookById(oldBook.getId(), false);
+                            this.addBookItem(updatedBookItem);
+                            break;
+
+                        case 16: // number
+                            updatedBookItem.setRack(Integer.parseInt(newValue), updatedBookItem.getRack().getLocationIdentifier()); // Assuming newValue is a valid integer string
+
+                            // Remove the book by ID and add it back with updated number
+                            this.removeBookById(oldBook.getId(), false);
+                            this.addBookItem(updatedBookItem);
+                            break;
+
+                        case 17: // location
+                            updatedBookItem.setRack(updatedBookItem.getRack().getNumber(), newValue);
+
+                            // Remove the book by ID and add it back with updated location
+                            this.removeBookById(oldBook.getId(), false);
+                            this.addBookItem(updatedBookItem);
+                            break;
+                        default:
+                            System.out.println("Invalid field.");
+                            return;
+                    }
+
+                }
+//                this.totalBooks = 0;
+//                this.bookSubjects = new HashMap<>();
+//                this.bookAuthors = new HashMap<>();
+//                this.bookTitles = new HashMap<>();
+//                this.bookId = new HashMap<>();
+//                this.bookPublicationDates = new HashMap<>();
+//                this.loadCatalogFromDatabase();
                 System.out.println("Book " + bookId + " has been updated.");
-                this.bookSubjects = new HashMap<>();
-                this.bookAuthors = new HashMap<>();
-                this.bookTitles = new HashMap<>();
-                this.bookId = new HashMap<>();
-                this.bookPublicationDates = new HashMap<>();
-                this.loadCatalogFromDatabase();
+
             } else {
                 System.out.println("No book found with ID " + bookId + ".");
             }
@@ -327,8 +494,9 @@ public class Catalog {
         } catch (SQLException e) {
             System.out.println("Error updating the book in the database: " + e.getMessage());
         }
+        long endTime = System.currentTimeMillis();
+        System.out.println("update elapsed time: " + (endTime - startTime) + " ms");
     }
-
 
     public void editBook(String bookId, int fieldToEdit, String newValue) {
         List<String> lines = new ArrayList<>();
@@ -434,7 +602,9 @@ public class Catalog {
         }
     }
 
-    public boolean removeBookById(String id) {
+    public boolean removeBookById(String id, boolean inDatabase) {
+        long startTime = System.currentTimeMillis();
+
         if (!bookId.containsKey(id)) {
             System.out.println("Book not found!");
             return false;
@@ -442,45 +612,83 @@ public class Catalog {
 
         BookItem bookToRemove = this.bookId.get(id);
 
-        String title = bookToRemove.getTitle();
-        List<BookItem> rmFromTitle = this.bookTitles.get(title);
-        if (rmFromTitle != null) {
-            rmFromTitle.remove(bookToRemove);
-            if (rmFromTitle.isEmpty()) {
-                bookTitles.remove(title);
+        // Create threads
+        Thread titleThread = new Thread(() -> {
+            String title = bookToRemove.getTitle().toLowerCase();
+            List<BookItem> rmFromTitle = this.bookTitles.get(title);
+            if (rmFromTitle != null) {
+                synchronized (rmFromTitle) {
+                    rmFromTitle.remove(bookToRemove);
+                    if (rmFromTitle.isEmpty()) {
+                        bookTitles.remove(title);
+                    }
+                }
             }
+        });
+
+        Thread authorThread = new Thread(() -> {
+            String author = bookToRemove.getAuthor().getName().toLowerCase();
+            List<BookItem> rmFromAuthor = bookAuthors.get(author);
+            if (rmFromAuthor != null) {
+                synchronized (rmFromAuthor) {
+                    rmFromAuthor.remove(bookToRemove);
+                    if (rmFromAuthor.isEmpty()) {
+                        bookAuthors.remove(author);
+                    }
+                }
+            }
+        });
+
+        Thread subjectThread = new Thread(() -> {
+            String subject = bookToRemove.getSubject().toLowerCase();
+            List<BookItem> rmFromSubject = bookSubjects.get(subject);
+            if (rmFromSubject != null) {
+                synchronized (rmFromSubject) {
+                    rmFromSubject.remove(bookToRemove);
+                    if (rmFromSubject.isEmpty()) {
+                        bookSubjects.remove(subject);
+                    }
+                }
+            }
+        });
+
+        Thread dateThread = new Thread(() -> {
+            Date date = bookToRemove.getPublicationDate();
+            List<BookItem> rmFromDate = bookPublicationDates.get(date);
+            if (rmFromDate != null) {
+                synchronized (rmFromDate) {
+                    rmFromDate.remove(bookToRemove);
+                    if (rmFromDate.isEmpty()) {
+                        bookPublicationDates.remove(date);
+                    }
+                }
+            }
+        });
+
+        // start
+        titleThread.start();
+        authorThread.start();
+        subjectThread.start();
+        dateThread.start();
+
+        // wait for all threads to finish
+        try {
+            titleThread.join();
+            authorThread.join();
+            subjectThread.join();
+            dateThread.join();
+        } catch (InterruptedException e) {
+            Thread.currentThread().interrupt();
+            e.printStackTrace();
         }
 
-        String author = bookToRemove.getAuthor().getName();
-        List<BookItem> rmFromAuthor = bookAuthors.get(author);
-        if (rmFromAuthor != null) {
-            rmFromAuthor.remove(bookToRemove);
-            if (rmFromAuthor.isEmpty()) {
-                bookAuthors.remove(author);
-            }
+        if (inDatabase == true) {
+            this.removeBookFromDatabase(id);
         }
-
-        String subject = bookToRemove.getSubject();
-        List<BookItem> rmFromSubject = bookAuthors.get(author);
-        if (rmFromSubject != null) {
-            rmFromSubject.remove(bookToRemove);
-            if (rmFromSubject.isEmpty()) {
-                bookAuthors.remove(author);
-            }
-        }
-
-        Date date = bookToRemove.getPublicationDate();
-        List<BookItem> rmFromDate = bookAuthors.get(author);
-        if (rmFromDate != null) {
-            rmFromDate.remove(bookToRemove);
-            if (rmFromDate.isEmpty()) {
-                bookAuthors.remove(author);
-            }
-        }
-
-        this.removeBookFromDatabase(id);
-
         totalBooks--;
+
+        long endTime = System.currentTimeMillis();
+        System.out.println("remove book elapsed time: " + (endTime - startTime) + " ms");
         return true;
     }
 
