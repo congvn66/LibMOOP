@@ -98,7 +98,7 @@ public class LibMainController implements Initializable {
     private ChoiceBox<AccountStatus> statusChoiceBox;
 
     @FXML
-    private Label totalBooks;
+    private Label totalBooksNum;
 
     @FXML
     private Label totalMemNum;
@@ -112,6 +112,16 @@ public class LibMainController implements Initializable {
     @FXML
     private Button searchMemBut;
 
+    @FXML
+    private Spinner addPointSpinner;
+
+    private int totalMembers;
+    private int totalBooks;
+    private int totalBooksOnShelf;
+    private int totalBooksLoaned;
+    private int totalBooksLost;
+    private int totalBooksReserved;
+
     public void setMemberTable(ObservableList a) {
         accountIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         accountStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
@@ -122,14 +132,10 @@ public class LibMainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        displayNumberOfBooks();
-    }
-
-    public void displayNumberOfBooks() {
         Catalog catalog = new Catalog();
         Librarian librarian = new Librarian();
         catalog.loadCatalogFromDatabase();
-        totalBooks.setText(String.valueOf(catalog.getTotalBooks() + "/5000"));
+        totalBooksNum.setText(String.valueOf(catalog.getTotalBooks() + "/5000"));
         booksAvailableNum.setText(String.valueOf(catalog.getBookStatus().get(BookStatus.AVAILABLE).size()));
         bookReservedNum.setText(String.valueOf(catalog.getBookStatus().get(BookStatus.RESERVED).size()));
         bookLoanedNum.setText(String.valueOf(catalog.getBookStatus().get(BookStatus.LOANED).size()));
@@ -139,6 +145,8 @@ public class LibMainController implements Initializable {
         percentage.setText(String.valueOf((double) catalog.getBookId().size() / 50 + "%"));
         welcomeText.setText("Hello " + CurrentLibrarian.getLibrarian().getId());
         setMemberTable(CurrentLibrarian.getMemberObservableList());
+        ObservableList <AccountStatus> statusList = FXCollections.observableArrayList(AccountStatus.ACTIVE, AccountStatus.NONE, AccountStatus.BLACKLISTED);
+        statusChoiceBox.getItems().addAll(statusList);
     }
 
     public void setMainTab(ActionEvent event) {
@@ -172,7 +180,8 @@ public class LibMainController implements Initializable {
                 if (CurrentLibrarian.getLibrarian().getMemberMap().containsKey(id)) {
                     ObservableList tmp = FXCollections.observableArrayList();
                     tmp.add(CurrentLibrarian.getLibrarian().getMemberMap().get(id));
-                    setMemberTable(tmp);
+                    CurrentLibrarian.setMemberObservableList(tmp);
+                    setMemberTable(CurrentLibrarian.getMemberObservableList());
                     checkIdLabel.setVisible(false);
                 } else {
                     enterIdTextField.setText("");
@@ -180,10 +189,20 @@ public class LibMainController implements Initializable {
                     checkIdLabel.setVisible(true);
                 }
             }
-        } else if (event.getSource() == memberTable) {
-            if (memberTable.getSelectionModel().getSelectedItems().size() != 0) {
-                ObservableList<AccountStatus> statusList = FXCollections.observableArrayList(AccountStatus.ACTIVE, AccountStatus.BLACKLISTED, AccountStatus.NONE);
-                statusChoiceBox.setItems(statusList);
+        } else if (event.getSource() == updateBut) {
+               if (statusChoiceBox.getValue() != null) {
+                   CurrentLibrarian.getLibrarian().changeMemberStatus(memberTable.getSelectionModel().getSelectedItem().getId(), statusChoiceBox.getValue());
+                   CurrentLibrarian.updateMemberObservableList(memberTable.getSelectionModel().getSelectedItem());
+               }
+        } else if (event.getSource() == cancelBut) {
+            enterIdTextField.setText("");
+            CurrentLibrarian.returnMemberObservableList();
+            setMemberTable(CurrentLibrarian.getMemberObservableList());
+            checkIdLabel.setVisible(false);
+        } else if (event.getSource() == deleteBut) {
+            if (memberTable.getSelectionModel().getSelectedItem() != null) {
+                CurrentLibrarian.getLibrarian().deleteMemberAccount(memberTable.getSelectionModel().getSelectedItem().getId());
+                CurrentLibrarian.deleteMemberObservableList(memberTable.getSelectionModel().getSelectedItem());
             }
         }
     }

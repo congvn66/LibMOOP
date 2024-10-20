@@ -123,6 +123,43 @@ public class Librarian extends Account{
         }
     }
 
+    public void deleteMemberAccount(String id) {
+        String updateQuery = "DELETE FROM members WHERE id = ?";
+
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+             PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
+
+            preparedStatement.setString(1, id);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                if (this.getMemberMap().containsKey(id)) {
+                    this.memberMap.remove(id);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Delete member error");
+        }
+    }
+    public void changeMemberStatus(String id, AccountStatus status) {
+        String updateQuery = "UPDATE members SET accountStatus = ? WHERE id = ?";
+
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+             PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
+
+            preparedStatement.setString(1, status.name());
+            preparedStatement.setString(2, id);
+
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                if (this.getMemberMap().containsKey(id)) {
+                    this.getMemberMap().get(id).setStatus(status);
+                }
+            }
+        } catch (SQLException e) {
+            System.out.println("Update member error");
+        }
+    }
 
     public void blockMember(String id) {
         // lines container.
