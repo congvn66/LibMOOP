@@ -26,6 +26,7 @@ public class LibraryLogger {
                     insertStatement.setDate(2, new java.sql.Date(date.getTime()));
                     insertStatement.setString(3, bookId);  // Thêm bookId
                     insertStatement.executeUpdate();
+                    member.setTotalBooksCheckedOut(member.getTotalBooksCheckedOut() + 1);
                     break;
 
                 case "RETURN":
@@ -59,6 +60,7 @@ public class LibraryLogger {
                         deleteStatement.setDate(2, new java.sql.Date(borrowedDate.getTime()));
                         deleteStatement.setString(3, bookId);
                         deleteStatement.executeUpdate();
+                        member.setTotalBooksCheckedOut(member.getTotalBooksCheckedOut() - 1);
                     }
                     if (!found) {
                         System.out.println("You haven't borrowed this book.");

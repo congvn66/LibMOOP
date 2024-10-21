@@ -27,8 +27,8 @@ public class LibrarianTest {
         connection.close();
     }
 
-    @BeforeAll
-    static void setUp() {
+    @BeforeEach
+    void setUp() {
         librarian = new Librarian();
     }
 
