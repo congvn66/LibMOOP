@@ -6,9 +6,6 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.Date;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
-import java.util.concurrent.TimeUnit;
 
 public class Catalog {
     private String filePath;
@@ -36,6 +33,54 @@ public class Catalog {
         this.bookPublicationDates = new HashMap<>();
         this.bookId = new HashMap<>();
         this.bookStatus = new HashMap<>();
+    }
+
+    public void setTotalBooks(int totalBooks) {
+        this.totalBooks = totalBooks;
+    }
+
+    public Map<String, List<BookItem>> getBookTitles() {
+        return bookTitles;
+    }
+
+    public void setBookTitles(Map<String, List<BookItem>> bookTitles) {
+        this.bookTitles = bookTitles;
+    }
+
+    public Map<String, List<BookItem>> getBookAuthors() {
+        return bookAuthors;
+    }
+
+    public void setBookAuthors(Map<String, List<BookItem>> bookAuthors) {
+        this.bookAuthors = bookAuthors;
+    }
+
+    public void setBookSubjects(Map<String, List<BookItem>> bookSubjects) {
+        this.bookSubjects = bookSubjects;
+    }
+
+    public Map<Date, List<BookItem>> getBookPublicationDates() {
+        return bookPublicationDates;
+    }
+
+    public void setBookPublicationDates(Map<Date, List<BookItem>> bookPublicationDates) {
+        this.bookPublicationDates = bookPublicationDates;
+    }
+
+    public void setBookId(Map<String, BookItem> bookId) {
+        this.bookId = bookId;
+    }
+
+    public void setBookStatus(Map<BookStatus, List<BookItem>> bookStatus) {
+        this.bookStatus = bookStatus;
+    }
+
+    public Date getCreationDate() {
+        return creationDate;
+    }
+
+    public void setCreationDate(Date creationDate) {
+        this.creationDate = creationDate;
     }
 
     public Map<String, List<BookItem>> getBookSubjects() {
@@ -253,6 +298,9 @@ public class Catalog {
     }
 
     public void editBookInDataBase(String bookId, int fieldToEdit, String newValue) {
+        if (this.findBookById(bookId) == null) {
+            return;
+        }
         long startTime = System.currentTimeMillis();
         String query = "";
 
@@ -626,6 +674,8 @@ public class Catalog {
             }
         });
 
+
+
         Thread authorThread = new Thread(() -> {
             String author = bookToRemove.getAuthor().getName().toLowerCase();
             List<BookItem> rmFromAuthor = bookAuthors.get(author);
@@ -681,6 +731,8 @@ public class Catalog {
             Thread.currentThread().interrupt();
             e.printStackTrace();
         }
+
+        this.bookId.remove(id);
 
         if (inDatabase == true) {
             this.removeBookFromDatabase(id);
