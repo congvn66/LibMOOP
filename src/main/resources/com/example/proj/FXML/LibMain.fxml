@@ -110,77 +110,6 @@
                   </Label>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="BookManagementTab" layoutX="278.0" layoutY="185.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #7efff5;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="278.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="185.0">
-               <children>
-                  <TableView editable="true" layoutY="63.0" prefHeight="282.0" prefWidth="1242.0">
-                     <columns>
-                        <TableColumn prefWidth="101.60000765323639" resizable="false" sortable="false" style="-fx-background-color: #7efff5; -fx-border-color: black;" text="ID" />
-                        <TableColumn prefWidth="95.1999740600586" resizable="false" sortable="false" style="-fx-background-color: #7efff5; -fx-border-color: black;" text="Title" />
-                        <TableColumn prefWidth="102.66659545898438" resizable="false" sortable="false" style="-fx-background-color: #7efff5; -fx-border-color: black;" text="Subject" />
-                        <TableColumn prefWidth="90.13330078125" resizable="false" sortable="false" style="-fx-background-color: #7efff5; -fx-border-color: black;" text="ReferenceOnly" />
-                        <TableColumn prefWidth="103.46673583984375" resizable="false" sortable="false" style="-fx-background-color: #7efff5; -fx-border-color: black;" text="Status" />
-                        <TableColumn prefWidth="67.19998168945312" resizable="false" sortable="false" style="-fx-background-color: #7efff5; -fx-border-color: black;" text="Price" />
-                        <TableColumn prefWidth="153.60003662109375" resizable="false" sortable="false" style="-fx-background-color: #7efff5; -fx-border-color: black;" text="Author" />
-                        <TableColumn prefWidth="341.5999755859375" resizable="false" sortable="false" style="-fx-background-color: #7efff5; -fx-border-color: black;" text="AuthorDescription" />
-                        <TableColumn prefWidth="92.533447265625" resizable="false" sortable="false" style="-fx-background-color: #7efff5; -fx-border-color: black;" text="Number" />
-                        <TableColumn prefWidth="88.0" resizable="false" sortable="false" style="-fx-background-color: #7efff5; -fx-border-color: black;" text="Location" />
-                     </columns>
-                  </TableView>
-                  <TextField layoutX="285.0" layoutY="2.0" prefHeight="40.0" prefWidth="428.0" promptText="Enter ID" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
-                     <font>
-                        <Font name="Book Antiqua" size="18.0" />
-                     </font>
-                  </TextField>
-                  <Label layoutX="300.0" layoutY="43.0" text="ID doesn't exist" textFill="RED">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                  </Label>
-                  <Button layoutX="400.0" layoutY="506.0" mnemonicParsing="false" prefHeight="84.0" prefWidth="139.0" style="-fx-background-color: #2ecc71; -fx-background-radius: 50; -fx-border-color: black; -fx-border-radius: 50; -fx-border-width: 3;" text="Update">
-                     <font>
-                        <Font name="Book Antiqua Bold" size="22.0" />
-                     </font>
-                  </Button>
-                  <Button layoutX="700.0" layoutY="506.0" mnemonicParsing="false" prefHeight="84.0" prefWidth="139.0" style="-fx-background-color: yellow; -fx-background-radius: 50; -fx-border-color: black; -fx-border-radius: 50; -fx-border-width: 3;" text="Cancel">
-                     <font>
-                        <Font name="Book Antiqua Bold" size="22.0" />
-                     </font>
-                  </Button>
-                  <ChoiceBox layoutX="133.0" layoutY="2.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-radius: 15; -fx-border-color: black; -fx-border-radius: 15;" />
-                  <Button layoutX="100.0" layoutY="506.0" mnemonicParsing="false" prefHeight="84.0" prefWidth="152.0" style="-fx-background-color: #4cd137; -fx-background-radius: 50; -fx-border-color: black; -fx-border-radius: 50; -fx-border-width: 3;" text=" Add book">
-                     <font>
-                        <Font name="Book Antiqua Bold" size="22.0" />
-                     </font>
-                  </Button>
-                  <TextField layoutX="250.0" layoutY="360.0" prefHeight="40.0" prefWidth="128.0" promptText="Enter ID" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
-                     <font>
-                        <Font name="Book Antiqua" size="18.0" />
-                     </font>
-                  </TextField>
-                  <Button layoutX="1000.0" layoutY="506.0" mnemonicParsing="false" prefHeight="84.0" prefWidth="139.0" style="-fx-background-color: red; -fx-background-radius: 50; -fx-border-color: black; -fx-border-radius: 50; -fx-border-width: 3;" text="Delete">
-                     <font>
-                        <Font name="Book Antiqua Bold" size="22.0" />
-                     </font>
-                  </Button>
-                  <TextField layoutX="550.0" layoutY="415.0" prefHeight="40.0" prefWidth="128.0" promptText="Enter Price" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
-                     <font>
-                        <Font name="Book Antiqua" size="18.0" />
-                     </font>
-                  </TextField>
-                  <TextField layoutX="850.0" layoutY="415.0" prefHeight="40.0" prefWidth="139.0" promptText="Enter Location" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
-                     <font>
-                        <Font name="Book Antiqua" size="18.0" />
-                     </font>
-                  </TextField>
-                  <TextField layoutX="850.0" layoutY="360.0" prefHeight="40.0" prefWidth="139.0" promptText="Enter Number" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
-                     <font>
-                        <Font name="Book Antiqua" size="18.0" />
-                     </font>
-                  </TextField>
-                  <ChoiceBox layoutX="250.0" layoutY="415.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-radius: 15; -fx-border-color: black; -fx-border-radius: 15;" />
-                  <ChoiceBox layoutX="550.0" layoutY="360.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-radius: 15; -fx-border-color: black; -fx-border-radius: 15;" />
-               </children>
-            </AnchorPane>
             <AnchorPane fx:id="LibraryDiaryTab" layoutX="278.0" layoutY="185.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #7efff5;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="278.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="185.0">
                <children>
                   <Label layoutX="96.0" layoutY="558.0" text="Vẽ đồ thị số log mượn sách, số member mới, xem format hay tác giả nào được yêu thích nhất  ">
@@ -321,11 +250,87 @@
                      </font>
                   </Button>
                   <Spinner fx:id="addPointSpinner" editable="true" layoutX="485.0" layoutY="450.0" prefHeight="47.0" prefWidth="72.0" style="-fx-border-color: black; -fx-border-width: 1;" />
-                  <Label layoutX="340.0" layoutY="455.0" text="Point Add:">
+                  <Label layoutX="410.0" layoutY="455.0" text="Point:">
                      <font>
                         <Font name="Book Antiqua Bold" size="24.0" />
                      </font>
                   </Label>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="BookManagementTab" layoutX="278.0" layoutY="185.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #7efff5;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="278.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="185.0">
+               <children>
+                  <TableView fx:id="bookTable" editable="true" layoutY="63.0" onSort="#setBookManagementTab" prefHeight="282.0" prefWidth="1242.0">
+                     <columns>
+                        <TableColumn fx:id="bookIdColumn" prefWidth="101.60000765323639" resizable="false" sortable="false" style="-fx-border-color: black;" text="ID" />
+                        <TableColumn fx:id="bookTitleColumn" prefWidth="95.1999740600586" resizable="false" sortable="false" style="-fx-border-color: black;" text="Title" />
+                        <TableColumn fx:id="bookSubjectColumn" prefWidth="102.66659545898438" resizable="false" sortable="false" style="-fx-border-color: black;" text="Subject" />
+                        <TableColumn fx:id="bookRefColumn" prefWidth="90.13330078125" resizable="false" sortable="false" style="-fx-border-color: black;" text="ReferenceOnly" />
+                        <TableColumn fx:id="bookStatusColumn" prefWidth="103.46673583984375" resizable="false" sortable="false" style="-fx-border-color: black;" text="Status" />
+                        <TableColumn fx:id="bookPriceColumn" prefWidth="67.19998168945312" resizable="false" sortable="false" style="-fx-border-color: black;" text="Price" />
+                        <TableColumn fx:id="bookAuthorColumn" prefWidth="153.60003662109375" resizable="false" sortable="false" style="-fx-border-color: black;" text="Author" />
+                        <TableColumn fx:id="bookAuthorDesColumn" prefWidth="341.5999755859375" resizable="false" sortable="false" style="-fx-border-color: black;" text="AuthorDescription" />
+                        <TableColumn fx:id="bookNumberColumn" prefWidth="92.533447265625" resizable="false" sortable="false" style="-fx-border-color: black;" text="Number" />
+                        <TableColumn fx:id="bookLocationColumn" prefWidth="88.0" resizable="false" sortable="false" style="-fx-border-color: black;" text="Location" />
+                     </columns>
+                  </TableView>
+                  <TextField fx:id="searchTextField" layoutX="285.0" layoutY="2.0" onAction="#setBookManagementTab" prefHeight="40.0" prefWidth="428.0" promptText="Search" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+                     <font>
+                        <Font name="Book Antiqua" size="18.0" />
+                     </font>
+                  </TextField>
+                  <Label fx:id="checkSearchLabel" layoutX="300.0" layoutY="43.0" text="ID doesn't exist" textFill="RED" visible="false">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Button fx:id="updateBookBut" layoutX="400.0" layoutY="506.0" mnemonicParsing="false" onAction="#setBookManagementTab" prefHeight="84.0" prefWidth="139.0" style="-fx-background-color: #2ecc71; -fx-background-radius: 50; -fx-border-color: black; -fx-border-radius: 50; -fx-border-width: 3;" text="Update">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="22.0" />
+                     </font>
+                  </Button>
+                  <Button fx:id="cancelBookBut" layoutX="704.0" layoutY="496.0" mnemonicParsing="false" onAction="#setBookManagementTab" prefHeight="84.0" prefWidth="139.0" style="-fx-background-color: yellow; -fx-background-radius: 50; -fx-border-color: black; -fx-border-radius: 50; -fx-border-width: 3;" text="Cancel">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="22.0" />
+                     </font>
+                  </Button>
+                  <ChoiceBox fx:id="searchOptionChoiceBox" layoutX="133.0" layoutY="2.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-radius: 15; -fx-border-color: black; -fx-border-radius: 15;" />
+                  <Button fx:id="addBookBut" layoutX="100.0" layoutY="506.0" mnemonicParsing="false" onAction="#setBookManagementTab" prefHeight="84.0" prefWidth="152.0" style="-fx-background-color: #4cd137; -fx-background-radius: 50; -fx-border-color: black; -fx-border-radius: 50; -fx-border-width: 3;" text=" Add book">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="22.0" />
+                     </font>
+                  </Button>
+                  <TextField fx:id="updateIdTextField" layoutX="250.0" layoutY="360.0" onAction="#setBookManagementTab" prefHeight="40.0" prefWidth="128.0" promptText="Enter ID" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+                     <font>
+                        <Font name="Book Antiqua" size="18.0" />
+                     </font>
+                  </TextField>
+                  <Button fx:id="deleteBookBut" layoutX="1000.0" layoutY="506.0" mnemonicParsing="false" onAction="#setBookManagementTab" prefHeight="84.0" prefWidth="139.0" style="-fx-background-color: red; -fx-background-radius: 50; -fx-border-color: black; -fx-border-radius: 50; -fx-border-width: 3;" text="Delete">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="22.0" />
+                     </font>
+                  </Button>
+                  <TextField fx:id="priceTextField" layoutX="550.0" layoutY="415.0" onAction="#setBookManagementTab" prefHeight="40.0" prefWidth="128.0" promptText="Enter Price" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+                     <font>
+                        <Font name="Book Antiqua" size="18.0" />
+                     </font>
+                  </TextField>
+                  <TextField fx:id="locationTextField" layoutX="850.0" layoutY="415.0" onAction="#setBookManagementTab" prefHeight="40.0" prefWidth="139.0" promptText="Enter Location" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+                     <font>
+                        <Font name="Book Antiqua" size="18.0" />
+                     </font>
+                  </TextField>
+                  <TextField fx:id="numberTextField" layoutX="850.0" layoutY="360.0" onAction="#setBookManagementTab" prefHeight="40.0" prefWidth="139.0" promptText="Enter Number" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+                     <font>
+                        <Font name="Book Antiqua" size="18.0" />
+                     </font>
+                  </TextField>
+                  <ChoiceBox fx:id="isRefOnlyChoiceBox" layoutX="250.0" layoutY="415.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-radius: 15; -fx-border-color: black; -fx-border-radius: 15;" />
+                  <ChoiceBox fx:id="bookStatusChoiceBox" layoutX="550.0" layoutY="360.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-radius: 15; -fx-border-color: black; -fx-border-radius: 15;" />
+                  <Button fx:id="searchBookBut" layoutX="740.0" mnemonicParsing="false" onAction="#setBookManagementTab" prefHeight="48.0" prefWidth="104.0" style="-fx-background-color: #2ecc71; -fx-background-radius: 50; -fx-border-color: black; -fx-border-radius: 50; -fx-border-width: 3;" text="Search">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="22.0" />
+                     </font>
+                  </Button>
                </children>
             </AnchorPane>
          </children>

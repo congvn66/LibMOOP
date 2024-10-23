@@ -3,6 +3,10 @@ package com.example.proj.Controller;
 import com.example.proj.Models.*;
 import javafx.application.Platform;
 import javafx.beans.Observable;
+import javafx.beans.property.IntegerProperty;
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.property.SimpleObjectProperty;
+import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
@@ -98,7 +102,7 @@ public class LibMainController implements Initializable {
     private ChoiceBox<AccountStatus> statusChoiceBox;
 
     @FXML
-    private Label totalBooksNum;
+    private Label totalBooks;
 
     @FXML
     private Label totalMemNum;
@@ -113,14 +117,68 @@ public class LibMainController implements Initializable {
     private Button searchMemBut;
 
     @FXML
-    private Spinner addPointSpinner;
+    private Spinner<Integer> addPointSpinner;
+    @FXML
+    private TableColumn<BookItem, String> bookAuthorColumn;
 
-    private int totalMembers;
-    private int totalBooks;
-    private int totalBooksOnShelf;
-    private int totalBooksLoaned;
-    private int totalBooksLost;
-    private int totalBooksReserved;
+    @FXML
+    private TableColumn<BookItem, String> bookAuthorDesColumn;
+
+    @FXML
+    private TableColumn<BookItem, String> bookIdColumn;
+    @FXML
+    private TableColumn<BookItem, String> bookLocationColumn;
+    @FXML
+    private TableColumn<BookItem, Integer> bookNumberColumn;
+
+    @FXML
+    private TableColumn<BookItem, Double> bookPriceColumn;
+
+    @FXML
+    private TableColumn<BookItem, Boolean> bookRefColumn;
+    @FXML
+    private TableColumn<BookItem, BookStatus> bookStatusColumn;
+
+    @FXML
+    private TableColumn<BookItem, String> bookSubjectColumn;
+
+    @FXML
+    private TableView<BookItem> bookTable;
+
+    @FXML
+    private TableColumn<BookItem, String> bookTitleColumn;
+
+    @FXML
+    private ChoiceBox<String> searchOptionChoiceBox;
+
+    @FXML
+    private ChoiceBox<Boolean> isRefOnlyChoiceBox;
+    @FXML
+    private ChoiceBox<BookStatus> bookStatusChoiceBox;
+    @FXML
+    private TextField searchTextField;
+    @FXML
+    private Label checkSearchLabel;
+
+    @FXML
+    private TextField priceTextField;
+    @FXML
+    private TextField numberTextField;
+    @FXML
+    private TextField locationTextField;
+    @FXML
+    private TextField updateIdTextField;
+    @FXML
+    private Button addBookBut;
+    @FXML
+    private Button updateBookBut;
+    @FXML
+    private Button cancelBookBut;
+    @FXML
+    private Button deleteBookBut;
+    @FXML
+    private Button searchBookBut;
+
 
     public void setMemberTable(ObservableList a) {
         accountIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -130,23 +188,51 @@ public class LibMainController implements Initializable {
         memberTable.setItems(a);
     }
 
+    public void setBookTable(ObservableList a) {
+        bookIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        bookTitleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        bookSubjectColumn.setCellValueFactory(new PropertyValueFactory<>("subject"));
+        bookRefColumn.setCellValueFactory(new PropertyValueFactory<>("isReferenceOnly"));
+        bookStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+        bookPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        bookAuthorColumn.setCellValueFactory(cellData -> {
+            return new SimpleStringProperty(cellData.getValue().getAuthor().getName());
+        });
+        bookAuthorDesColumn.setCellValueFactory(cellData -> {
+            return new SimpleStringProperty(cellData.getValue().getAuthor().getDescription());
+        });
+        bookNumberColumn.setCellValueFactory(cellData -> {
+            return new SimpleObjectProperty<>(cellData.getValue().getRack().getNumber());
+        });
+        bookLocationColumn.setCellValueFactory(cellData -> {
+            return new SimpleStringProperty(cellData.getValue().getRack().getLocationIdentifier());
+        });
+        bookTable.setItems(a);
+    }
+
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        Catalog catalog = new Catalog();
-        Librarian librarian = new Librarian();
-        catalog.loadCatalogFromDatabase();
-        totalBooksNum.setText(String.valueOf(catalog.getTotalBooks() + "/5000"));
-        booksAvailableNum.setText(String.valueOf(catalog.getBookStatus().get(BookStatus.AVAILABLE).size()));
-        bookReservedNum.setText(String.valueOf(catalog.getBookStatus().get(BookStatus.RESERVED).size()));
-        bookLoanedNum.setText(String.valueOf(catalog.getBookStatus().get(BookStatus.LOANED).size()));
-        bookLostNum.setText(String.valueOf(catalog.getBookStatus().get(BookStatus.LOST).size()));
-        totalMemNum.setText(String.valueOf(librarian.getMemberMap().size()));
-        progressBar.setProgress((double) catalog.getBookId().size() / 5000);
-        percentage.setText(String.valueOf((double) catalog.getBookId().size() / 50 + "%"));
+        totalBooks.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getTotalBooks() + "/5000"));
+        booksAvailableNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.AVAILABLE).size()));
+        bookReservedNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.RESERVED).size()));
+        bookLoanedNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOANED).size()));
+        bookLostNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOST).size()));
+        totalMemNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getMemberMap().size()));
+        progressBar.setProgress((double) CurrentLibrarian.getLibrarian().getCatalog().getBookId().size() / 5000);
+        percentage.setText(String.valueOf((double) CurrentLibrarian.getLibrarian().getCatalog().getBookId().size() / 50 + "%"));
         welcomeText.setText("Hello " + CurrentLibrarian.getLibrarian().getId());
         setMemberTable(CurrentLibrarian.getMemberObservableList());
-        ObservableList <AccountStatus> statusList = FXCollections.observableArrayList(AccountStatus.ACTIVE, AccountStatus.NONE, AccountStatus.BLACKLISTED);
+        setBookTable(CurrentLibrarian.getBookObservableList());
+        ObservableList<AccountStatus> statusList = FXCollections.observableArrayList(AccountStatus.ACTIVE, AccountStatus.NONE, AccountStatus.BLACKLISTED);
         statusChoiceBox.getItems().addAll(statusList);
+        ObservableList<BookStatus> bookStatusList = FXCollections.observableArrayList(BookStatus.AVAILABLE, BookStatus.LOANED, BookStatus.RESERVED, BookStatus.LOST);
+        bookStatusChoiceBox.getItems().addAll(bookStatusList);
+        ObservableList<Boolean> refList = FXCollections.observableArrayList(Boolean.TRUE, Boolean.FALSE);
+        isRefOnlyChoiceBox.getItems().addAll(refList);
+        ObservableList<String> searchOptionList = FXCollections.observableArrayList("ID", "Title", " Author", "Subject");
+        searchOptionChoiceBox.getItems().addAll(searchOptionList);
+        SpinnerValueFactory<Integer> integerSpinnerValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100, 0, 1);
+        addPointSpinner.setValueFactory(integerSpinnerValueFactory);
     }
 
     public void setMainTab(ActionEvent event) {
@@ -190,10 +276,11 @@ public class LibMainController implements Initializable {
                 }
             }
         } else if (event.getSource() == updateBut) {
-               if (statusChoiceBox.getValue() != null) {
-                   CurrentLibrarian.getLibrarian().changeMemberStatus(memberTable.getSelectionModel().getSelectedItem().getId(), statusChoiceBox.getValue());
-                   CurrentLibrarian.updateMemberObservableList(memberTable.getSelectionModel().getSelectedItem());
-               }
+            if (statusChoiceBox.getValue() != null && addPointSpinner.getValue() instanceof Integer) {
+                CurrentLibrarian.getLibrarian().changeMemberStatus(memberTable.getSelectionModel().getSelectedItem().getId(), statusChoiceBox.getValue());
+                CurrentLibrarian.getLibrarian().updatePoint(memberTable.getSelectionModel().getSelectedItem().getId(), addPointSpinner.getValue());
+                CurrentLibrarian.updateMemberObservableList(memberTable.getSelectionModel().getSelectedItem());
+            }
         } else if (event.getSource() == cancelBut) {
             enterIdTextField.setText("");
             CurrentLibrarian.returnMemberObservableList();
@@ -206,4 +293,73 @@ public class LibMainController implements Initializable {
             }
         }
     }
-}
+
+    public void setBookManagementTab(ActionEvent event) {
+        if (event.getSource() == searchBookBut) {
+            try {
+                if (searchOptionChoiceBox != null) {
+                    String searchString = searchTextField.getText().trim();
+                    if (searchString.isEmpty()) {
+                        checkSearchLabel.setText("Please fill in");
+                        checkSearchLabel.setVisible(true);
+                    } else {
+                        ObservableList<BookItem> tmp = FXCollections.observableArrayList();
+                        switch (searchOptionChoiceBox.getValue()) {
+                            case "ID":
+                                 tmp = FXCollections.observableArrayList(CurrentLibrarian.getLibrarian().getCatalog().findBookById(searchString));
+                                if (tmp.size() != 0) {
+                                    CurrentLibrarian.setBookObservableList(FXCollections.observableArrayList(tmp));
+                                    setBookTable(CurrentLibrarian.getBookObservableList());
+                                    checkSearchLabel.setVisible(false);
+                                } else {
+                                    checkSearchLabel.setText("ID doesn't exist");
+                                    checkSearchLabel.setVisible(true);
+                                }
+                                break;
+                            case "Author":
+                                tmp = FXCollections.observableArrayList(CurrentLibrarian.getLibrarian().getCatalog().findBooksByAuthor(searchString));
+                                if (tmp.size() != 0) {
+                                    CurrentLibrarian.setBookObservableList(tmp);
+                                    setBookTable(CurrentLibrarian.getBookObservableList());
+                                    checkSearchLabel.setVisible(false);
+                                } else {
+                                    checkSearchLabel.setText("Author doesn't exist");
+                                    checkSearchLabel.setVisible(true);
+                                }
+                                break;
+                            case "Subject":
+                                tmp =FXCollections.observableArrayList(CurrentLibrarian.getLibrarian().getCatalog().findBooksBySubject(searchString));
+                                if (tmp.size() != 0) {
+                                    CurrentLibrarian.setBookObservableList(tmp);
+                                    setBookTable(CurrentLibrarian.getBookObservableList());
+                                    checkSearchLabel.setVisible(false);
+                                } else {
+                                    checkSearchLabel.setText("Subject doesn't exist");
+                                    checkSearchLabel.setVisible(true);
+                                }
+                                break;
+                            case "Title":
+                                tmp =FXCollections.observableArrayList(CurrentLibrarian.getLibrarian().getCatalog().findBooksByTitle(searchString));
+                                if (tmp.size() != 0) {
+                                    CurrentLibrarian.setBookObservableList(tmp);
+                                    setBookTable(CurrentLibrarian.getBookObservableList());
+                                    checkSearchLabel.setVisible(false);
+                                } else {
+                                    checkSearchLabel.setText("Title doesn't exist");
+                                    checkSearchLabel.setVisible(true);
+                                }
+                                break;
+                            default:
+                                break;
+                        }
+                    }
+                }
+            }
+                catch (Exception e) {
+                e.printStackTrace();
+                    checkSearchLabel.setText("Please select search option");
+                    checkSearchLabel.setVisible(true);
+                }
+            }
+        }
+    }

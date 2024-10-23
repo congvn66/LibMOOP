@@ -7,6 +7,7 @@ public class BookItem extends Book {
     private boolean isReferenceOnly;
     private Date borrowed;
     private Date dueDate;
+
     private double price;
     private BookFormat format;
     private BookStatus status;
@@ -48,9 +49,10 @@ public class BookItem extends Book {
         this.id = id;
     }
 
-    public boolean isReferenceOnly() {
+    public boolean getIsReferenceOnly() {
         return isReferenceOnly;
     }
+
 
     public void setReferenceOnly(boolean referenceOnly) {
         isReferenceOnly = referenceOnly;

@@ -245,6 +245,28 @@ public class Librarian extends Account{
         } catch (SQLException e) {
         }
     }
+
+    public void updatePoint(String id, int newPoint) {
+        String updateQuery = "UPDATE members SET point = ? WHERE id = ?";
+
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+             PreparedStatement preparedStatement = connection.prepareStatement(updateQuery);
+             ) {
+
+            // Set the parameter for the query
+            preparedStatement.setInt(1, newPoint);
+            preparedStatement.setString(2, id);
+            // Execute the update
+            int rowsAffected = preparedStatement.executeUpdate();
+            if (rowsAffected > 0) {
+                if (this.getMemberMap().containsKey(id)) {
+                    this.getMemberMap().get(id).setPoint(newPoint);
+                }
+            }
+        } catch (SQLException e) {
+        }
+    }
+
     public void reducePointMember(String id) {
         // lines container.
         List<String> lines = new ArrayList<>();

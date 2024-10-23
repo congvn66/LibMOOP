@@ -193,7 +193,7 @@ public class Catalog {
             statement.setString(7, bookItem.getAuthor().getName());
             statement.setString(8, bookItem.getAuthor().getDescription());
             statement.setString(9, bookItem.getId());
-            statement.setString(10, bookItem.isReferenceOnly() ? "true" : "false");
+            statement.setString(10, bookItem.getIsReferenceOnly() ? "true" : "false");
             statement.setDouble(11, bookItem.getPrice());
             statement.setString(12, bookItem.getFormat().name());
             statement.setString(13, bookItem.getStatus().name());
@@ -231,7 +231,7 @@ public class Catalog {
                     bookItem.getAuthor().getName() + ";" +
                     bookItem.getAuthor().getDescription() + ";" +
                     bookItem.getId() + ";" +
-                    bookItem.isReferenceOnly() + ";" +
+                    bookItem.getIsReferenceOnly() + ";" +
                     bookItem.getPrice() + ";" +
                     bookItem.getFormat() + ";" +
                     bookItem.getStatus() + ";" +
@@ -251,23 +251,11 @@ public class Catalog {
     }
 
     public List<BookItem> findBooksByTitle(String title) {
-        List<BookItem> matchingBooks = new ArrayList<>();
-        for (String innerTitle  : bookTitles.keySet()) {
-            if (innerTitle.toLowerCase().contains(title.toLowerCase())) {
-                matchingBooks.addAll(bookTitles.get(innerTitle));
-            }
-        }
-        return matchingBooks;
+        return bookSubjects.getOrDefault(title.toLowerCase(), new ArrayList<>());
     }
 
     public List<BookItem> findBooksByAuthor(String author) {
-        List<BookItem> matchingBooks = new ArrayList<>();
-        for (String innerAuthor  : bookAuthors.keySet()) {
-            if (innerAuthor.toLowerCase().contains(author.toLowerCase())) {
-                matchingBooks.addAll(bookAuthors.get(innerAuthor));
-            }
-        }
-        return matchingBooks;
+        return bookSubjects.getOrDefault(author.toLowerCase(), new ArrayList<>());
     }
 
     public List<BookItem> findBooksBySubject(String subject) {
