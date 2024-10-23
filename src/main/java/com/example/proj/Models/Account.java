@@ -7,7 +7,7 @@ import java.util.List;
 public abstract class Account {
     private String id;
     private String password;
-    private Catalog catalog;
+    private static Catalog catalog;
     private AccountStatus status;
 
 
@@ -28,11 +28,11 @@ public abstract class Account {
     }
 
     public Catalog getCatalog() {
-        if (this.catalog == null) {
-            this.catalog = new Catalog();
+        if (catalog == null) {
+            catalog = new Catalog();
             catalog.loadCatalogFromDatabase();
         }
-        return this.catalog;
+        return catalog;
     }
 
     public void setId(String id) {

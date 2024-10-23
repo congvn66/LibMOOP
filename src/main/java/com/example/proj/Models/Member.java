@@ -3,6 +3,7 @@ package com.example.proj.Models;
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Date;
+import java.util.List;
 import java.util.Map;
 
 public class Member extends Account{
@@ -10,6 +11,8 @@ public class Member extends Account{
     private LibraryLogger logger;
     private Map<String, String> listOfBook;
     private java.sql.Date createDate;
+    private NotificationBox notificationBox;
+    private int point;
 
     public int getPoint() {
         return point;
@@ -19,8 +22,6 @@ public class Member extends Account{
         this.point = point;
     }
 
-    private int point;
-
     public Member() {
         super("none", AccountStatus.NONE, "1234");
         this.totalBooksCheckedOut = 0;
@@ -29,7 +30,23 @@ public class Member extends Account{
         this.createDate = java.sql.Date.valueOf(LocalDate.now());
     }
 
-    public Member(String id, AccountStatus status, String password, int totalBooksCheckedOut,int point, java.sql.Date createDate) {
+    public NotificationBox getNotificationBox() {
+        if (this.notificationBox == null) {
+            this.notificationBox = new NotificationBox();
+
+        }
+        this.notificationBox.getNotificationsForMember(this.getId());
+        return this.notificationBox;
+    }
+
+    public void showNotifications() {
+        List<Notification> tmp = this.getNotificationBox().getNotifications();
+        for (Notification m : tmp) {
+            System.out.println(m.toString());
+        }
+    }
+
+    public Member(String id, AccountStatus status, String password, int totalBooksCheckedOut, int point, java.sql.Date createDate) {
         super(id, status, password);
         this.totalBooksCheckedOut = totalBooksCheckedOut;
         this.createDate = createDate;
