@@ -251,11 +251,23 @@ public class Catalog {
     }
 
     public List<BookItem> findBooksByTitle(String title) {
-        return bookSubjects.getOrDefault(title.toLowerCase(), new ArrayList<>());
+        List<BookItem> matchingBooks = new ArrayList<>();
+        for (String innerTitle  : bookTitles.keySet()) {
+            if (innerTitle.toUpperCase().contains(title.toUpperCase())) {
+                matchingBooks.addAll(bookTitles.get(innerTitle));
+            }
+        }
+        return matchingBooks;
     }
 
     public List<BookItem> findBooksByAuthor(String author) {
-        return bookSubjects.getOrDefault(author.toLowerCase(), new ArrayList<>());
+        List<BookItem> matchingBooks = new ArrayList<>();
+        for (String innerAuthor  : bookAuthors.keySet()) {
+            if (innerAuthor.toLowerCase().contains(author.toLowerCase())) {
+                matchingBooks.addAll(bookAuthors.get(innerAuthor));
+            }
+        }
+        return matchingBooks;
     }
 
     public List<BookItem> findBooksBySubject(String subject) {
