@@ -144,14 +144,14 @@ public class Catalog {
 
     public void addBookItem(BookItem bookItem) {
         // Update titles
-        bookTitles.computeIfAbsent(bookItem.getTitle().toLowerCase(), k -> new ArrayList<>()).add(bookItem);
+        bookTitles.computeIfAbsent(bookItem.getTitle().toUpperCase(), k -> new ArrayList<>()).add(bookItem);
 
         // Update authors
-        String author = bookItem.getAuthor().getName().toLowerCase();
+        String author = bookItem.getAuthor().getName().toUpperCase();
         bookAuthors.computeIfAbsent(author, k -> new ArrayList<>()).add(bookItem);
 
         // Update subjects
-        String subject = bookItem.getSubject().toLowerCase();
+        String subject = bookItem.getSubject().toUpperCase();
         bookSubjects.computeIfAbsent(subject, k -> new ArrayList<>()).add(bookItem);
 
         // Update publication dates
@@ -259,7 +259,7 @@ public class Catalog {
     }
 
     public List<BookItem> findBooksBySubject(String subject) {
-        return bookSubjects.getOrDefault(subject.toLowerCase(), new ArrayList<>());
+        return bookSubjects.getOrDefault(subject.toUpperCase(), new ArrayList<>());
     }
 
     public List<BookItem> findBooksByPublicationDate(Date publicationDate) {
