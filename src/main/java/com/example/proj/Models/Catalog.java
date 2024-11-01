@@ -662,7 +662,7 @@ public class Catalog {
 
         // Create threads
         Thread titleThread = new Thread(() -> {
-            String title = bookToRemove.getTitle().toLowerCase();
+            String title = bookToRemove.getTitle().toUpperCase();
             List<BookItem> rmFromTitle = this.bookTitles.get(title);
             if (rmFromTitle != null) {
                 synchronized (rmFromTitle) {
@@ -677,11 +677,11 @@ public class Catalog {
 
 
         Thread authorThread = new Thread(() -> {
-            String author = bookToRemove.getAuthor().getName().toLowerCase();
+            String author = bookToRemove.getAuthor().getName().toUpperCase();
             List<BookItem> rmFromAuthor = bookAuthors.get(author);
             if (rmFromAuthor != null) {
                 synchronized (rmFromAuthor) {
-                    rmFromAuthor.removeIf(book -> book.getId().equals(bookToRemove.getId()));
+                    rmFromAuthor.remove(bookToRemove);
                     if (rmFromAuthor.isEmpty()) {
                         bookAuthors.remove(author);
                     }
@@ -690,11 +690,12 @@ public class Catalog {
         });
 
         Thread subjectThread = new Thread(() -> {
-            String subject = bookToRemove.getSubject().toLowerCase();
+            String subject = bookToRemove.getSubject().toUpperCase();
             List<BookItem> rmFromSubject = bookSubjects.get(subject);
             if (rmFromSubject != null) {
                 synchronized (rmFromSubject) {
-                    rmFromSubject.removeIf(book -> book.getId().equals(bookToRemove.getId()));
+                    //rmFromSubject.removeIf(book -> book.getId().equals(bookToRemove.getId()));
+                    rmFromSubject.remove(bookToRemove);
                     if (rmFromSubject.isEmpty()) {
                         bookSubjects.remove(subject);
                     }
@@ -707,7 +708,7 @@ public class Catalog {
             List<BookItem> rmFromDate = bookPublicationDates.get(date);
             if (rmFromDate != null) {
                 synchronized (rmFromDate) {
-                    rmFromDate.removeIf(book -> book.getId().equals(bookToRemove.getId()));
+                    rmFromDate.remove(bookToRemove);
                     if (rmFromDate.isEmpty()) {
                         bookPublicationDates.remove(date);
                     }
