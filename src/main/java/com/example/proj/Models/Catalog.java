@@ -681,7 +681,7 @@ public class Catalog {
             List<BookItem> rmFromAuthor = bookAuthors.get(author);
             if (rmFromAuthor != null) {
                 synchronized (rmFromAuthor) {
-                    rmFromAuthor.remove(bookToRemove);
+                    rmFromAuthor.removeIf(book -> book.getId().equals(bookToRemove.getId()));
                     if (rmFromAuthor.isEmpty()) {
                         bookAuthors.remove(author);
                     }
@@ -694,7 +694,7 @@ public class Catalog {
             List<BookItem> rmFromSubject = bookSubjects.get(subject);
             if (rmFromSubject != null) {
                 synchronized (rmFromSubject) {
-                    rmFromSubject.remove(bookToRemove);
+                    rmFromSubject.removeIf(book -> book.getId().equals(bookToRemove.getId()));
                     if (rmFromSubject.isEmpty()) {
                         bookSubjects.remove(subject);
                     }
@@ -707,7 +707,7 @@ public class Catalog {
             List<BookItem> rmFromDate = bookPublicationDates.get(date);
             if (rmFromDate != null) {
                 synchronized (rmFromDate) {
-                    rmFromDate.remove(bookToRemove);
+                    rmFromDate.removeIf(book -> book.getId().equals(bookToRemove.getId()));
                     if (rmFromDate.isEmpty()) {
                         bookPublicationDates.remove(date);
                     }
