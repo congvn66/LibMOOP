@@ -1,6 +1,7 @@
 package com.example.proj.Models;
 
 import java.util.Date;
+import java.util.Objects;
 
 public class BookItem extends Book {
     private String id;
@@ -150,5 +151,24 @@ public class BookItem extends Book {
         System.out.println("Date of Purchase: " + dateOfPurchase);
         System.out.println("Publication Date: " + publicationDate);
         System.out.println("\n");
+    }
+
+    @Override
+    public boolean equals(Object obj) {
+        if (this == obj) {
+            return true;
+        }
+
+        if (obj == null || this.getClass() != obj.getClass()) {
+            return false;
+        }
+
+        BookItem bookItem = (BookItem) obj;
+        return this.id.equals(bookItem.id);
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(id); // Ensure to override hashCode whenever equals is overridden
     }
 }

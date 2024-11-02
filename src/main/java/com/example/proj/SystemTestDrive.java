@@ -11,10 +11,7 @@ import java.util.List;
 
 public class SystemTestDrive {
     public static void main(String[] args) throws ParseException {
-//        CmdLine cmdLine = new CmdLine();
-//        cmdLine.run();
-        Member member = new Member("cong", AccountStatus.ACTIVE, "congdz",
-                2 ,100);
-        member.showNotifications();
+        CmdLine cmdLine = new CmdLine();
+        cmdLine.run();
     }
 }
