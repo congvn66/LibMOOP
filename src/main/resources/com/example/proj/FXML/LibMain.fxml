@@ -299,7 +299,7 @@
                         <Font name="Book Antiqua Bold" size="22.0" />
                      </font>
                   </Button>
-                  <TextField fx:id="updateIdTextField" layoutX="250.0" layoutY="360.0" onAction="#setBookManagementTab" prefHeight="40.0" prefWidth="128.0" promptText="Enter ID" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+                  <TextField fx:id="updateIdTextField" editable="false" layoutX="250.0" layoutY="360.0" onAction="#setBookManagementTab" prefHeight="40.0" prefWidth="128.0" promptText="Enter ID" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
                      <font>
                         <Font name="Book Antiqua" size="18.0" />
                      </font>
@@ -331,6 +331,11 @@
                         <Font name="Book Antiqua Bold" size="22.0" />
                      </font>
                   </Button>
+                  <Label fx:id="checkBookUpdateLabel" layoutX="258.0" layoutY="458.0" text="ID doesn't exist" textFill="RED" visible="false">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
                </children>
             </AnchorPane>
          </children>

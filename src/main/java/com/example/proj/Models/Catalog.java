@@ -715,6 +715,19 @@ public class Catalog {
             }
         });
 
+        Thread statusThread = new Thread(() -> {
+            BookStatus status = bookToRemove.getStatus();
+            List<BookItem> rmFromStatus = bookPublicationDates.get(status);
+            if (rmFromStatus != null) {
+                synchronized (rmFromStatus) {
+                    rmFromStatus.remove(bookToRemove);
+                    if (rmFromStatus.isEmpty()) {
+                        bookPublicationDates.remove(status);
+                    }
+                }
+            }
+        });
+
         // start
         titleThread.start();
         authorThread.start();

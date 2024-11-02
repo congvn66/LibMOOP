@@ -60,12 +60,12 @@ public class CurrentLibrarian {
 
     public static void deleteMemberObservableList(Member member) {
                 initialMemberList.remove(member);
-                memberObservableList = initialMemberList;
+                memberObservableList.remove(member);
     }
 
     public static void deleteBookObservableList(BookItem bookItem) {
         initialBookList.remove(bookItem);
-        bookObservableList = initialBookList;
+        bookObservableList.remove(bookItem);
     }
     public static void setMemberObservableList(ObservableList<Member> memberObservableList) {
         CurrentLibrarian.memberObservableList = memberObservableList;

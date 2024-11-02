@@ -17,6 +17,7 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 
 import java.net.URL;
+import java.util.ArrayList;
 import java.util.ResourceBundle;
 
 public class LibMainController implements Initializable {
@@ -178,6 +179,8 @@ public class LibMainController implements Initializable {
     private Button deleteBookBut;
     @FXML
     private Button searchBookBut;
+    @FXML
+    private Label checkBookUpdateLabel;
 
 
     public void setMemberTable(ObservableList a) {
@@ -229,10 +232,38 @@ public class LibMainController implements Initializable {
         bookStatusChoiceBox.getItems().addAll(bookStatusList);
         ObservableList<Boolean> refList = FXCollections.observableArrayList(Boolean.TRUE, Boolean.FALSE);
         isRefOnlyChoiceBox.getItems().addAll(refList);
-        ObservableList<String> searchOptionList = FXCollections.observableArrayList("ID", "Title", " Author", "Subject");
+        ObservableList<String> searchOptionList = FXCollections.observableArrayList("ID", "Title", "Author", "Subject");
         searchOptionChoiceBox.getItems().addAll(searchOptionList);
         SpinnerValueFactory<Integer> integerSpinnerValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100, 0, 1);
         addPointSpinner.setValueFactory(integerSpinnerValueFactory);
+        memberTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                statusChoiceBox.setValue(newValue.getStatus());
+                addPointSpinner.getValueFactory().setValue(newValue.getPoint());
+                checkIdLabel.setVisible(false);
+            } else {
+                statusChoiceBox.setValue(null);
+                addPointSpinner.getValueFactory().setValue(0);
+            }
+        });
+        bookTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                updateIdTextField.setText(newValue.getId());
+                bookStatusChoiceBox.setValue(newValue.getStatus());
+                numberTextField.setText(String.valueOf(newValue.getRack().getNumber()));
+                isRefOnlyChoiceBox.setValue(newValue.getIsReferenceOnly());
+                priceTextField.setText(String.valueOf(newValue.getPrice()));
+                locationTextField.setText(newValue.getRack().getLocationIdentifier());
+                checkBookUpdateLabel.setVisible(false);
+            } else {
+                updateIdTextField.setText("");
+                bookStatusChoiceBox.setValue(null);
+                numberTextField.setText("");
+                isRefOnlyChoiceBox.setValue(null);
+                priceTextField.setText("");
+                locationTextField.setText("");
+            }
+        });
     }
 
     public void setMainTab(ActionEvent event) {
@@ -276,7 +307,7 @@ public class LibMainController implements Initializable {
                 }
             }
         } else if (event.getSource() == updateBut) {
-            if (statusChoiceBox.getValue() != null && addPointSpinner.getValue() instanceof Integer) {
+            if (memberTable.getSelectionModel().getSelectedItem() != null && statusChoiceBox.getValue() != null && addPointSpinner.getValue() instanceof Integer) {
                 CurrentLibrarian.getLibrarian().changeMemberStatus(memberTable.getSelectionModel().getSelectedItem().getId(), statusChoiceBox.getValue());
                 CurrentLibrarian.getLibrarian().updatePoint(memberTable.getSelectionModel().getSelectedItem().getId(), addPointSpinner.getValue());
                 CurrentLibrarian.updateMemberObservableList(memberTable.getSelectionModel().getSelectedItem());
@@ -286,6 +317,7 @@ public class LibMainController implements Initializable {
             CurrentLibrarian.returnMemberObservableList();
             setMemberTable(CurrentLibrarian.getMemberObservableList());
             checkIdLabel.setVisible(false);
+            memberTable.getSelectionModel().select(null);
         } else if (event.getSource() == deleteBut) {
             if (memberTable.getSelectionModel().getSelectedItem() != null) {
                 CurrentLibrarian.getLibrarian().deleteMemberAccount(memberTable.getSelectionModel().getSelectedItem().getId());
@@ -306,8 +338,9 @@ public class LibMainController implements Initializable {
                         ObservableList<BookItem> tmp = FXCollections.observableArrayList();
                         switch (searchOptionChoiceBox.getValue()) {
                             case "ID":
-                                 tmp = FXCollections.observableArrayList(CurrentLibrarian.getLibrarian().getCatalog().findBookById(searchString));
-                                if (tmp.size() != 0) {
+                                BookItem bookItem = CurrentLibrarian.getLibrarian().getCatalog().findBookById(searchString);
+                                if (bookItem != null) {
+                                    tmp = FXCollections.singletonObservableList(bookItem);
                                     CurrentLibrarian.setBookObservableList(FXCollections.observableArrayList(tmp));
                                     setBookTable(CurrentLibrarian.getBookObservableList());
                                     checkSearchLabel.setVisible(false);
@@ -328,7 +361,7 @@ public class LibMainController implements Initializable {
                                 }
                                 break;
                             case "Subject":
-                                tmp =FXCollections.observableArrayList(CurrentLibrarian.getLibrarian().getCatalog().findBooksBySubject(searchString));
+                                tmp = FXCollections.observableArrayList(CurrentLibrarian.getLibrarian().getCatalog().findBooksBySubject(searchString));
                                 if (tmp.size() != 0) {
                                     CurrentLibrarian.setBookObservableList(tmp);
                                     setBookTable(CurrentLibrarian.getBookObservableList());
@@ -339,7 +372,7 @@ public class LibMainController implements Initializable {
                                 }
                                 break;
                             case "Title":
-                                tmp =FXCollections.observableArrayList(CurrentLibrarian.getLibrarian().getCatalog().findBooksByTitle(searchString));
+                                tmp = FXCollections.observableArrayList(CurrentLibrarian.getLibrarian().getCatalog().findBooksByTitle(searchString));
                                 if (tmp.size() != 0) {
                                     CurrentLibrarian.setBookObservableList(tmp);
                                     setBookTable(CurrentLibrarian.getBookObservableList());
@@ -354,12 +387,60 @@ public class LibMainController implements Initializable {
                         }
                     }
                 }
+            } catch (Exception e) {
+                checkSearchLabel.setText("Please select search option");
+                checkSearchLabel.setVisible(true);
             }
-                catch (Exception e) {
-                e.printStackTrace();
-                    checkSearchLabel.setText("Please select search option");
-                    checkSearchLabel.setVisible(true);
+        } else if (event.getSource() == updateBookBut) {
+            if (bookTable.getSelectionModel().getSelectedItem() != null) {
+                boolean legitUpdate = true;
+                ArrayList<String> updates = new ArrayList<>();
+                try {
+                    double priceUpdate = Double.parseDouble(priceTextField.getText());
+                    int numberUpdate = Integer.parseInt(numberTextField.getText());
+                    String[] location = locationTextField.getText().split(" ");
+                    int numberOfRack = Integer.parseInt(location[1]);
+                    if (!locationTextField.getText().contains("Rack")) {
+                        legitUpdate = false;
+                    }
+                } catch (Exception n) {
+                    legitUpdate = false;
+                    checkBookUpdateLabel.setText("Wrong update format for price, number or location.");
+                    checkBookUpdateLabel.setVisible(true);
+                }
+                try {
+                    updates.add(String.valueOf(isRefOnlyChoiceBox.getValue()));
+                    updates.add(priceTextField.getText());
+                    updates.add(String.valueOf(bookStatusChoiceBox.getValue()));
+                    updates.add(numberTextField.getText());
+                    updates.add(locationTextField.getText());
+                } catch (NullPointerException n) {
+                    legitUpdate = false;
+                    checkBookUpdateLabel.setText("Please choose all categories.");
+                    checkBookUpdateLabel.setVisible(true);
+                }
+                if (legitUpdate) {
+                    checkBookUpdateLabel.setVisible(false);
+                    int j = 0;
+                    for (Integer i : new Integer[]{10, 11, 13, 16, 17}) {
+                        CurrentLibrarian.getLibrarian().updateBook(updateIdTextField.getText(), i, updates.get(j));
+                        j++;
+                    }
+                    CurrentLibrarian.updateBookObservableList(bookTable.getSelectionModel().getSelectedItem());
                 }
             }
+        } else if (event.getSource() == cancelBookBut) {
+            searchTextField.setText("");
+            CurrentLibrarian.returnBookObservableList();
+            setBookTable(CurrentLibrarian.getBookObservableList());
+            checkBookUpdateLabel.setVisible(false);
+            checkSearchLabel.setVisible(false);
+            bookTable.getSelectionModel().select(null);
+        } else if (event.getSource() == deleteBookBut) {
+            if (bookTable.getSelectionModel().getSelectedItem() != null) {
+                CurrentLibrarian.getLibrarian().removeBook(bookTable.getSelectionModel().getSelectedItem().getId());
+                CurrentLibrarian.deleteBookObservableList(bookTable.getSelectionModel().getSelectedItem());
+            }
         }
+    }
     }
