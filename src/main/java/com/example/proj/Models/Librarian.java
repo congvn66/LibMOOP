@@ -97,7 +97,7 @@ public class Librarian extends Account{
     }
 
     public void addBookItem(BookItem bookItem) {
-        this.getCatalog().addBookItem(bookItem);
+        this.getCatalog().addBookItem(bookItem, false);
         this.getCatalog().writeBookItemToDatabase(bookItem);
     }
 
@@ -482,7 +482,9 @@ public class Librarian extends Account{
     }
 
     public void removeBook(String id) {
-        this.getCatalog().removeBookById(id, true);
+        System.out.println(this.getCatalog().getTotalBooks().get());
+        this.getCatalog().removeBookById(id, true, false);
+        System.out.println(this.getCatalog().getTotalBooks().get());
     }
 
     public void printAllMember() {

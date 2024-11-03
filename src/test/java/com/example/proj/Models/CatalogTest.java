@@ -249,7 +249,7 @@ class CatalogTest {
     public void testRemoveBookById_Success() {
         catalog.loadCatalogFromDatabase();
         String bookId = "100"; // Replace with a valid ID that exists in your database
-        assertTrue(catalog.removeBookById(bookId, true), "Book should be removed successfully");
+        assertTrue(catalog.removeBookById(bookId, true, false), "Book should be removed successfully");
 
         // Verify that the book is no longer present in the catalog
         assertNull(catalog.findBookById(bookId), "Book should be null after removal");

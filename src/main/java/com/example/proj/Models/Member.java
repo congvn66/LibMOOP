@@ -56,7 +56,7 @@ public class Member extends Account{
     public Member(String id, AccountStatus status, String password, int totalBooksCheckOut, int point) {
         super(id, status, password);
         this.totalBooksCheckedOut = totalBooksCheckOut;
-        this.getCatalog().loadCatalogFromDatabase();
+        //this.getCatalog().loadCatalogFromDatabase();
         this.point = point;
         this.createDate = java.sql.Date.valueOf(LocalDate.now());
     }

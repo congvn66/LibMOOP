@@ -50,10 +50,10 @@ public class CurrentLibrarian {
 
     public static void updateBookObservableList(BookItem bookItem) {
         for (BookItem i : bookObservableList) {
-            if (i.getId() == bookItem.getId()) {
+            if (i.getId().equals(bookItem.getId())) {
                 bookObservableList.set(bookObservableList.indexOf(i), bookItem);
                 initialBookList.set(initialBookList.indexOf(i), bookItem);
-                break;
+                return;
             }
         }
     }
@@ -67,6 +67,12 @@ public class CurrentLibrarian {
         initialBookList.remove(bookItem);
         bookObservableList.remove(bookItem);
     }
+
+    public static void addBookObservableList(BookItem bookItem) {
+        initialBookList.add(bookItem);
+        bookObservableList.add(bookItem);
+    }
+
     public static void setMemberObservableList(ObservableList<Member> memberObservableList) {
         CurrentLibrarian.memberObservableList = memberObservableList;
     }

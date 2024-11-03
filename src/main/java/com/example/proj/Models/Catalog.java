@@ -1,5 +1,10 @@
 package com.example.proj.Models;
 
+import javafx.beans.property.SimpleIntegerProperty;
+import javafx.beans.value.ObservableIntegerValue;
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.io.*;
 import java.sql.*;
 import java.text.ParseException;
@@ -10,13 +15,13 @@ import java.util.Date;
 public class Catalog {
     private String filePath;
     private Date creationDate;
-    private int totalBooks;
+    private SimpleIntegerProperty totalBooks;
     private Map<String, List<BookItem>> bookTitles;
     private Map<String, List<BookItem>> bookAuthors;
     private Map<String, List<BookItem>> bookSubjects;
     private Map<Date, List<BookItem>> bookPublicationDates;
     private Map<String, BookItem> bookId;
-    private Map<BookStatus, List<BookItem>> bookStatus;
+    private Map<BookStatus, ObservableList<BookItem>> bookStatus;
 
     // Constructor
     public Catalog() {
@@ -26,7 +31,7 @@ public class Catalog {
             this.filePath = absolute;
         }
         this.creationDate = new Date(); // Ngày tạo là ngày hiện tại
-        this.totalBooks = 0;
+        this.totalBooks = new SimpleIntegerProperty(0);
         this.bookTitles = new HashMap<>();
         this.bookAuthors = new HashMap<>();
         this.bookSubjects = new HashMap<>();
@@ -36,7 +41,7 @@ public class Catalog {
     }
 
     public void setTotalBooks(int totalBooks) {
-        this.totalBooks = totalBooks;
+        this.totalBooks.set(totalBooks);
     }
 
     public Map<String, List<BookItem>> getBookTitles() {
@@ -71,7 +76,7 @@ public class Catalog {
         this.bookId = bookId;
     }
 
-    public void setBookStatus(Map<BookStatus, List<BookItem>> bookStatus) {
+    public void setBookStatus(Map<BookStatus, ObservableList<BookItem>> bookStatus) {
         this.bookStatus = bookStatus;
     }
 
@@ -91,7 +96,7 @@ public class Catalog {
         return bookId;
     }
 
-    public Map<BookStatus, List<BookItem>> getBookStatus() {
+    public Map<BookStatus, ObservableList<BookItem>> getBookStatus() {
         return bookStatus;
     }
 
@@ -130,7 +135,7 @@ public class Catalog {
                         authorName, authorDescription, id, isReferenceOnly, price, format, status,
                         dateOfPurchase, publicationDate, number, location);
 
-                this.addBookItem(bookItem);
+                this.addBookItem(bookItem, false);
             }
 
             //System.out.println("Catalog loaded successfully from the database!");
@@ -142,9 +147,10 @@ public class Catalog {
         System.out.println("load catalog from db elapsed time: " + (endTime - startTime) + " ms");
     }
 
-    public void addBookItem(BookItem bookItem) {
+    public void addBookItem(BookItem bookItem, boolean isEdit) {
         // Update titles
-        bookTitles.computeIfAbsent(bookItem.getTitle().toUpperCase(), k -> new ArrayList<>()).add(bookItem);
+        bookTitles.computeIfAbsent(bookItem.getTitle().toUpperCase(), k -> new ArrayList<BookItem>() {
+        }).add(bookItem);
 
         // Update authors
         String author = bookItem.getAuthor().getName().toUpperCase();
@@ -160,14 +166,16 @@ public class Catalog {
 
         // Update status
         BookStatus status = bookItem.getStatus();
-        bookStatus.computeIfAbsent(status, k -> new ArrayList<>()).add(bookItem);
+        bookStatus.computeIfAbsent(status, k -> FXCollections.observableArrayList()).add(bookItem);
 
         // Update ID
-        String id = bookItem.getId();
-        bookId.put(id, bookItem);
+        if (!isEdit) {
+            String id = bookItem.getId();
+            bookId.put(id, bookItem);
 
-        // Increment totalBooks
-        totalBooks++;
+            // Increment totalBooks
+            totalBooks.set(totalBooks.get() + 1);
+        }
     }
 
     public void writeBookItemToDatabase(BookItem bookItem) {
@@ -283,7 +291,7 @@ public class Catalog {
         return true; // Trả về true nếu thành công
     }
 
-    public int getTotalBooks() {
+    public SimpleIntegerProperty getTotalBooks() {
         return totalBooks;
     }
 
@@ -372,74 +380,56 @@ public class Catalog {
             int rowsUpdated = statement.executeUpdate();
 
             if (rowsUpdated > 0) {
-                BookItem updatedBookItem = this.bookId.get(bookId);
-                BookItem oldBook = this.bookId.get(bookId);
-                if (updatedBookItem != null) {
+                BookItem oldBookItem = this.bookId.get(bookId);
+                if (oldBookItem != null) {
                     // Update the specific fields in the relevant maps
                     switch (fieldToEdit) {
                         case 1: // ISBN
-                            updatedBookItem.setISBN(newValue);
-                            this.removeBookById(oldBook.getId(), false);
-                            this.addBookItem(updatedBookItem);
+                            this.removeBookById(oldBookItem.getId(), false, true);
+                            oldBookItem.setISBN(newValue);
+                            this.addBookItem(oldBookItem, true);
                             break;
 
                         case 2: // title
-                            String oldTitle = updatedBookItem.getTitle();
-                            updatedBookItem.setTitle(newValue);
-
-                            // Remove the book by ID and add it back with updated title
-                            this.removeBookById(oldBook.getId(), false);
-                            this.addBookItem(updatedBookItem);
+                            this.removeBookById(oldBookItem.getId(), false, true);
+                            oldBookItem.setTitle(newValue);
+                            this.addBookItem(oldBookItem, true);
                             break;
 
                         case 3: // subject
-                            String oldSubject = updatedBookItem.getSubject();
-                            updatedBookItem.setSubject(newValue);
-
-                            // Remove the book by ID and add it back with updated subject
-                            this.removeBookById(oldBook.getId(), false);
-                            this.addBookItem(updatedBookItem);
+                            this.removeBookById(oldBookItem.getId(), false, true);
+                            oldBookItem.setSubject(newValue);
+                            this.addBookItem(oldBookItem, true);
                             break;
 
                         case 4: // publisher
-                            updatedBookItem.setPublisher(newValue);
-
-                            // Remove the book by ID and add it back with updated publisher
-                            this.removeBookById(oldBook.getId(), false);
-                            this.addBookItem(updatedBookItem);
+                            this.removeBookById(oldBookItem.getId(), false, true);
+                            oldBookItem.setPublisher(newValue);
+                            this.addBookItem(oldBookItem, true);
                             break;
 
                         case 5: // language
-                            updatedBookItem.setLanguage(newValue);
-
-                            // Remove the book by ID and add it back with updated language
-                            this.removeBookById(oldBook.getId(), false);
-                            this.addBookItem(updatedBookItem);
+                            this.removeBookById(oldBookItem.getId(), false, true);
+                            oldBookItem.setLanguage(newValue);
+                            this.addBookItem(oldBookItem, true);
                             break;
 
                         case 6: // numberOfPage
-                            updatedBookItem.setNumberOfPage(newValue); // Assuming newValue is a valid integer string
-
-                            // Remove the book by ID and add it back with updated numberOfPage
-                            this.removeBookById(oldBook.getId(), false);
-                            this.addBookItem(updatedBookItem);
+                            this.removeBookById(oldBookItem.getId(), false, true);
+                            oldBookItem.setNumberOfPage(newValue);
+                            this.addBookItem(oldBookItem, true);
                             break;
 
                         case 7: // authorName
-                            String oldAuthorName = updatedBookItem.getAuthor().getName();
-                            updatedBookItem.getAuthor().setName(newValue); // Assuming Author has a method to set name
-
-                            // Remove the book by ID and add it back with updated authorName
-                            this.removeBookById(oldBook.getId(), false);
-                            this.addBookItem(updatedBookItem);
+                            this.removeBookById(oldBookItem.getId(), false, true);
+                            oldBookItem.getAuthor().setName(newValue);
+                            this.addBookItem(oldBookItem, true);
                             break;
 
                         case 8: // authorDescription
-                            updatedBookItem.getAuthor().setDescription(newValue); // Assuming Author has a method to set description
-
-                            // Remove the book by ID and add it back with updated authorDescription
-                            this.removeBookById(oldBook.getId(), false);
-                            this.addBookItem(updatedBookItem);
+                            this.removeBookById(oldBookItem.getId(), false, true);
+                            oldBookItem.getAuthor().setDescription(newValue);
+                            this.addBookItem(oldBookItem, true);
                             break;
 
                         case 9: // id
@@ -447,78 +437,77 @@ public class Catalog {
                             return;
 
                         case 10: // isReferenceOnly
-                            updatedBookItem.setReferenceOnly(Boolean.parseBoolean(newValue)); // Assuming newValue is a valid boolean string
-
-                            // Remove the book by ID and add it back with updated isReferenceOnly
-                            this.removeBookById(oldBook.getId(), false);
-                            this.addBookItem(updatedBookItem);
+                            this.removeBookById(oldBookItem.getId(), false, true);
+                            oldBookItem.setReferenceOnly(Boolean.parseBoolean(newValue));
+                            this.addBookItem(oldBookItem, true);
                             break;
 
                         case 11: // price
-                            updatedBookItem.setPrice(Double.parseDouble(newValue)); // Assuming newValue is a valid double string
-
-                            // Remove the book by ID and add it back with updated price
-                            this.removeBookById(oldBook.getId(), false);
-                            this.addBookItem(updatedBookItem);
+                            this.removeBookById(oldBookItem.getId(), false, true);
+                            oldBookItem.setPrice(Double.parseDouble(newValue));
+                            this.addBookItem(oldBookItem, true);
                             break;
 
                         case 12: // format
-                            updatedBookItem.setFormat(BookFormat.valueOf(newValue));
-
-                            // Remove the book by ID and add it back with updated format
-                            this.removeBookById(oldBook.getId(), false);
-                            this.addBookItem(updatedBookItem);
+                            this.removeBookById(oldBookItem.getId(), false, true);
+                            oldBookItem.setFormat(BookFormat.valueOf(newValue));
+                            this.addBookItem(oldBookItem, true);
                             break;
 
                         case 13: // status
-                            BookStatus newStatus = BookStatus.valueOf(newValue.toUpperCase()); // Assuming newValue corresponds to a valid enum value
-                            updatedBookItem.setStatus(newStatus);
-
                             // Remove the book by ID and add it back with updated status
-                            this.removeBookById(oldBook.getId(), false);
-                            this.addBookItem(updatedBookItem);
+                            this.removeBookById(oldBookItem.getId(), false, true);
+
+                            BookStatus newStatus = BookStatus.valueOf(newValue.toUpperCase()); // Assuming newValue corresponds to a valid enum value
+                            oldBookItem.setStatus(newStatus);
+
+                            this.addBookItem(oldBookItem, true);
                             break;
 
                         case 14: // dateOfPurchase
+                            // Remove the book by ID and add it back with updated dateOfPurchase
+                            this.removeBookById(oldBookItem.getId(), false, true);
+
                             try {
-                                updatedBookItem.setDateOfPurchase(java.sql.Date.valueOf(newValue)); // Assuming newValue is in the format "yyyy-mm-dd"
+                                oldBookItem.setDateOfPurchase(java.sql.Date.valueOf(newValue)); // Assuming newValue is in the format "yyyy-mm-dd"
                             } catch (IllegalArgumentException e) {
                                 System.out.println("Invalid date format for dateOfPurchase. Please use 'yyyy-mm-dd'.");
                                 return;
                             } // Assuming newValue is in valid format
 
-                            // Remove the book by ID and add it back with updated dateOfPurchase
-                            this.removeBookById(oldBook.getId(), false);
-                            this.addBookItem(updatedBookItem);
+                            this.addBookItem(oldBookItem, true);
                             break;
 
                         case 15: // publicationDate
+                            // Remove the book by ID and add it back with updated publicationDate
+                            this.removeBookById(oldBookItem.getId(), false, true);
+
                             try {
-                                updatedBookItem.setPublicationDate(java.sql.Date.valueOf(newValue)); // Assuming newValue is in the format "yyyy-mm-dd"
+                                oldBookItem.setPublicationDate(java.sql.Date.valueOf(newValue)); // Assuming newValue is in the format "yyyy-mm-dd"
                             } catch (IllegalArgumentException e) {
                                 System.out.println("Invalid date format for publicationDate. Please use 'yyyy-mm-dd'.");
                                 return;
                             } // Assuming newValue is in valid format
 
-                            // Remove the book by ID and add it back with updated publicationDate
-                            this.removeBookById(oldBook.getId(), false);
-                            this.addBookItem(updatedBookItem);
+                            this.addBookItem(oldBookItem, true);
                             break;
 
                         case 16: // number
-                            updatedBookItem.setRack(Integer.parseInt(newValue), updatedBookItem.getRack().getLocationIdentifier()); // Assuming newValue is a valid integer string
-
                             // Remove the book by ID and add it back with updated number
-                            this.removeBookById(oldBook.getId(), false);
-                            this.addBookItem(updatedBookItem);
+                            this.removeBookById(oldBookItem.getId(), false, true);
+
+                            oldBookItem.setRack(Integer.parseInt(newValue), oldBookItem.getRack().getLocationIdentifier()); // Assuming newValue is a valid integer string
+
+                            this.addBookItem(oldBookItem, true);
                             break;
 
                         case 17: // location
-                            updatedBookItem.setRack(updatedBookItem.getRack().getNumber(), newValue);
-
                             // Remove the book by ID and add it back with updated location
-                            this.removeBookById(oldBook.getId(), false);
-                            this.addBookItem(updatedBookItem);
+                            this.removeBookById(oldBookItem.getId(), false, true);
+
+                            oldBookItem.setRack(oldBookItem.getRack().getNumber(), newValue);
+
+                            this.addBookItem(oldBookItem, true);
                             break;
                         default:
                             System.out.println("Invalid field.");
@@ -597,7 +586,7 @@ public class Catalog {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            this.totalBooks = 0;
+            this.totalBooks.set(0);
             // load again.
             this.bookSubjects = new HashMap<>();
             this.bookAuthors = new HashMap<>();
@@ -641,7 +630,7 @@ public class Catalog {
                         id, isRefOnly, price, BookFormat.valueOf(bookFormat.toUpperCase()), BookStatus.valueOf(bookStatus.toUpperCase()),
                         dateOfPurchase, publicationDate, number, location);
 
-                this.addBookItem(addin);
+                this.addBookItem(addin, false);
             }
         } catch (FileNotFoundException e) {
             throw new RuntimeException("Cannot open file!");
@@ -650,7 +639,7 @@ public class Catalog {
         }
     }
 
-    public boolean removeBookById(String id, boolean inDatabase) {
+    public boolean removeBookById(String id, boolean inDatabase, boolean isEdit) {
         long startTime = System.currentTimeMillis();
 
         if (!bookId.containsKey(id)) {
@@ -718,12 +707,11 @@ public class Catalog {
 
         Thread statusThread = new Thread(() -> {
             BookStatus status = bookToRemove.getStatus();
-            List<BookItem> rmFromStatus = bookPublicationDates.get(status);
-            if (rmFromStatus != null) {
-                synchronized (rmFromStatus) {
-                    rmFromStatus.remove(bookToRemove);
-                    if (rmFromStatus.isEmpty()) {
-                        bookPublicationDates.remove(status);
+            if (bookStatus.get(status) != null) {
+                synchronized (bookStatus.get(status)) {
+                    bookStatus.get(status).remove(bookToRemove);
+                    if (bookStatus.get(status).isEmpty()) {
+                        bookStatus.remove(status);
                     }
                 }
             }
@@ -734,6 +722,7 @@ public class Catalog {
         authorThread.start();
         subjectThread.start();
         dateThread.start();
+        statusThread.start();
 
         // wait for all threads to finish
         try {
@@ -741,18 +730,18 @@ public class Catalog {
             authorThread.join();
             subjectThread.join();
             dateThread.join();
+            statusThread.join();
         } catch (InterruptedException e) {
             Thread.currentThread().interrupt();
             e.printStackTrace();
         }
-
-        this.bookId.remove(id);
-
+        if (!isEdit) {
+            this.bookId.remove(id);
+            totalBooks.set(totalBooks.get() - 1);
+        }
         if (inDatabase == true) {
             this.removeBookFromDatabase(id);
         }
-        totalBooks--;
-
         long endTime = System.currentTimeMillis();
         System.out.println("remove book elapsed time: " + (endTime - startTime) + " ms");
         return true;

@@ -2,22 +2,26 @@ package com.example.proj.Controller;
 
 import com.example.proj.Models.*;
 import javafx.application.Platform;
-import javafx.beans.Observable;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
+import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
+import java.io.IOException;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ResourceBundle;
 
 public class LibMainController implements Initializable {
@@ -215,14 +219,41 @@ public class LibMainController implements Initializable {
 
     @Override
     public void initialize(URL url, ResourceBundle resourceBundle) {
-        totalBooks.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getTotalBooks() + "/5000"));
-        booksAvailableNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.AVAILABLE).size()));
-        bookReservedNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.RESERVED).size()));
-        bookLoanedNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOANED).size()));
-        bookLostNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOST).size()));
-        totalMemNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getMemberMap().size()));
+        totalBooks.setText(CurrentLibrarian.getLibrarian().getCatalog().getTotalBooks().get() + "/5000");
         progressBar.setProgress((double) CurrentLibrarian.getLibrarian().getCatalog().getBookId().size() / 5000);
         percentage.setText(String.valueOf((double) CurrentLibrarian.getLibrarian().getCatalog().getBookId().size() / 50 + "%"));
+        CurrentLibrarian.getLibrarian().getCatalog().getTotalBooks().addListener((observable, oldValue, newValue) -> {
+            Platform.runLater(() -> {
+                totalBooks.setText(CurrentLibrarian.getLibrarian().getCatalog().getTotalBooks().get() + "/5000");
+                progressBar.setProgress((double)CurrentLibrarian.getLibrarian().getCatalog().getTotalBooks().get() / 5000);
+                percentage.setText((double) CurrentLibrarian.getLibrarian().getCatalog().getTotalBooks().get() / 50 + "%");
+            });
+        });
+        booksAvailableNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.AVAILABLE).size()));
+        CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.AVAILABLE).addListener((ListChangeListener<BookItem>) change -> {
+                    Platform.runLater(() -> {
+                        booksAvailableNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.AVAILABLE).size()));
+                    });
+                });
+        bookReservedNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.RESERVED).size()));
+        CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.RESERVED).addListener((ListChangeListener<BookItem>) change -> {
+            Platform.runLater(() -> {
+                bookReservedNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.RESERVED).size()));
+            });
+        });
+        bookLoanedNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOANED).size()));
+        CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOANED).addListener((ListChangeListener<BookItem>) change -> {
+            Platform.runLater(() -> {
+                bookLoanedNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOANED).size()));
+            });
+        });
+        bookLostNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOST).size()));
+        CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOST).addListener((ListChangeListener<BookItem>) change -> {
+            Platform.runLater(() -> {
+                bookLostNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOST).size()));
+            });
+        });
+        totalMemNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getMemberMap().size()));
         welcomeText.setText("Hello " + CurrentLibrarian.getLibrarian().getId());
         setMemberTable(CurrentLibrarian.getMemberObservableList());
         setBookTable(CurrentLibrarian.getBookObservableList());
@@ -326,7 +357,7 @@ public class LibMainController implements Initializable {
         }
     }
 
-    public void setBookManagementTab(ActionEvent event) {
+    public void setBookManagementTab(ActionEvent event) throws IOException {
         if (event.getSource() == searchBookBut) {
             try {
                 if (searchOptionChoiceBox != null) {
@@ -441,6 +472,15 @@ public class LibMainController implements Initializable {
                 CurrentLibrarian.getLibrarian().removeBook(bookTable.getSelectionModel().getSelectedItem().getId());
                 CurrentLibrarian.deleteBookObservableList(bookTable.getSelectionModel().getSelectedItem());
             }
+        } else if (event.getSource() == addBookBut) {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/proj/FXML/AddBook.fxml"));
+            Stage stage = new Stage();
+            Scene scene = new Scene(fxmlLoader.load());
+            stage.setTitle("Library Management System");
+            stage.setScene(scene);
+            stage.initStyle(StageStyle.UTILITY);
+            stage.show();
+            AddBookController.setStage(stage);
         }
     }
     }
