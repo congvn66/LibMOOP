@@ -1,5 +1,8 @@
 package com.example.proj.Models;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.io.*;
 import java.sql.*;
 import java.sql.Date;
@@ -8,6 +11,9 @@ import java.util.*;
 public class Librarian extends Account{
 
     private Map<String, Member> memberMap;
+    private LinkedHashMap<Date, ObservableList<Log>> totalLogs;
+    private HashMap<String, LinkedHashMap<Date, ObservableList<Log>>> memberLogs;
+    private LinkedHashMap<Date, Integer> memberRegister;
     private String filePath;
 
     public Librarian() {
@@ -18,6 +24,10 @@ public class Librarian extends Account{
             String absolute = file.getAbsolutePath();
             this.filePath = absolute;
         }
+        this.memberLogs = new HashMap<>();
+        this.totalLogs = new LinkedHashMap<>();
+        this.memberRegister = new LinkedHashMap<>();
+        loadLogFromDatabase();
         //this.memberMap = new HashMap<>();
         //this.loadMembersFromDatabase();
     }
@@ -30,6 +40,22 @@ public class Librarian extends Account{
             String absolute = file.getAbsolutePath();
             this.filePath = absolute;
         }
+        this.memberLogs = new HashMap<>();
+        this.totalLogs = new LinkedHashMap<>();
+        this.memberRegister = new LinkedHashMap<>();
+        loadLogFromDatabase();
+    }
+
+    public LinkedHashMap<Date, ObservableList<Log>> getTotalLogs() {
+        return totalLogs;
+    }
+
+    public HashMap<String, LinkedHashMap<Date, ObservableList<Log>>> getMemberLogs() {
+        return memberLogs;
+    }
+
+    public LinkedHashMap<Date, Integer> getMemberRegister() {
+        return memberRegister;
     }
 
     public Map<String,Member> getMemberMap() {
@@ -42,6 +68,11 @@ public class Librarian extends Account{
 
     private void putMemberInMap(Member member) {
         this.memberMap.put(member.getId(), member);
+    }
+
+    public void addMemberRegisterToMap(Member member) {
+        this.memberRegister.computeIfAbsent(member.getCreateDate(), k -> 1);
+        this.memberRegister.computeIfPresent(member.getCreateDate(), (k, v) -> v + 1);
     }
 
     private void loadMembersFromDatabase() {
@@ -62,6 +93,7 @@ public class Librarian extends Account{
                 Member member = new Member(id, AccountStatus.valueOf(accountStatusString.toUpperCase()), password, totalBooksCheckedOut, point, date);
 
                 this.putMemberInMap(member);
+                this.addMemberRegisterToMap(member);
             }
         } catch (SQLException e) {
             System.out.println("Error loading members from database: " + e.getMessage());
@@ -94,6 +126,32 @@ public class Librarian extends Account{
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
+    }
+
+    public void loadLogFromDatabase() {
+        String query = "SELECT id, creationDate, bookId FROM logs ORDER BY creationDate DESC";
+
+        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+             PreparedStatement preparedStatement = connection.prepareStatement(query);
+             ResultSet resultSet = preparedStatement.executeQuery()) {
+
+            while (resultSet.next()) {
+                String id = resultSet.getString("id").trim();
+                Date creationDate = resultSet.getDate("creationDate");
+                String bookId = resultSet.getString("bookId");
+
+                Log log = new Log(id, creationDate, bookId);
+                addLogToMap(log);
+            }
+        } catch (SQLException e) {
+            System.out.println("Error loading logs from database: " + e.getMessage());
+        }
+    }
+
+    public void addLogToMap(Log log) {
+        totalLogs.computeIfAbsent(log.getCreationDate(), k -> FXCollections.observableList(new ArrayList<Log>())).add(log);
+        memberLogs.computeIfAbsent(log.getId(), k -> new LinkedHashMap<>());
+        memberLogs.get(log.getId()).computeIfAbsent(log.getCreationDate(), k -> FXCollections.observableList(new ArrayList<>())).add(log);
     }
 
     public void addBookItem(BookItem bookItem) {

@@ -251,8 +251,6 @@ public class AddBookController implements Initializable {
             Boolean isRef = addIsRefOnlyChoiceBox.getValue();
             BookStatus bookStatus = addBookStatusChoiceBox.getValue();
             BookFormat bookFormat = addBookFormatChoiceBox.getValue();
-            Date dateOfPurchase = Date.from(addDateOfPurchasesPicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
-            Date publicationDate = Date.from(addPublicationDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
             String bookLocation = addBookLocationText.getText();
 
             if (!title.equals("")) {
@@ -317,15 +315,18 @@ public class AddBookController implements Initializable {
                 checkBookFormat.setText("Please select the book format.");
                 checkBookFormat.setVisible(true);
             }
-
-            if (dateOfPurchase != null) {
+            Date dateOfPurchase = new Date();
+            Date publicationDate = new Date();
+            if (addDateOfPurchasesPicker.getValue() != null) {
+                dateOfPurchase = Date.from(addDateOfPurchasesPicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
                 checkDateOfPurchase.setVisible(false);
             } else {
                 checkDateOfPurchase.setText("Please select the date of purchase.");
                 checkDateOfPurchase.setVisible(true);
             }
 
-            if (publicationDate != null) {
+            if (addPublicationDatePicker.getValue() != null && addDateOfPurchasesPicker.getValue() != null) {
+                publicationDate = Date.from(addPublicationDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
                 if (publicationDate.after(dateOfPurchase)) {
                     checkDateOfPurchase.setText("Date of purchase must be after publication date.");
                     checkDateOfPurchase.setVisible(true);

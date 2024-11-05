@@ -12,6 +12,10 @@ import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
 import javafx.scene.Scene;
+import javafx.scene.chart.BarChart;
+import javafx.scene.chart.CategoryAxis;
+import javafx.scene.chart.NumberAxis;
+import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
@@ -20,9 +24,9 @@ import javafx.stage.StageStyle;
 
 import java.io.IOException;
 import java.net.URL;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.ResourceBundle;
+import java.sql.Date;
+import java.time.Period;
+import java.util.*;
 
 public class LibMainController implements Initializable {
     @FXML
@@ -185,7 +189,26 @@ public class LibMainController implements Initializable {
     private Button searchBookBut;
     @FXML
     private Label checkBookUpdateLabel;
-
+    @FXML
+    private DatePicker diaryStartDatePicker;
+    @FXML
+    private DatePicker diaryEndDatePicker;
+    @FXML
+    private TextField diaryIDText;
+    @FXML
+    private ChoiceBox<String> diaryChoiceBox;
+    @FXML
+    private Button diarySearchBut;
+    @FXML
+    private Label diaryCheckChoiceBox;
+    @FXML
+    private Label diaryCheckIdLabel;
+    @FXML
+    private Label diaryCheckStartDateLabel;
+    @FXML
+    private Label diaryCheckEndDateLabel;
+    @FXML
+    private BarChart<String, Number> diaryGraph;
 
     public void setMemberTable(ObservableList a) {
         accountIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -253,6 +276,22 @@ public class LibMainController implements Initializable {
                 bookLostNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOST).size()));
             });
         });
+        diaryChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            switch (newValue) {
+                case "Total Logs", "Total member register" -> {
+                    diaryIDText.setText("");
+                    diaryIDText.setVisible(false);
+                    diaryCheckIdLabel.setVisible(false);
+                    diaryCheckChoiceBox.setVisible(false);
+                }
+                case "Logs by member" -> {
+                    diaryIDText.setVisible(true);
+                    diaryCheckChoiceBox.setVisible(false);
+                }
+                default -> {
+                }
+            }
+        });
         totalMemNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getMemberMap().size()));
         welcomeText.setText("Hello " + CurrentLibrarian.getLibrarian().getId());
         setMemberTable(CurrentLibrarian.getMemberObservableList());
@@ -265,6 +304,8 @@ public class LibMainController implements Initializable {
         isRefOnlyChoiceBox.getItems().addAll(refList);
         ObservableList<String> searchOptionList = FXCollections.observableArrayList("ID", "Title", "Author", "Subject");
         searchOptionChoiceBox.getItems().addAll(searchOptionList);
+        ObservableList<String> diaryChoice = FXCollections.observableArrayList("Total Logs", "Logs by member", "Total member register");
+        diaryChoiceBox.getItems().addAll(diaryChoice);
         SpinnerValueFactory<Integer> integerSpinnerValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100, 0, 1);
         addPointSpinner.setValueFactory(integerSpinnerValueFactory);
         memberTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -482,5 +523,92 @@ public class LibMainController implements Initializable {
             stage.show();
             AddBookController.setStage(stage);
         }
+    }
+
+    public XYChart.Series<String, Number> getListOfTotalLogs(LinkedHashMap<Date, ObservableList<Log>> totalLog, Date startDate, Date endDate) {
+        XYChart.Series<String, Number> listOfTotalLogs = new XYChart.Series<>();
+        Period period = Period.between(startDate.toLocalDate(), endDate.toLocalDate());
+        for (int i = 0; i <= period.getDays(); i++) {
+            listOfTotalLogs.getData().add(new XYChart.Data<>(startDate.toLocalDate().plusDays(i).toString(), totalLog.get(java.sql.Date.valueOf(startDate.toLocalDate().plusDays(i))) != null ? totalLog.get(java.sql.Date.valueOf(startDate.toLocalDate().plusDays(i))).size() : 0));
+        }
+        return listOfTotalLogs;
+    }
+
+    public XYChart.Series<String, Number> getListOfTotalMemberRegister(LinkedHashMap<Date, Integer> memberRegister, Date startDate, Date endDate) {
+        XYChart.Series<String, Number> listOfMemberRegister = new XYChart.Series<>();
+        Period period = Period.between(startDate.toLocalDate(), endDate.toLocalDate());
+        for (int i = 0; i <= period.getDays(); i++) {
+            listOfMemberRegister.getData().add(new XYChart.Data<>(startDate.toLocalDate().plusDays(i).toString(),
+                    memberRegister.get(java.sql.Date.valueOf(startDate.toLocalDate().plusDays(i))) != null ? memberRegister.get(java.sql.Date.valueOf(startDate.toLocalDate().plusDays(i))) : 0));
+        }
+        return listOfMemberRegister;
+    }
+
+    public XYChart.Series<String, Number> getListOfMemberLogs(HashMap<String, LinkedHashMap<Date, ObservableList<Log>>> memberLogs, String id, Date startDate, Date endDate) {
+        XYChart.Series<String, Number> listOfMemberRegister = new XYChart.Series<>();
+        Period period = Period.between(startDate.toLocalDate(), endDate.toLocalDate());
+        for (int i = 0; i <= period.getDays(); i++) {
+            listOfMemberRegister.getData().add(new XYChart.Data<>(startDate.toLocalDate().plusDays(i).toString(), memberLogs.get(java.sql.Date.valueOf(startDate.toLocalDate().plusDays(i))) != null ? memberLogs.get(java.sql.Date.valueOf(startDate.toLocalDate().plusDays(i))).size() : 0));
+        }
+        return listOfMemberRegister;
+    }
+
+    public void setLibraryDiaryTab(ActionEvent event) {
+       if (event.getSource() == diarySearchBut) {
+               Date startDate = null;
+               Date endDate = null;
+               if (diaryStartDatePicker.getValue() != null) {
+                   startDate = Date.valueOf(diaryStartDatePicker.getValue());
+                   diaryCheckStartDateLabel.setVisible(false);
+               } else {
+                   diaryCheckStartDateLabel.setText("Please select a date");
+                   diaryCheckStartDateLabel.setVisible(true);
+               }
+               if (diaryEndDatePicker.getValue() != null) {
+                   endDate = Date.valueOf(diaryEndDatePicker.getValue());
+                   diaryCheckEndDateLabel.setVisible(false);
+               } else {
+                   diaryCheckEndDateLabel.setText("Please select a date");
+                   diaryCheckEndDateLabel.setVisible(true);
+               }
+               if (startDate != null && endDate != null && startDate.after(endDate)) {
+                   diaryCheckStartDateLabel.setText("Start date must be before end date");
+                   diaryCheckEndDateLabel.setText("End date must be after start date");
+                   diaryCheckStartDateLabel.setVisible(true);
+                   diaryCheckEndDateLabel.setVisible(true);
+               } else {
+                   try {
+                       if (diaryChoiceBox.getValue().equals("Total Logs")) {
+                           diaryCheckChoiceBox.setVisible(false);
+                           diaryGraph.getData().clear();
+                           diaryGraph.setTitle("Total Logs By Day Graph");
+                           XYChart.Series tmp = getListOfTotalLogs(CurrentLibrarian.getLibrarian().getTotalLogs(), startDate, endDate);
+                           diaryGraph.getData().add(tmp);
+                           diaryGraph.getXAxis().setTickLabelGap(diaryGraph.getWidth() / (tmp.getData().size() + 1));
+                       } else if (diaryChoiceBox.getValue().equals("Total member register")) {
+                           diaryCheckChoiceBox.setVisible(false);
+                           diaryGraph.setTitle("Member Register By Day");
+                           diaryGraph.getData().clear();
+                           diaryGraph.getData().add(getListOfTotalMemberRegister(CurrentLibrarian.getLibrarian().getMemberRegister(), startDate, endDate));
+                       } else if (diaryChoiceBox.getValue().equals("Logs by member")) {
+                               diaryCheckChoiceBox.setVisible(false);
+                               String id = diaryIDText.getText();
+                               if (id.equals("")) {
+                                   diaryCheckIdLabel.setText("Please fill in an ID");
+                                   diaryCheckIdLabel.setVisible(true);
+                               } else if (!CurrentLibrarian.getLibrarian().getMemberLogs().containsKey(id)) {
+                                   diaryCheckIdLabel.setText("ID doesn't exist");
+                                   diaryCheckIdLabel.setVisible(true);
+                               } else {
+                                   diaryGraph.setTitle("Member Logs By Day");
+                                   diaryGraph.getData().clear();
+                                   diaryGraph.getData().add(getListOfMemberLogs(CurrentLibrarian.getLibrarian().getMemberLogs(), id, startDate, endDate));
+                               }
+                       }
+                   } catch (NullPointerException n) {
+                       diaryCheckChoiceBox.setVisible(true);
+                   }
+               }
+       }
     }
     }

@@ -8,7 +8,7 @@ import java.util.Map;
 
 public class Member extends Account{
     private int totalBooksCheckedOut;
-    private LibraryLogger logger;
+    private MemberLogger logger;
     private Map<String, String> listOfBook;
     private java.sql.Date createDate;
     private NotificationBox notificationBox;
@@ -78,7 +78,7 @@ public class Member extends Account{
     }
 
     public void basicActions(String id, Date creationDate, String type) throws ParseException {
-        this.logger = new LibraryLogger();
+        this.logger = new MemberLogger();
         //this.logger.generateMemberLog("src/main/resources/database/members.txt", this.getId());
         if (this.getCatalog().findBookById(id) == null) {
             System.out.println("Book not found.");

@@ -5,7 +5,7 @@ import java.sql.*;
 import java.text.ParseException;
 import java.util.Date;
 
-public class LibraryLogger {
+public class MemberLogger {
     private String filePath;
 
 
