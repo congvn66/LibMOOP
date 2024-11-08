@@ -14,6 +14,7 @@ public class Librarian extends Account{
     private LinkedHashMap<Date, ObservableList<Log>> totalLogs;
     private HashMap<String, LinkedHashMap<Date, ObservableList<Log>>> memberLogs;
     private LinkedHashMap<Date, Integer> memberRegister;
+    private Map<String, ObservableList<Log>> logList;
     private String filePath;
 
     public Librarian() {
@@ -27,7 +28,7 @@ public class Librarian extends Account{
         this.memberLogs = new HashMap<>();
         this.totalLogs = new LinkedHashMap<>();
         this.memberRegister = new LinkedHashMap<>();
-        loadLogFromDatabase();
+        this.logList = new HashMap<>();
         //this.memberMap = new HashMap<>();
         //this.loadMembersFromDatabase();
     }
@@ -43,19 +44,35 @@ public class Librarian extends Account{
         this.memberLogs = new HashMap<>();
         this.totalLogs = new LinkedHashMap<>();
         this.memberRegister = new LinkedHashMap<>();
-        loadLogFromDatabase();
+        this.logList = new HashMap<>();
     }
 
     public LinkedHashMap<Date, ObservableList<Log>> getTotalLogs() {
+        if (totalLogs.isEmpty()) {
+            loadLogFromDatabase();
+        }
         return totalLogs;
     }
 
     public HashMap<String, LinkedHashMap<Date, ObservableList<Log>>> getMemberLogs() {
+        if (memberLogs.isEmpty()) {
+            loadLogFromDatabase();
+        }
         return memberLogs;
     }
 
     public LinkedHashMap<Date, Integer> getMemberRegister() {
+        if (memberRegister.isEmpty()) {
+            loadMembersFromDatabase();
+        }
         return memberRegister;
+    }
+
+    public Map<String, ObservableList<Log>> getLogList() {
+        if (logList.isEmpty()) {
+            loadLogFromDatabase();
+        }
+        return logList;
     }
 
     public Map<String,Member> getMemberMap() {
@@ -129,7 +146,7 @@ public class Librarian extends Account{
     }
 
     public void loadLogFromDatabase() {
-        String query = "SELECT id, creationDate, bookId FROM logs ORDER BY creationDate DESC";
+        String query = "SELECT id, creationDate, bookId FROM logs ";
 
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
              PreparedStatement preparedStatement = connection.prepareStatement(query);
@@ -152,6 +169,7 @@ public class Librarian extends Account{
         totalLogs.computeIfAbsent(log.getCreationDate(), k -> FXCollections.observableList(new ArrayList<Log>())).add(log);
         memberLogs.computeIfAbsent(log.getId(), k -> new LinkedHashMap<>());
         memberLogs.get(log.getId()).computeIfAbsent(log.getCreationDate(), k -> FXCollections.observableList(new ArrayList<>())).add(log);
+        logList.computeIfAbsent(log.getId(), k -> FXCollections.observableList(new ArrayList<Log>())).add(log);
     }
 
     public void addBookItem(BookItem bookItem) {

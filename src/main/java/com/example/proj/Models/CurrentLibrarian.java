@@ -1,10 +1,5 @@
-package com.example.proj.Controller;
+package com.example.proj.Models;
 
-import com.example.proj.Models.AccountStatus;
-import com.example.proj.Models.BookItem;
-import com.example.proj.Models.Librarian;
-import com.example.proj.Models.Member;
-import javafx.beans.Observable;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 

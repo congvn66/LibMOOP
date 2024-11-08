@@ -126,8 +126,8 @@ public class Catalog {
                 double price = resultSet.getDouble("price");
                 BookFormat format = BookFormat.valueOf(resultSet.getString("format"));
                 BookStatus status = BookStatus.valueOf(resultSet.getString("status"));
-                Date dateOfPurchase = resultSet.getDate("dateOfPurchase");
-                Date publicationDate = resultSet.getDate("publicationDate");
+                Date dateOfPurchase = new Date(resultSet.getDate("dateOfPurchase").getTime());
+                Date publicationDate = new Date(resultSet.getDate("publicationDate").getTime());
                 int number = resultSet.getInt("number");
                 String location = resultSet.getString("location");
 

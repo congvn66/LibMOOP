@@ -1,9 +1,6 @@
 package com.example.proj.Controller;
 
-import com.example.proj.Models.AccountStatus;
-import com.example.proj.Models.Authentication;
-import com.example.proj.Models.Librarian;
-import com.example.proj.Models.Member;
+import com.example.proj.Models.*;
 import javafx.application.Application;
 import javafx.application.Platform;
 import javafx.event.ActionEvent;
@@ -123,8 +120,16 @@ public class LoginController extends Application {
                     Login.getScene().getWindow().hide();
                     stage.show();
                 } else if (authentication.checkLoginMember() != null) {
+                    CurrentMember currentMember = new CurrentMember(name_log.getText(), authentication.checkLoginMember().getStatus(), authentication.checkLoginMember().getPassword(), authentication.checkLoginMember().getTotalBooksCheckedOut(), authentication.checkLoginMember().getPoint(), authentication.checkLoginMember().getCreateDate());
                     wrong.setVisible(false);
                     System.out.println("Login successfully");
+                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/proj/FXML/MemMain.fxml"));
+                    Stage stage = new Stage();
+                    Scene scene = new Scene(fxmlLoader.load());
+                    stage.setTitle("Library Management System");
+                    stage.setScene(scene);
+                    Login.getScene().getWindow().hide();
+                    stage.show();
                 } else {
                     wrong.setVisible(true);
                     System.out.println("Login failed");

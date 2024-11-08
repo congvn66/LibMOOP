@@ -9,7 +9,6 @@ import java.util.Map;
 public class Member extends Account{
     private int totalBooksCheckedOut;
     private MemberLogger logger;
-    private Map<String, String> listOfBook;
     private java.sql.Date createDate;
     private NotificationBox notificationBox;
     private int point;
@@ -51,6 +50,7 @@ public class Member extends Account{
         this.totalBooksCheckedOut = totalBooksCheckedOut;
         this.createDate = createDate;
         this.point = point;
+        this.logger = new MemberLogger(id);
     }
 
     public Member(String id, AccountStatus status, String password, int totalBooksCheckOut, int point) {
@@ -77,12 +77,15 @@ public class Member extends Account{
         this.createDate = createDate;
     }
 
+    public MemberLogger getLogger() {
+        return logger;
+    }
+
     public void basicActions(String id, Date creationDate, String type) throws ParseException {
-        this.logger = new MemberLogger();
         //this.logger.generateMemberLog("src/main/resources/database/members.txt", this.getId());
         if (this.getCatalog().findBookById(id) == null) {
             System.out.println("Book not found.");
-            return;
+            return ;
         }
         BookItem book = this.getCatalog().findBookById(id);
         switch (type) {

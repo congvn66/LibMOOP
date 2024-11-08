@@ -41,4 +41,21 @@ public class Log {
      public String toString() {
           return "Member " + id + " has borrowed book with the id of " + bookId + " in " + creationDate.toString();
      }
+
+     @Override
+     public boolean equals(Object obj) {
+          if (obj == this) {
+               return true;
+          }
+          if (!(obj instanceof Log)) {
+               return false;
+          }
+          Log tmp = (Log) obj;
+          if (tmp.getBookId().equals(this.bookId)
+                  && this.id.equals(tmp.getId())
+                  && this.creationDate.equals(tmp.getCreationDate())) {
+               return true;
+          }
+          return false;
+     }
 }
