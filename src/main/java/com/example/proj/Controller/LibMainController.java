@@ -17,6 +17,7 @@ import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -36,8 +37,6 @@ public class LibMainController implements Initializable {
     @FXML
     private AnchorPane LibraryDiaryTab;
 
-    @FXML
-    private AnchorPane LoggerManagementTab;
 
     @FXML
     private AnchorPane MainTab;
@@ -86,9 +85,6 @@ public class LibMainController implements Initializable {
 
     @FXML
     private TextField enterIdTextField;
-
-    @FXML
-    private Button loggerManageBut;
 
     @FXML
     private Button memberManageBut;
@@ -343,9 +339,6 @@ public class LibMainController implements Initializable {
         } else if (event.getSource() == bookManageBut) {
             BookManagementTab.toFront();
             backBut.toFront();
-        } else if (event.getSource() == loggerManageBut) {
-            LoggerManagementTab.toFront();
-            backBut.toFront();
         } else if (event.getSource() == diaryBut) {
             LibraryDiaryTab.toFront();
             backBut.toFront();
@@ -517,7 +510,8 @@ public class LibMainController implements Initializable {
             Scene scene = new Scene(fxmlLoader.load());
             stage.setTitle("Library Management System");
             stage.setScene(scene);
-            stage.initStyle(StageStyle.UTILITY);
+            stage.setResizable(false);
+            stage.initStyle(StageStyle.UNDECORATED);
             stage.show();
             AddBookController.setStage(stage);
         }

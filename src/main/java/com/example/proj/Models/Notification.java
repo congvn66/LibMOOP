@@ -1,12 +1,15 @@
 package com.example.proj.Models;
 
+import java.time.LocalDate;
+import java.time.Period;
+
 public class Notification {
     private static Catalog catalog;
     private String bookId;
-    private String dueDate;
+    private LocalDate dueDate;
     private boolean late;
 
-    public Notification(String bookId, String dueDate, boolean late) {
+    public Notification(String bookId, LocalDate dueDate, boolean late) {
         this.bookId = bookId;
         this.dueDate = dueDate;
         this.late = late;
@@ -14,8 +17,7 @@ public class Notification {
 
     public Catalog getCatalog() {
         if (catalog == null) {
-            catalog = new Catalog();
-            catalog.loadCatalogFromDatabase();
+            catalog = CurrentMember.getMember().getCatalog();
         }
         return catalog;
     }
@@ -24,15 +26,15 @@ public class Notification {
         return bookId;
     }
 
-    public String getDueDate() {
+    public LocalDate getDueDate() {
         return dueDate;
     }
 
     public String toString() {
         String title = this.getCatalog().findBookById(this.bookId).getTitle();
         if (this.late) {
-            return "you have to return book: " + title + " right now";
+            return "You have to return book: " + title + " right now";
         }
-        return "you have to return book: " + title + ", at: " + dueDate;
+        return "Book: " + title + " is due on " + dueDate.toString() + "\n(" + Period.between(LocalDate.now(), dueDate).getDays() + " days left)";
     }
 }

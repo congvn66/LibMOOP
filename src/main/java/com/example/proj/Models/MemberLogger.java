@@ -6,6 +6,9 @@ import javafx.collections.ObservableList;
 import java.io.*;
 import java.sql.*;
 import java.text.ParseException;
+import java.time.Instant;
+import java.time.LocalDate;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -46,7 +49,7 @@ public class MemberLogger {
         return memListOfLog;
     }
 
-    public void updateLog(Member member, String bookId, Date date, String type) throws ParseException {
+    public String updateLog(Member member, String bookId, Date date, String type) throws ParseException {
         String sqlInsert = "INSERT INTO logs (id, creationDate, bookId) VALUES (?, ?, ?)";
         String sqlDelete = "DELETE FROM logs WHERE id = ? AND creationDate = ? AND bookId = ?";
         String sqlSelect = "SELECT creationDate FROM logs WHERE id = ? AND bookId = ?";
@@ -65,7 +68,7 @@ public class MemberLogger {
                     insertStatement.executeUpdate();
                     member.setTotalBooksCheckedOut(member.getTotalBooksCheckedOut() + 1);
                     memListOfLog.add(new Log(id, new java.sql.Date(date.getTime()), bookId));
-                    break;
+                    return "You have successfully borrowed this book";
 
                 case "RETURN":
                     selectStatement.setString(1, member.getId()); // Sử dụng ID của member
@@ -80,10 +83,19 @@ public class MemberLogger {
                         Librarian admin = new Librarian();
                         admin.decreaseBookForMemberDatabase(member.getId());
                         member.setTotalBooksCheckedOut(member.getTotalBooksCheckedOut() - 1);
-                        member.updateBook(bookId, 13, "AVAILABLE");
+                        member.updateBook(bookId, 13, String.valueOf(BookStatus.AVAILABLE));
+
+                        // Delete the log entry for the returned book
+                        deleteStatement.setString(1, member.getId());
+                        deleteStatement.setDate(2, new java.sql.Date(borrowedDate.getTime()));
+                        deleteStatement.setString(3, bookId);
+                        deleteStatement.executeUpdate();
+                        Notification deleteNotification = new Notification(bookId, new java.sql.Date(date.getTime()).toLocalDate(), false);
+                        member.deleteNotificationBox(deleteNotification);
+                        memListOfLog.remove(new Log(id, new java.sql.Date(borrowedDate.getTime()), bookId));
+                        member.setTotalBooksCheckedOut(member.getTotalBooksCheckedOut() - 1);
 
                         if (daysBetween > 15) {
-                            System.out.println("Warning: The return date exceeds the allowable 15 days limit!");
                             int p = member.getPoint() - 1;
                             member.setPoint(p);
                             admin.reducePointMemberDatabase(member.getId());
@@ -92,24 +104,18 @@ public class MemberLogger {
                                 member.setStatus(AccountStatus.BLACKLISTED);
                                 admin.blockMemberDatabase(member.getId());
                             }
+                            return "Warning: The return date exceeds the allowable 15 days limit!";
                         }
-                        // Delete the log entry for the returned book
-                        deleteStatement.setString(1, member.getId());
-                        deleteStatement.setDate(2, new java.sql.Date(borrowedDate.getTime()));
-                        deleteStatement.setString(3, bookId);
-                        deleteStatement.executeUpdate();
-                        memListOfLog.remove(new Log(id, new java.sql.Date(borrowedDate.getTime()), bookId));
-                        member.setTotalBooksCheckedOut(member.getTotalBooksCheckedOut() - 1);
+                        return "You have successfully return this book";
                     }
                     if (!found) {
-                        System.out.println("You haven't borrowed this book.");
+                        return "You haven't borrowed this book.";
                     }
                     break;
 
                 case "RENEW":
                     if (member.getStatus() == AccountStatus.BLACKLISTED) {
-                        System.out.println("You've been blocked for returning books late too many times");
-                        break;
+                        return "You've been blocked being in blacklist";
                     }
 
                     // Prepare to select the existing log entry
@@ -132,8 +138,10 @@ public class MemberLogger {
                                     new Log(id, new java.sql.Date(date.getTime()), bookId));
                         }
 
+                        Notification newNotification = new Notification(bookId, new java.sql.Date(date.getTime()).toLocalDate().plusDays(15), false);
+                        member.replaceNotificationBox(newNotification);
+
                         if (daysBetween > 15) {
-                            System.out.println("Warning: The renewal date exceeds the allowable 15 days limit.");
                             Librarian admin = new Librarian();
                             int p = member.getPoint() - 1;
                             member.setPoint(p);
@@ -143,22 +151,24 @@ public class MemberLogger {
                                 member.setStatus(AccountStatus.BLACKLISTED);
                                 admin.blockMemberDatabase(member.getId());
                             }
+                            return "Warning: The renewal date exceeds the allowable 15 days limit.";
                         }
+                        return "You have successfully renew this book";
                     }
                     if (!found) {
-                        System.out.println("You haven't borrowed this book.");
+                        return "You haven't borrowed this book.";
                     }
                     break;
 
 
                 default:
-                    System.out.println("Invalid type. Use 'LEND', 'RETURN', or 'RENEW'.");
-                    return;
+                    return "Invalid type. Use 'LEND', 'RETURN', or 'RENEW'.";
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+        return "";
     }
 
 

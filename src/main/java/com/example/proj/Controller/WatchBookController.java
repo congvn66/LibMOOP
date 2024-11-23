@@ -99,7 +99,7 @@ public class WatchBookController implements Initializable {
         bookNumberText.setText(String.valueOf(bookItem.getRack().getNumber()));
         bookLocationText.setText(bookItem.getRack().getLocationIdentifier());
         alert = new Alert(Alert.AlertType.INFORMATION);
-        alert.setContentText("Book has been added successfully!");
+        alert.setContentText("You have successfully borrowed this book!");
     }
     public static void setStage(Stage watchStage) {
         stage = watchStage;
@@ -113,14 +113,20 @@ public class WatchBookController implements Initializable {
             if (CurrentMember.getMember().getPoint() == 0
                     || CurrentMember.getMember().getStatus() == AccountStatus.BLACKLISTED) {
                 checkBorrowBookLabel.setText("Your credit is too low \nor you have been blacklisted");
-            } else if (bookItem.getStatus() != BookStatus.AVAILABLE) {
+                checkBorrowBookLabel.setVisible(true);
+            } else if (bookItem.getStatus() != BookStatus.AVAILABLE || bookItem.getIsReferenceOnly()) {
                 checkBorrowBookLabel.setText("Book can not be lent");
                 checkBorrowBookLabel.setVisible(true);
             } else {
                 checkBorrowBookLabel.setVisible(false);
                 CurrentMember.getMember().basicActions(bookItem.getId(), Date.valueOf(LocalDate.now()), "LEND");
                 CurrentMember.addListOfMemBook(bookItem);
+                CurrentMember.updateListOfLibBook(bookItem);
+                alert.showAndWait();
+                stage.close();
             }
+        } else if (event.getSource() == backToLibBookBut) {
+            stage.close();
         }
     }
 }

@@ -1,9 +1,6 @@
 package com.example.proj.Controller;
 
-import com.example.proj.Models.BookItem;
-import com.example.proj.Models.BookStatus;
-import com.example.proj.Models.CurrentLibrarian;
-import com.example.proj.Models.CurrentMember;
+import com.example.proj.Models.*;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
@@ -14,17 +11,29 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.fxml.Initializable;
+import javafx.scene.Node;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.layout.AnchorPane;
 import javafx.scene.control.Label;
+import javafx.scene.layout.Background;
+import javafx.scene.layout.BackgroundFill;
+import javafx.scene.layout.VBox;
+import javafx.scene.paint.Color;
+import javafx.scene.text.TextAlignment;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Callback;
 
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
+import java.text.ParseException;
+import java.time.LocalDate;
+import java.time.Period;
+import java.util.Optional;
 import java.util.ResourceBundle;
 
 public class MemMainController implements Initializable {
@@ -41,7 +50,7 @@ public class MemMainController implements Initializable {
     private AnchorPane MemBookTab;
 
     @FXML
-    private Button MemCancelBookBut;
+    private Button cancelBookBut;
 
     @FXML
     private Button backBut;
@@ -95,19 +104,10 @@ public class MemMainController implements Initializable {
     private Label booksAvailableNum;
 
     @FXML
-    private Button cancelBookBut;
-
-    @FXML
-    private Label checkBookUpdateLabel;
-
-    @FXML
-    private Label checkBookUpdateLabel1;
+    private Button memCancelBookBut;
 
     @FXML
     private Label checkSearchLabel;
-
-    @FXML
-    private Label checkSearchLabel1;
 
     @FXML
     private Button myBookManageBut;
@@ -118,8 +118,6 @@ public class MemMainController implements Initializable {
     @FXML
     private TableColumn<BookItem, String> memBookAuthorDescColumn;
 
-    @FXML
-    private ChoiceBox<String> memBookChoiceBox;
 
     @FXML
     private TableColumn<BookItem, String> memBookIdColumn;
@@ -152,12 +150,6 @@ public class MemMainController implements Initializable {
     private Button searchBookBut;
 
     @FXML
-    private Button searchMemBookBut;
-
-    @FXML
-    private TextField searchMemBookTextField;
-
-    @FXML
     private ChoiceBox<String> searchOptionChoiceBox;
 
     @FXML
@@ -167,13 +159,21 @@ public class MemMainController implements Initializable {
     private Label totalBooks;
 
     @FXML
-    private Label totalMemNum;
+    private Label yourBookNum;
 
     @FXML
     private Button watchBookBut;
 
     @FXML
     private Label welcomeText;
+
+    @FXML
+    private VBox notificationVBox;
+
+    private Alert alertInfo;
+
+    private Alert alertConfirm;
+
 
     public void setLibBookTable(ObservableList a) {
         bookIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
@@ -200,6 +200,18 @@ public class MemMainController implements Initializable {
     public void setMemBookTable(ObservableList a) {
         memBookIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         memBookTitleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        memBookTitleColumn.setCellFactory(column -> new TableCell<>() {
+            @Override
+            protected void updateItem(String item, boolean empty) {
+                super.updateItem(item, empty);
+                if (empty) {
+                    setText(null);
+                } else {
+                    setText(item);
+                    setWrapText(true);
+                }
+            }
+        });
         memBookSubjectColumn.setCellValueFactory(new PropertyValueFactory<>("subject"));
         memBookAuthorColumn.setCellValueFactory(cellData -> {
             return new SimpleStringProperty(cellData.getValue().getAuthor().getName());
@@ -208,6 +220,16 @@ public class MemMainController implements Initializable {
             return new SimpleStringProperty(cellData.getValue().getAuthor().getDescription());
         });
         memBookTable.setItems(a);
+    }
+
+    public void setNotificationVBox(ObservableList<Notification> a) {
+        notificationVBox.getChildren().clear();
+        for (Notification i : a) {
+            Label tmp = new Label(i.toString());
+            tmp.setWrapText(true);
+            tmp.setTextAlignment(TextAlignment.CENTER);
+            notificationVBox.getChildren().add(tmp);
+        }
     }
 
     @Override
@@ -246,17 +268,30 @@ public class MemMainController implements Initializable {
                 bookLostNum.setText(String.valueOf(CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.LOST).size()));
             });
         });
+        yourBookNum.setText(String.valueOf(CurrentMember.getMember().getLogger().getMemListOfLog().size()));
+        CurrentMember.getMember().getLogger().getMemListOfLog().addListener((ListChangeListener<Log>) change -> {
+            Platform.runLater(() -> {
+                yourBookNum.setText(String.valueOf(CurrentMember.getMember().getLogger().getMemListOfLog().size()));
+            });
+        });
         welcomeText.setText("Hello " + CurrentMember.getMember().getId());
         setLibBookTable(CurrentMember.getListOfLibBook());
         setMemBookTable(CurrentMember.getListOfMemBook());
         ObservableList<String> searchOptionList = FXCollections.observableArrayList("ID", "Title", "Author", "Subject");
         searchOptionChoiceBox.getItems().addAll(searchOptionList);
-        memBookChoiceBox.getItems().addAll(searchOptionList);
         bookTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 WatchBookController.setBookItem(newValue);
             }
         });
+        setNotificationVBox(CurrentMember.getMember().getNotificationBox().getNotifications());
+        CurrentMember.getMember().getNotificationBox().getNotifications().addListener((ListChangeListener<Notification>) change -> {
+                setNotificationVBox(CurrentMember.getMember().getNotificationBox().getNotifications());
+        });
+        alertInfo = new Alert(Alert.AlertType.INFORMATION);
+        alertConfirm = new Alert(Alert.AlertType.CONFIRMATION);
+        alertConfirm.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
+        notificationVBox.setSpacing(10);
     }
 
     public void setMainTab(ActionEvent event) {
@@ -343,7 +378,6 @@ public class MemMainController implements Initializable {
             searchTextField.setText("");
             CurrentMember.returnListOfLibBook();
             setLibBookTable(CurrentMember.getListOfLibBook());
-            checkBookUpdateLabel.setVisible(false);
             checkSearchLabel.setVisible(false);
             bookTable.getSelectionModel().select(null);
         } else if (event.getSource() == watchBookBut) {
@@ -353,9 +387,52 @@ public class MemMainController implements Initializable {
                 Scene scene = new Scene(fxmlLoader.load());
                 stage.setTitle("Library Management System");
                 stage.setScene(scene);
-                stage.initStyle(StageStyle.UTILITY);
+                stage.initStyle(StageStyle.UNDECORATED);
+                stage.setResizable(false);
                 stage.show();
                 WatchBookController.setStage(stage);
+            }
+        }
+    }
+    public void setMemBookTab(ActionEvent event) throws ParseException {
+        if (event.getSource() == memCancelBookBut) {
+            memBookTable.getSelectionModel().select(null);
+        } else if (event.getSource() == renewBookBut) {
+            if (memBookTable.getSelectionModel().getSelectedItem() != null) {
+                BookItem renewBook = memBookTable.getSelectionModel().getSelectedItem();
+                alertInfo.setContentText(CurrentMember.getMember().basicActions(renewBook.getId(), Date.valueOf(LocalDate.now()), "RENEW"));
+                CurrentMember.updateListOfMemBook(renewBook);
+                CurrentMember.updateListOfLibBook(renewBook);
+                alertInfo.showAndWait();
+            }
+        } else if (event.getSource() == returnBookBut) {
+            if (memBookTable.getSelectionModel().getSelectedItem() != null) {
+                BookItem returnBook = memBookTable.getSelectionModel().getSelectedItem();
+                alertInfo.setContentText(CurrentMember.getMember().basicActions(returnBook.getId(), Date.valueOf(LocalDate.now()), "RETURN"));
+                CurrentMember.deleteListOfMemBook(returnBook);
+                CurrentMember.updateListOfLibBook(returnBook);
+                alertInfo.showAndWait();
+            }
+        } else if (event.getSource() == memLostBookBut) {
+            if (memBookTable.getSelectionModel().getSelectedItem() != null) {
+                BookItem lostBook = memBookTable.getSelectionModel().getSelectedItem();
+                Notification notification = CurrentMember.getMember().getNotificationBox().findNotification(lostBook.getId());
+                if (notification.getDueDate().isAfter(LocalDate.now())) {
+                    int daysBetween = Period.between(LocalDate.now(), notification.getDueDate()).getDays();
+                    alertConfirm.setContentText("You have " + daysBetween + " days to find the book before being blacklisted." +
+                            "\nDo you still want to report the loss of this book?");
+                    Optional<ButtonType> type = alertConfirm.showAndWait();
+                    if (type.isPresent()) {
+                        if (type.get() == ButtonType.YES) {
+                            CurrentMember.getMember().updateBook(lostBook.getId(), 13, "LOST");
+                            alertInfo.setContentText("You have lost " + Math.min(50, CurrentMember.getMember().getPoint()) + " points for loosing a book!");
+                            System.out.println(CurrentMember.getMember().getPoint());
+                            CurrentLibrarian.getLibrarian().updatePoint(CurrentMember.getMember().getId(), Math.max(0, CurrentMember.getMember().getPoint() - 50));
+                            System.out.println(CurrentMember.getMember().getPoint());
+                            alertInfo.showAndWait();
+                        }
+                    }
+                }
             }
         }
     }

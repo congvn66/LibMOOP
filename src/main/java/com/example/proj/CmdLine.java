@@ -205,21 +205,21 @@ public class CmdLine {
                     String idL = this.scanner.nextLine();
                     System.out.println("Creation date: ");
                     String d = this.scanner.nextLine();
-                    this.currentMember.basicActions(idL, parseDate(d), "LEND");
+                    System.out.println(this.currentMember.basicActions(idL, parseDate(d), "LEND"));
                     break;
                 case 5:
                     System.out.println("Id: ");
                     String idR = this.scanner.nextLine();
                     System.out.println("Creation date: ");
                     String d2 = this.scanner.nextLine();
-                    this.currentMember.basicActions(idR, parseDate(d2), "RETURN");
+                    System.out.println(this.currentMember.basicActions(idR, parseDate(d2), "RETURN"));
                     break;
                 case 6:
                     System.out.println("Id: ");
                     String idRe = this.scanner.nextLine();
                     System.out.println("Creation date: ");
                     String d3 = this.scanner.nextLine();
-                    this.currentMember.basicActions(idRe, parseDate(d3), "RENEW");
+                    System.out.println(this.currentMember.basicActions(idRe, parseDate(d3), "RENEW"));
                     break;
                     //break;
                 case 7:

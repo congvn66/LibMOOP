@@ -1,25 +1,27 @@
 package com.example.proj.Models;
 
+import javafx.collections.FXCollections;
+import javafx.collections.ObservableList;
+
 import java.sql.*;
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.List;
 
 public class NotificationBox {
-    private List<Notification> notifications;
+    private ObservableList<Notification> notifications;
 
     public NotificationBox() {
-        this.notifications = new ArrayList<>();
+        this.notifications = FXCollections.observableArrayList();
     }
 
-    public List<Notification> getNotifications() {
+    public ObservableList<Notification> getNotifications() {
         return notifications;
     }
 
-    public void setNotifications(List<Notification> notifications) {
+    public void setNotifications(ObservableList<Notification> notifications) {
         this.notifications = notifications;
     }
-
 
 
     public void getNotificationsForMember(String memberId) {
@@ -43,14 +45,22 @@ public class NotificationBox {
 
                 LocalDate tomorrow = today.plusDays(1);
                 if (!dueDate.isBefore(tomorrow)) {
-                    notifications.add(new Notification(bookId, dueDate.toString(), false));
+                    notifications.add(new Notification(bookId, dueDate, false));
                 } else {
-                    notifications.add(new Notification(bookId, dueDate.toString(), true));
+                    notifications.add(new Notification(bookId, dueDate, true));
                 }
             }
 
         } catch (SQLException e) {
             e.printStackTrace();
         }
+    }
+    public Notification findNotification (String bookId) {
+        for (Notification i : notifications) {
+            if (i.getBookId().equals(bookId)) {
+                return i;
+            }
+        }
+        return null;
     }
 }

@@ -7,6 +7,7 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.Initializable;
 import javafx.scene.control.*;
+import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
 
 import java.net.URL;
@@ -121,6 +122,8 @@ public class AddBookController implements Initializable {
 
     @FXML
     private Button finalAddBookBut;
+    @FXML
+    private AnchorPane addBookAnchorPane;
 
     private List<Label> checkList;
 
@@ -369,6 +372,17 @@ public class AddBookController implements Initializable {
                 CurrentLibrarian.getLibrarian().addBookItem(bookItem);
                 CurrentLibrarian.addBookObservableList(bookItem);
                 alert.showAndWait();
+                addBookAnchorPane.getChildren().stream().filter(node -> node instanceof TextField || node instanceof TextArea || node instanceof ChoiceBox<?> || node instanceof DatePicker).forEach(node -> {
+                    if (node instanceof TextField) {
+                        ((TextField) node).setText("");
+                    } else if (node instanceof TextArea) {
+                        ((TextArea) node).setText("");
+                    } else if (node instanceof ChoiceBox<?>) {
+                        ((ChoiceBox<?>) node).getSelectionModel().clearSelection();
+                    } else if (node instanceof DatePicker) {
+                        ((DatePicker) node).setValue(null);
+                    }
+                });
             }
         }
     }

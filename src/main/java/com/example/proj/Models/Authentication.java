@@ -61,8 +61,7 @@ public class Authentication {
         }
     }
 
-    public Member checkLoginMember() {
-        Librarian librarian = new Librarian();
+    public Member checkLoginMember(Librarian librarian) {
         Member member = librarian.getMemberMap().get(this.id);
         if (member == null || !member.getPassword().equals(this.passWord)) {
             return null;

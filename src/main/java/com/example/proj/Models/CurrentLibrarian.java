@@ -12,33 +12,44 @@ public class CurrentLibrarian {
 
     private static ObservableList <BookItem> initialBookList;
 
-    public CurrentLibrarian(String name, AccountStatus status, String passWord) {
-        librarian = new Librarian(name, status, passWord);
-        memberObservableList = FXCollections.observableArrayList();
-        bookObservableList = FXCollections.observableArrayList();
-        for (String i : librarian.getMemberMap().keySet()) {
-            memberObservableList.add(librarian.getMemberMap().get(i));
-        }
-        for (String i : librarian.getCatalog().getBookId().keySet()) {
-            bookObservableList.add(librarian.getCatalog().getBookId().get(i));
-        }
-        initialMemberList = memberObservableList;
-        initialBookList = bookObservableList;
+    public CurrentLibrarian(Librarian librarian) {
+        this.librarian = librarian;
     }
 
     public static ObservableList<Member> getMemberObservableList() {
-        return memberObservableList;
+        if (memberObservableList == null) {
+            memberObservableList = FXCollections.observableArrayList();
+            for (String i : librarian.getMemberMap().keySet()) {
+                memberObservableList.add(librarian.getMemberMap().get(i));
+            }
+            initialMemberList = memberObservableList;
+            return memberObservableList;
+        }
+            return memberObservableList;
     }
 
     public static ObservableList<BookItem> getBookObservableList() {
+        if (bookObservableList == null) {
+            bookObservableList = FXCollections.observableArrayList();
+            for (String i : librarian.getCatalog().getBookId().keySet()) {
+                bookObservableList.add(librarian.getCatalog().getBookId().get(i));
+            }
+            initialBookList = bookObservableList;
+            return bookObservableList;
+        }
         return bookObservableList;
     }
     public static void updateMemberObservableList(Member member) {
         for (Member i : memberObservableList) {
             if (i.getId() == member.getId()) {
-                memberObservableList.set(memberObservableList.indexOf(i), member);
-                initialMemberList.set(initialMemberList.indexOf(i), member);
-                break;
+                if (memberObservableList != initialMemberList) {
+                    memberObservableList.set(memberObservableList.indexOf(i), member);
+                    initialMemberList.set(initialMemberList.indexOf(i), member);
+                    break;
+                } else {
+                    initialMemberList.set(initialMemberList.indexOf(i), member);
+                    break;
+                }
             }
         }
     }
@@ -46,26 +57,43 @@ public class CurrentLibrarian {
     public static void updateBookObservableList(BookItem bookItem) {
         for (BookItem i : bookObservableList) {
             if (i.getId().equals(bookItem.getId())) {
-                bookObservableList.set(bookObservableList.indexOf(i), bookItem);
-                initialBookList.set(initialBookList.indexOf(i), bookItem);
-                return;
+                if (bookObservableList != initialBookList) {
+                    bookObservableList.set(bookObservableList.indexOf(i), bookItem);
+                    initialBookList.set(initialBookList.indexOf(i), bookItem);
+                    return;
+                } else {
+                    initialBookList.set(initialBookList.indexOf(i), bookItem);
+                    return;
+                }
             }
         }
     }
 
     public static void deleteMemberObservableList(Member member) {
-                initialMemberList.remove(member);
-                memberObservableList.remove(member);
+        if (initialMemberList != memberObservableList) {
+            initialMemberList.remove(member);
+            memberObservableList.remove(member);
+        } else {
+            initialMemberList.remove(member);
+        }
     }
 
     public static void deleteBookObservableList(BookItem bookItem) {
-        initialBookList.remove(bookItem);
-        bookObservableList.remove(bookItem);
+        if (initialBookList != bookObservableList) {
+            initialBookList.remove(bookItem);
+            bookObservableList.remove(bookItem);
+        } else {
+            initialBookList.remove(bookItem);
+        }
     }
 
     public static void addBookObservableList(BookItem bookItem) {
-        initialBookList.add(bookItem);
-        bookObservableList.add(bookItem);
+        if (initialBookList != bookObservableList) {
+            initialBookList.add(bookItem);
+            bookObservableList.add(bookItem);
+        } else {
+            initialBookList.add(bookItem);
+        }
     }
 
     public static void setMemberObservableList(ObservableList<Member> memberObservableList) {

@@ -32,9 +32,8 @@ public class Member extends Account{
     public NotificationBox getNotificationBox() {
         if (this.notificationBox == null) {
             this.notificationBox = new NotificationBox();
-
+            this.notificationBox.getNotificationsForMember(this.getId());
         }
-        this.notificationBox.getNotificationsForMember(this.getId());
         return this.notificationBox;
     }
 
@@ -80,42 +79,69 @@ public class Member extends Account{
     public MemberLogger getLogger() {
         return logger;
     }
+    public void replaceNotificationBox(Notification a) {
+        for (Notification i : this.notificationBox.getNotifications()) {
+            if (a.getBookId().equals(i.getBookId())) {
+                this.notificationBox.getNotifications().set(this.notificationBox.getNotifications().indexOf(i), a);
+                return;
+            }
+        }
+    }
 
-    public void basicActions(String id, Date creationDate, String type) throws ParseException {
+    public void addNotificationBox(Notification a) {
+        this.notificationBox.getNotifications().add(a);
+    }
+
+    public void deleteNotificationBox(Notification a) {
+        for (Notification i : this.notificationBox.getNotifications()) {
+            if (a.getBookId().equals(i.getBookId())) {
+                this.notificationBox.getNotifications().remove(i);
+                return;
+            }
+        }
+    }
+
+    public String basicActions(String id, Date creationDate, String type) throws ParseException {
         //this.logger.generateMemberLog("src/main/resources/database/members.txt", this.getId());
         if (this.getCatalog().findBookById(id) == null) {
-            System.out.println("Book not found.");
-            return ;
+            return "Book not found.";
         }
         BookItem book = this.getCatalog().findBookById(id);
+        String returnString = "";
         switch (type) {
             case "LEND":
                 if (this.getStatus() == AccountStatus.BLACKLISTED) {
-                    System.out.println("You have been banned!");
+                    returnString = "You have been banned!";
+                    System.out.println(returnString);
                     break;
                 }
                 if (book.getStatus() == BookStatus.AVAILABLE && !book.getIsReferenceOnly()) {
                     if (this.getTotalBooksCheckedOut() < 5) {
-                        this.logger.updateLog(this, book.getId(), creationDate, "LEND");
+                        returnString = this.logger.updateLog(this, book.getId(), creationDate, "LEND");
                         Librarian adminLend = new Librarian();
                         adminLend.increaseBookForMemberDatabase(this.getId());
-                        this.updateBook(book.getId(), 13, "LOANED");
+                        this.updateBook(book.getId(), 13, String.valueOf(BookStatus.LOANED));
+                        Notification addNotification = new Notification(book.getId(), LocalDate.now().plusDays(15), false);
+                        addNotificationBox(addNotification);
                     } else {
-                        System.out.println("You have reached maximum number of books!");
+                        returnString = "You have reached maximum number of books!";
+                        System.out.println(returnString);
                     }
                 } else {
-                    System.out.println("You can't borrow that book now.");
+                    returnString = "You can't borrow that book now.";
+                    System.out.println(returnString);
                 }
                 break;
             case "RETURN":
-                this.logger.updateLog(this, book.getId(), creationDate, "RETURN");
+                returnString = this.logger.updateLog(this, book.getId(), creationDate, "RETURN");
                 break;
             case "RENEW":
-                this.logger.updateLog(this, book.getId(), creationDate, "RENEW");
+                returnString = this.logger.updateLog(this, book.getId(), creationDate, "RENEW");
                 break;
             default:
                 break;
         }
+        return returnString;
     }
 
     public void printInfo() {

@@ -108,8 +108,9 @@ public class LoginController extends Application {
         if (event.getSource() != null) {
             if (event.getSource() == Login) {
                 Authentication authentication = new Authentication(name_log.getText(), password_log.getText());
+                Librarian librarian = new Librarian();
                 if (authentication.checkLoginasLibrarian() != null) {
-                    CurrentLibrarian currentLib = new CurrentLibrarian(name_log.getText(), authentication.checkLoginasLibrarian().getStatus(), authentication.checkLoginasLibrarian().getPassword());
+                    CurrentLibrarian currentLib = new CurrentLibrarian(authentication.checkLoginasLibrarian());
                     wrong.setVisible(false);
                     System.out.println("Librarian logged in");
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/proj/FXML/LibMain.fxml"));
@@ -119,8 +120,9 @@ public class LoginController extends Application {
                     stage.setScene(scene);
                     Login.getScene().getWindow().hide();
                     stage.show();
-                } else if (authentication.checkLoginMember() != null) {
-                    CurrentMember currentMember = new CurrentMember(name_log.getText(), authentication.checkLoginMember().getStatus(), authentication.checkLoginMember().getPassword(), authentication.checkLoginMember().getTotalBooksCheckedOut(), authentication.checkLoginMember().getPoint(), authentication.checkLoginMember().getCreateDate());
+                } else if (authentication.checkLoginMember(librarian) != null) {
+                    CurrentLibrarian currentLibrarian = new CurrentLibrarian(librarian);
+                    CurrentMember currentMember = new CurrentMember(authentication.checkLoginMember(librarian));
                     wrong.setVisible(false);
                     System.out.println("Login successfully");
                     FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/proj/FXML/MemMain.fxml"));

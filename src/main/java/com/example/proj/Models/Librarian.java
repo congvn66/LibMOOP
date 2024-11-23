@@ -336,6 +336,9 @@ public class Librarian extends Account{
             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected > 0) {
                 if (this.getMemberMap().containsKey(id)) {
+                    if (newPoint == 0) {
+                        this.changeMemberStatus(id, AccountStatus.BLACKLISTED);
+                    }
                     this.getMemberMap().get(id).setPoint(newPoint);
                 }
             }

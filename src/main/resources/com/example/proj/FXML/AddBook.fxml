@@ -12,7 +12,7 @@
 
 <StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="600.0" prefWidth="900.0" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.proj.Controller.AddBookController">
    <children>
-      <AnchorPane prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #7efff5;">
+      <AnchorPane fx:id="addBookAnchorPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #7efff5;">
          <children>
             <ChoiceBox fx:id="addIsRefOnlyChoiceBox" layoutX="577.0" layoutY="90.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-radius: 15; -fx-border-color: black; -fx-border-radius: 15;" />
             <ChoiceBox fx:id="addBookStatusChoiceBox" layoutX="576.0" layoutY="148.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-radius: 15; -fx-border-color: black; -fx-border-radius: 15;" />
