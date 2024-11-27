@@ -23,8 +23,10 @@ public class Catalog {
     private Map<String, BookItem> bookId;
     private Map<BookStatus, ObservableList<BookItem>> bookStatus;
 
+    private static Catalog instance;
+
     // Constructor
-    public Catalog() {
+    private Catalog() {
         File file = new File("src/main/resources/database/real_books.txt");
         if (file.exists()) {
             String absolute = file.getAbsolutePath();
@@ -38,6 +40,14 @@ public class Catalog {
         this.bookPublicationDates = new HashMap<>();
         this.bookId = new HashMap<>();
         this.bookStatus = new HashMap<>();
+    }
+
+    public static Catalog getInstance() {
+        if (instance == null) {
+            instance = new Catalog(); // Nếu chưa có instance, tạo mới
+            instance.loadCatalogFromDatabase();
+        }
+        return instance;
     }
 
     public void setTotalBooks(int totalBooks) {
@@ -106,7 +116,7 @@ public class Catalog {
         String username = "root";
         String password = "";
 
-        String query = "SELECT ISBN, title, subject, publisher, language, numberOfPage, authorName, authorDescription, id, isReferenceOnly, price, format, status, dateOfPurchase, publicationDate, number, location FROM bookitem";
+        String query = "SELECT ISBN, title, subject, publisher, language, numberOfPage, authorName, authorDescription, id, isReferenceOnly, price, format, status, dateOfPurchase, publicationDate, number, location, imgName FROM bookitem";
 
         try (Connection connection = DriverManager.getConnection(jdbcURL, username, password);
              PreparedStatement statement = connection.prepareStatement(query);
@@ -130,10 +140,11 @@ public class Catalog {
                 Date publicationDate = new Date(resultSet.getDate("publicationDate").getTime());
                 int number = resultSet.getInt("number");
                 String location = resultSet.getString("location");
+                String imageName = resultSet.getString("imgName");
 
                 BookItem bookItem = new BookItem(ISBN, title, subject, publisher, language, numberOfPage,
                         authorName, authorDescription, id, isReferenceOnly, price, format, status,
-                        dateOfPurchase, publicationDate, number, location);
+                        dateOfPurchase, publicationDate, number, location, imageName);
 
                 this.addBookItem(bookItem, false);
             }
@@ -178,7 +189,7 @@ public class Catalog {
         }
     }
 
-    public void writeBookItemToDatabase(BookItem bookItem) {
+    public int writeBookItemToDatabaseAndReturnId(BookItem bookItem) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
 
         // Database connection details
@@ -189,9 +200,12 @@ public class Catalog {
         String sql = "INSERT INTO bookitem (ISBN, title, subject, publisher, language, numberOfPage, authorName, authorDescription, id, isReferenceOnly, price, format, status, dateOfPurchase, publicationDate, number, location) "
                 + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
-        try (Connection connection = DriverManager.getConnection(jdbcURL, dbUsername, dbPassword);
-             PreparedStatement statement = connection.prepareStatement(sql)) {
+        int generatedId = -1;
 
+        try (Connection connection = DriverManager.getConnection(jdbcURL, dbUsername, dbPassword);
+             PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
+
+            // Set parameters
             statement.setString(1, bookItem.getISBN());
             statement.setString(2, bookItem.getTitle());
             statement.setString(3, bookItem.getSubject());
@@ -200,7 +214,7 @@ public class Catalog {
             statement.setString(6, bookItem.getNumberOfPage());
             statement.setString(7, bookItem.getAuthor().getName());
             statement.setString(8, bookItem.getAuthor().getDescription());
-            statement.setString(9, bookItem.getId());
+            statement.setString(9, null);
             statement.setString(10, bookItem.getIsReferenceOnly() ? "true" : "false");
             statement.setDouble(11, bookItem.getPrice());
             statement.setString(12, bookItem.getFormat().name());
@@ -210,15 +224,24 @@ public class Catalog {
             statement.setInt(16, bookItem.getRack().getNumber());
             statement.setString(17, bookItem.getRack().getLocationIdentifier());
 
+            // Execute the insert and retrieve the generated keys
             int rowsInserted = statement.executeUpdate();
             if (rowsInserted > 0) {
-                System.out.println("A new book item was inserted successfully!");
+                try (ResultSet generatedKeys = statement.getGeneratedKeys()) {
+                    if (generatedKeys.next()) {
+                        generatedId = generatedKeys.getInt(1); // Retrieve the generated ID
+                        System.out.println("A new book item was inserted successfully with ID: " + generatedId);
+                    }
+                }
             }
 
         } catch (SQLException e) {
             System.out.println("Error inserting the book item into the database: " + e.getMessage());
         }
+
+        return generatedId; // Return the generated ID
     }
+
 
     public void writeBookItemToFile(BookItem bookItem) {
         SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
@@ -363,6 +386,9 @@ public class Catalog {
                 break;
             case 17: // location
                 query = "UPDATE bookitem SET location = ? WHERE id = ?";
+                break;
+            case 18: // image name
+                query = "UPDATE bookitem SET imgName = ? WHERE id = ?";
                 break;
             default:
                 System.out.println("Invalid field.");
@@ -535,109 +561,6 @@ public class Catalog {
         System.out.println("update elapsed time: " + (endTime - startTime) + " ms");
     }
 
-    public void editBook(String bookId, int fieldToEdit, String newValue) {
-        List<String> lines = new ArrayList<>();
-        boolean bookFound = false;
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] fields = line.split(";");
-                if (fields[8].equals(bookId)) {
-                    bookFound = true;
-                    switch (fieldToEdit) {
-                        case 1: fields[0] = newValue; break;  // ISBN
-                        case 2: fields[1] = newValue; break;  // title
-                        case 3: fields[2] = newValue; break;  // subject
-                        case 4: fields[3] = newValue; break;  // publisher
-                        case 5: fields[4] = newValue; break;  // language
-                        case 6: fields[5] = newValue; break;  // numberOfPage
-                        case 7: fields[6] = newValue; break;  // authorName
-                        case 8: fields[7] = newValue; break;  // authorDescription
-                        case 9: fields[8] = newValue; break;  // id
-                        case 10: fields[9] = newValue; break; // isReferenceOnly
-                        case 11: fields[10] = newValue; break; // price
-                        case 12: fields[11] = newValue; break; // format
-                        case 13: fields[12] = newValue; break; // status
-                        case 14: fields[13] = newValue; break; // dateOfPurchase
-                        case 15: fields[14] = newValue; break; // publicationDate
-                        case 16: fields[15] = newValue; break; // number
-                        case 17: fields[16] = newValue; break; // location
-                        default:
-                            System.out.println("Invalid field.");
-                            return;
-                    }
-                }
-
-                lines.add(String.join(";", fields));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // Ghi lại file với thông tin đã chỉnh sửa
-        if (bookFound) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-                for (String line : lines) {
-                    writer.write(line);
-                    writer.newLine();
-                }
-                System.out.println("Book " + bookId + " has been updated.");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            this.totalBooks.set(0);
-            // load again.
-            this.bookSubjects = new HashMap<>();
-            this.bookAuthors = new HashMap<>();
-            this.bookTitles = new HashMap<>();
-            this.bookId = new HashMap<>();
-            this.bookPublicationDates = new HashMap<>();
-            this.ImportFromFile();
-        } else {
-            System.out.println("Book with ID " + bookId + " not found.");
-        }
-    }
-
-    public void ImportFromFile() {
-        try (BufferedReader br  = new BufferedReader(new FileReader(this.filePath))) {
-            String line;
-            //br.readLine();
-            while ((line = br.readLine()) != null) {
-                String[] tmp = line.split(";");
-                if (tmp.length != 17) {
-                    continue;
-                }
-                String ISBN = tmp[0].trim();
-                String title = tmp[1].trim();
-                String subject = tmp[2].trim();
-                String publisher = tmp[3].trim();
-                String language = tmp[4].trim();
-                String numberOfPage = tmp[5].trim();
-                String authorName = tmp[6].trim();
-                String authorDescription = tmp[7].trim();
-                String id = tmp[8].trim();
-                Boolean isRefOnly = Boolean.parseBoolean(tmp[9].trim());
-                double price = Double.parseDouble(tmp[10].trim());
-                String bookFormat = tmp[11].trim();
-                String bookStatus = tmp[12].trim();
-                Date dateOfPurchase = parseDate(tmp[13].trim());
-                Date publicationDate = parseDate(tmp[14].trim());
-                int number = Integer.parseInt(tmp[15].trim());
-                String location = tmp[16].trim();
-
-                BookItem addin = new BookItem(ISBN, title, subject, publisher, language, numberOfPage, authorName,authorDescription,
-                        id, isRefOnly, price, BookFormat.valueOf(bookFormat.toUpperCase()), BookStatus.valueOf(bookStatus.toUpperCase()),
-                        dateOfPurchase, publicationDate, number, location);
-
-                this.addBookItem(addin, false);
-            }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException("Cannot open file!");
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
 
     public boolean removeBookById(String id, boolean inDatabase, boolean isEdit) {
         long startTime = System.currentTimeMillis();

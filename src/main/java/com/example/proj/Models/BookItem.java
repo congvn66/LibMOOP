@@ -1,5 +1,6 @@
 package com.example.proj.Models;
 
+import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -14,6 +15,7 @@ public class BookItem extends Book {
     private BookStatus status;
     private Date dateOfPurchase;
     private Date publicationDate;
+    private String imgName;
 
     // CAUTION!!!
     private Rack rack;
@@ -28,7 +30,7 @@ public class BookItem extends Book {
                     String numberOfPage, String authorName, String authorDescription,
                     String id, boolean isReferenceOnly, double price,
                     BookFormat format, BookStatus status, Date dateOfPurchase, Date publicationDate,
-                    int number, String location) {
+                    int number, String location, String imgName) {
         super(ISBN, title, subject, publisher, language, numberOfPage, authorName, authorDescription);
         this.id = id;
         this.isReferenceOnly = isReferenceOnly;
@@ -37,7 +39,7 @@ public class BookItem extends Book {
         this.status = status;
         this.dateOfPurchase = dateOfPurchase;
         this.publicationDate = publicationDate;
-
+        this.imgName = imgName;
         // CAUTION!!!!!
         this.rack = new Rack(number, location);
     }
@@ -52,6 +54,35 @@ public class BookItem extends Book {
 
     public boolean getIsReferenceOnly() {
         return isReferenceOnly;
+    }
+
+    public String getImgName() {
+        return imgName;
+    }
+
+    public void setImgName(String imgName) {
+        this.imgName = imgName;
+    }
+
+    public String generateImagePathFromImageName(String imgName) {
+        String basePath = "src/main/resources/asset/book/";
+        if (imgName == null || imgName.trim().isEmpty()) {
+            imgName = "default.png";
+        }
+        return basePath + imgName;
+    }
+
+    public static String generateImageNameFromChosenImage(String imgName) {
+
+        int dotIndex = imgName.lastIndexOf(".");
+        String name = imgName.substring(0, dotIndex);
+        String extension = imgName.substring(dotIndex);
+
+        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+
+        String newImgName = name + "_" + timestamp + extension;
+
+        return newImgName;
     }
 
 

@@ -252,6 +252,7 @@ public class AddBookController implements Initializable {
             BookFormat bookFormat = addBookFormatChoiceBox.getValue();
             String bookLocation = addBookLocationText.getText();
 
+
             if (!title.equals("")) {
                 checkTitle.setVisible(false);
             } else {
@@ -366,9 +367,10 @@ public class AddBookController implements Initializable {
                 }
             }
             if (checkBook) {
+                // fix!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
                 BookItem bookItem = new BookItem(isbn, title, subject, publisher, language, numberOfPage, authorName
                         , authorDesc, id, isRef, Double.parseDouble(price), bookFormat, bookStatus, dateOfPurchase, publicationDate
-                        , Integer.parseInt(num), bookLocation);
+                        , Integer.parseInt(num), bookLocation, "");
                 CurrentLibrarian.getLibrarian().addBookItem(bookItem);
                 CurrentLibrarian.addBookObservableList(bookItem);
                 alert.showAndWait();

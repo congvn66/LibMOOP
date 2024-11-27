@@ -28,7 +28,7 @@ class CatalogTest {
 
     @BeforeEach
     public void setUp() {
-        catalog = new Catalog();
+        Librarian l = new Librarian();
     }
 
     @Test
@@ -101,11 +101,12 @@ class CatalogTest {
                 Date.valueOf(LocalDate.of(2017, 12, 27)), // Date of purchase
                 Date.valueOf(LocalDate.of(2008, 5, 8)), // Publication date
                 1, // Number
-                "Shelf A" // Location
+                "Shelf A", // Location
+                "deafault.png"
         );
 
         // Add book item to the catalog
-        catalog.addBookItem(bookItem);
+        catalog.addBookItem(bookItem, true);
 
         // Check if the title was added correctly
         List<BookItem> booksByTitle = catalog.getBookTitles().get("effective java");
@@ -167,11 +168,12 @@ class CatalogTest {
                 Date.valueOf(LocalDate.of(2017, 12, 27)), // Date of purchase
                 Date.valueOf(LocalDate.of(2008, 5, 8)), // Publication date
                 1, // Rack number
-                "Shelf A" // Rack location
+                "Shelf A", // Rack location
+                "default.png"
         );
 
         // Insert book item into the database
-        catalog.writeBookItemToDatabase(bookItem);
+        catalog.writeBookItemToDatabaseAndReturnId(bookItem);
 
         // Check the database to see if the book was inserted correctly
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
