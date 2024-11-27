@@ -2,6 +2,7 @@ package com.example.proj.Controller;
 
 import com.example.proj.Models.*;
 import javafx.application.Platform;
+import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
 import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
@@ -246,28 +247,28 @@ public class LibMainController implements Initializable {
                 percentage.setText((double) CurrentLibrarian.getLibrarian().getCatalog().getTotalBooks().get() / 50 + "%");
             });
         });
-        booksAvailableNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.AVAILABLE).size()));
-        CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.AVAILABLE).addListener((ListChangeListener<BookItem>) change -> {
+        booksAvailableNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.AVAILABLE.toString()).size()));
+        CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.AVAILABLE.toString()).addListener((ListChangeListener<BookItem>) change -> {
                     Platform.runLater(() -> {
-                        booksAvailableNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.AVAILABLE).size()));
+                        booksAvailableNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.AVAILABLE.toString()).size()));
                     });
                 });
-        bookReservedNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.RESERVED).size()));
-        CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.RESERVED).addListener((ListChangeListener<BookItem>) change -> {
+        bookReservedNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.RESERVED.toString()).size()));
+        CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.RESERVED.toString()).addListener((ListChangeListener<BookItem>) change -> {
             Platform.runLater(() -> {
-                bookReservedNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.RESERVED).size()));
+                bookReservedNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.RESERVED.toString()).size()));
             });
         });
-        bookLoanedNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOANED).size()));
-        CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOANED).addListener((ListChangeListener<BookItem>) change -> {
+        bookLoanedNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOANED.toString()).size()));
+        CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOANED.toString()).addListener((ListChangeListener<BookItem>) change -> {
             Platform.runLater(() -> {
-                bookLoanedNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOANED).size()));
+                bookLoanedNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOANED.toString()).size()));
             });
         });
-        bookLostNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOST).size()));
-        CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOST).addListener((ListChangeListener<BookItem>) change -> {
+        bookLostNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOST.toString()).size()));
+        CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOST.toString()).addListener((ListChangeListener<BookItem>) change -> {
             Platform.runLater(() -> {
-                bookLostNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOST).size()));
+                bookLostNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOST.toString()).size()));
             });
         });
         diaryChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> {
@@ -296,7 +297,7 @@ public class LibMainController implements Initializable {
         bookStatusChoiceBox.getItems().addAll(bookStatusList);
         ObservableList<Boolean> refList = FXCollections.observableArrayList(Boolean.TRUE, Boolean.FALSE);
         isRefOnlyChoiceBox.getItems().addAll(refList);
-        ObservableList<String> searchOptionList = FXCollections.observableArrayList("ID", "Title", "Author", "Subject");
+        ObservableList<String> searchOptionList = FXCollections.observableArrayList("ID", "Title", "Author", "Subject", "Status");
         searchOptionChoiceBox.getItems().addAll(searchOptionList);
         ObservableList<String> diaryChoice = FXCollections.observableArrayList("Total Logs", "Logs by member", "Total member register");
         diaryChoiceBox.getItems().addAll(diaryChoice);
@@ -331,22 +332,42 @@ public class LibMainController implements Initializable {
             }
         });
     }
-
-    public void setMainTab(ActionEvent event) {
+    private void disableMainButton(Button[] list, Button x, boolean backToMain) {
+        for (Button i : list) {
+            if (i.equals(x) && !backToMain) {
+                i.setDisable(true);
+            } else {
+                i.setDisable(false);
+            }
+        }
+    }
+    public void setMainTab(ActionEvent event) throws IOException {
+        Button[] listOfMainBut = {memberManageBut, bookManageBut, diaryBut};
         if (event.getSource() == memberManageBut) {
             MemberManagementTab.toFront();
             backBut.toFront();
+            disableMainButton(listOfMainBut, memberManageBut, false);
         } else if (event.getSource() == bookManageBut) {
             BookManagementTab.toFront();
             backBut.toFront();
+            disableMainButton(listOfMainBut, bookManageBut, false);
         } else if (event.getSource() == diaryBut) {
             LibraryDiaryTab.toFront();
             backBut.toFront();
+            disableMainButton(listOfMainBut, diaryBut, false);
         } else if (event.getSource() == backBut) {
             MainTab.toFront();
             ExitBut.toFront();
+            disableMainButton(listOfMainBut, diaryBut, true);
         } else if (event.getSource() == ExitBut) {
-            Platform.exit();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/proj/FXML/Login.fxml"));
+            Stage stage = new Stage();
+            Scene scene = new Scene(fxmlLoader.load());
+            stage.setTitle("Library Management System");
+            stage.setScene(scene);
+            stage.setResizable(false);
+            ExitBut.getScene().getWindow().hide();
+            stage.show();
         }
     }
 
@@ -442,6 +463,17 @@ public class LibMainController implements Initializable {
                                     checkSearchLabel.setVisible(false);
                                 } else {
                                     checkSearchLabel.setText("Title doesn't exist");
+                                    checkSearchLabel.setVisible(true);
+                                }
+                                break;
+                            case "Status":
+                                tmp = FXCollections.observableArrayList(CurrentLibrarian.getLibrarian().getCatalog().findBooksByStatus(searchString.toUpperCase()));
+                                if (tmp.size() != 0) {
+                                    CurrentLibrarian.setBookObservableList(tmp);
+                                    setBookTable(CurrentLibrarian.getBookObservableList());
+                                    checkSearchLabel.setVisible(false);
+                                } else {
+                                    checkSearchLabel.setText("Status doesn't exist");
                                     checkSearchLabel.setVisible(true);
                                 }
                                 break;

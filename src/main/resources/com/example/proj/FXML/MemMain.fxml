@@ -208,6 +208,16 @@
                               <Font name="Book Antiqua Bold" size="36.0" />
                            </font>
                         </Label>
+                        <Label alignment="TOP_CENTER" layoutX="324.0" layoutY="482.0" prefHeight="97.0" prefWidth="313.0" style="-fx-background-color: #18dcff; -fx-background-radius: 30;" text="Your Point:">
+                           <font>
+                              <Font name="System Bold" size="36.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="memPoint" alignment="CENTER" layoutX="412.0" layoutY="527.0" prefHeight="40.0" prefWidth="139.0" text="memPoint">
+                           <font>
+                              <Font name="Book Antiqua Bold" size="36.0" />
+                           </font>
+                        </Label>
                      </children>
                   </AnchorPane>
                   <AnchorPane layoutX="973.6000061035156" prefHeight="615.0" prefWidth="278.0" style="-fx-background-color: #1abc9c;" AnchorPane.rightAnchor="0.0">

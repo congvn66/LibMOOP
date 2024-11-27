@@ -21,7 +21,7 @@ public class Catalog {
     private Map<String, List<BookItem>> bookSubjects;
     private Map<Date, List<BookItem>> bookPublicationDates;
     private Map<String, BookItem> bookId;
-    private Map<BookStatus, ObservableList<BookItem>> bookStatus;
+    private Map<String, ObservableList<BookItem>> bookStatus;
 
     // Constructor
     public Catalog() {
@@ -32,12 +32,12 @@ public class Catalog {
         }
         this.creationDate = new Date(); // Ngày tạo là ngày hiện tại
         this.totalBooks = new SimpleIntegerProperty(0);
-        this.bookTitles = new HashMap<>();
-        this.bookAuthors = new HashMap<>();
-        this.bookSubjects = new HashMap<>();
+        this.bookTitles = new LinkedHashMap<>();
+        this.bookAuthors = new LinkedHashMap<>();
+        this.bookSubjects = new LinkedHashMap<>();
         this.bookPublicationDates = new HashMap<>();
-        this.bookId = new HashMap<>();
-        this.bookStatus = new HashMap<>();
+        this.bookId = new LinkedHashMap<>();
+        this.bookStatus = new LinkedHashMap<>();
     }
 
     public void setTotalBooks(int totalBooks) {
@@ -76,7 +76,7 @@ public class Catalog {
         this.bookId = bookId;
     }
 
-    public void setBookStatus(Map<BookStatus, ObservableList<BookItem>> bookStatus) {
+    public void setBookStatus(Map<String, ObservableList<BookItem>> bookStatus) {
         this.bookStatus = bookStatus;
     }
 
@@ -96,7 +96,7 @@ public class Catalog {
         return bookId;
     }
 
-    public Map<BookStatus, ObservableList<BookItem>> getBookStatus() {
+    public Map<String, ObservableList<BookItem>> getBookStatus() {
         return bookStatus;
     }
 
@@ -106,7 +106,7 @@ public class Catalog {
         String username = "root";
         String password = "";
 
-        String query = "SELECT ISBN, title, subject, publisher, language, numberOfPage, authorName, authorDescription, id, isReferenceOnly, price, format, status, dateOfPurchase, publicationDate, number, location FROM bookitem";
+        String query = "SELECT * FROM bookitem";
 
         try (Connection connection = DriverManager.getConnection(jdbcURL, username, password);
              PreparedStatement statement = connection.prepareStatement(query);
@@ -166,7 +166,7 @@ public class Catalog {
 
         // Update status
         BookStatus status = bookItem.getStatus();
-        bookStatus.computeIfAbsent(status, k -> FXCollections.observableArrayList()).add(bookItem);
+        bookStatus.computeIfAbsent(status.toString(), k -> FXCollections.observableArrayList()).add(bookItem);
 
         // Update ID
         if (!isEdit) {
@@ -280,6 +280,9 @@ public class Catalog {
 
     public List<BookItem> findBooksBySubject(String subject) {
         return bookSubjects.getOrDefault(subject.toUpperCase(), new ArrayList<>());
+    }
+    public ObservableList<BookItem> findBooksByStatus(String bookStatus) {
+        return this.bookStatus.getOrDefault(bookStatus, FXCollections.observableArrayList());
     }
 
     public List<BookItem> findBooksByPublicationDate(Date publicationDate) {

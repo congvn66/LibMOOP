@@ -7,12 +7,10 @@ import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Hyperlink;
-import javafx.scene.control.TextField;
-import javafx.scene.control.Label;
+import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Stage;
+import javafx.stage.StageStyle;
 
 import java.io.IOException;
 
@@ -51,7 +49,7 @@ public class LoginController extends Application {
     private TextField name_log;
 
     @FXML
-    private TextField password_log;
+    private PasswordField password_log;
 
     @FXML
     private AnchorPane questionTest;
@@ -60,7 +58,7 @@ public class LoginController extends Application {
     private AnchorPane resetPassword;
 
     @FXML
-    private TextField setPass;
+    private PasswordField setPass;
 
     @FXML
     private Label wrong;
@@ -78,7 +76,7 @@ public class LoginController extends Application {
     private TextField nameReg;
 
     @FXML
-    private TextField passWordReg;
+    private PasswordField passWordReg;
 
     @FXML
     private Label nameTakenReg;
@@ -118,6 +116,8 @@ public class LoginController extends Application {
                     Scene scene = new Scene(fxmlLoader.load());
                     stage.setTitle("Library Management System");
                     stage.setScene(scene);
+                    stage.initStyle(StageStyle.UNDECORATED);
+                    stage.setResizable(false);
                     Login.getScene().getWindow().hide();
                     stage.show();
                 } else if (authentication.checkLoginMember(librarian) != null) {
@@ -130,6 +130,8 @@ public class LoginController extends Application {
                     Scene scene = new Scene(fxmlLoader.load());
                     stage.setTitle("Library Management System");
                     stage.setScene(scene);
+                    stage.setResizable(false);
+                    stage.initStyle(StageStyle.UNDECORATED);
                     Login.getScene().getWindow().hide();
                     stage.show();
                 } else {
@@ -247,7 +249,7 @@ public class LoginController extends Application {
         Scene scene = new Scene(fxmlLoader.load());
         stage.setTitle("Library Management System");
         stage.setScene(scene);
-        stage.setResizable(true);
+        stage.setResizable(false);
         stage.show();
     }
 }

@@ -277,23 +277,23 @@ public class Librarian extends Account{
         }
     }
 
-    public void reducePointMemberDatabase(String id) {
-        String updateQuery = "UPDATE members SET point = point - 1 WHERE id = ?";
+    public void reducePointMemberDatabase(String id, int point) {
+        String updateQuery = "UPDATE members SET point = point - ? WHERE id = ?";
 
         try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
              PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
 
             // Set the parameter for the query
-            preparedStatement.setString(1, id);
-
+            preparedStatement.setString(2, id);
+            preparedStatement.setInt(1, point);
             // Execute the update
             int rowsAffected = preparedStatement.executeUpdate();
             if (rowsAffected > 0) {
                 if (this.getMemberMap().containsKey(id)) {
-                    int newPoints = this.getMemberMap().get(id).getPoint() - 1;
+                    int newPoints = this.getMemberMap().get(id).getPoint() - point;
                     this.getMemberMap().get(id).setPoint(newPoints);
                 }
-                System.out.println("Member " + id + " has lost 1 reputation.");
+                System.out.println("Member " + id + " has lost " + point + " reputation.");
             } else {
                 System.out.println("Member with ID " + id + " not found.");
             }

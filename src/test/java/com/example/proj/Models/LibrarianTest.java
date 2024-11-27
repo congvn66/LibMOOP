@@ -89,7 +89,7 @@ public class LibrarianTest {
         Map<String, Member> members = librarian.getMemberMap();
 
         // Act
-        librarian.reducePointMemberDatabase("lebron");
+        librarian.reducePointMemberDatabase("lebron", 1);
 
         // Assert
         assertEquals(98, librarian.getMemberMap().get("lebron").getPoint());

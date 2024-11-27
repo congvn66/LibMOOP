@@ -170,6 +170,9 @@ public class MemMainController implements Initializable {
     @FXML
     private VBox notificationVBox;
 
+    @FXML
+    private Label memPoint;
+
     private Alert alertInfo;
 
     private Alert alertConfirm;
@@ -244,28 +247,34 @@ public class MemMainController implements Initializable {
                 percentage.setText((double) CurrentMember.getMember().getCatalog().getTotalBooks().get() / 50 + "%");
             });
         });
-        booksAvailableNum.setText(String.valueOf(CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.AVAILABLE).size()));
-        CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.AVAILABLE).addListener((ListChangeListener<BookItem>) change -> {
+        memPoint.setText(String.valueOf(CurrentMember.getMember().getPoint()));
+        CurrentMember.getMember().getPointProperty().addListener((observable, oldValue, newValue) -> {
             Platform.runLater(() -> {
-                booksAvailableNum.setText(String.valueOf(CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.AVAILABLE).size()));
+                memPoint.setText(String.valueOf(CurrentMember.getMember().getPoint()));
             });
         });
-        bookReservedNum.setText(String.valueOf(CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.RESERVED).size()));
-        CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.RESERVED).addListener((ListChangeListener<BookItem>) change -> {
+        booksAvailableNum.setText(String.valueOf(CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.AVAILABLE.toString()).size()));
+        CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.AVAILABLE.toString()).addListener((ListChangeListener<BookItem>) change -> {
             Platform.runLater(() -> {
-                bookReservedNum.setText(String.valueOf(CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.RESERVED).size()));
+                booksAvailableNum.setText(String.valueOf(CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.AVAILABLE.toString()).size()));
             });
         });
-        bookLoanedNum.setText(String.valueOf(CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.LOANED).size()));
-        CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.LOANED).addListener((ListChangeListener<BookItem>) change -> {
+        bookReservedNum.setText(String.valueOf(CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.RESERVED.toString()).size()));
+        CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.RESERVED.toString()).addListener((ListChangeListener<BookItem>) change -> {
             Platform.runLater(() -> {
-                bookLoanedNum.setText(String.valueOf(CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.LOANED).size()));
+                bookReservedNum.setText(String.valueOf(CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.RESERVED.toString()).size()));
             });
         });
-        bookLostNum.setText(String.valueOf(CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.LOST).size()));
-        CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.LOST).addListener((ListChangeListener<BookItem>) change -> {
+        bookLoanedNum.setText(String.valueOf(CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.LOANED.toString()).size()));
+        CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.LOANED.toString()).addListener((ListChangeListener<BookItem>) change -> {
             Platform.runLater(() -> {
-                bookLostNum.setText(String.valueOf(CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.LOST).size()));
+                bookLoanedNum.setText(String.valueOf(CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.LOANED.toString()).size()));
+            });
+        });
+        bookLostNum.setText(String.valueOf(CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.LOST.toString()).size()));
+        CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.LOST.toString()).addListener((ListChangeListener<BookItem>) change -> {
+            Platform.runLater(() -> {
+                bookLostNum.setText(String.valueOf(CurrentMember.getMember().getCatalog().getBookStatus().get(BookStatus.LOST.toString()).size()));
             });
         });
         yourBookNum.setText(String.valueOf(CurrentMember.getMember().getLogger().getMemListOfLog().size()));
@@ -277,7 +286,7 @@ public class MemMainController implements Initializable {
         welcomeText.setText("Hello " + CurrentMember.getMember().getId());
         setLibBookTable(CurrentMember.getListOfLibBook());
         setMemBookTable(CurrentMember.getListOfMemBook());
-        ObservableList<String> searchOptionList = FXCollections.observableArrayList("ID", "Title", "Author", "Subject");
+        ObservableList<String> searchOptionList = FXCollections.observableArrayList("ID", "Title", "Author", "Subject", "Status");
         searchOptionChoiceBox.getItems().addAll(searchOptionList);
         bookTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
@@ -294,7 +303,7 @@ public class MemMainController implements Initializable {
         notificationVBox.setSpacing(10);
     }
 
-    public void setMainTab(ActionEvent event) {
+    public void setMainTab(ActionEvent event) throws IOException {
         if (event.getSource() == bookManageBut) {
             BookManagementTab.toFront();
             backBut.toFront();
@@ -305,7 +314,14 @@ public class MemMainController implements Initializable {
             MainTab.toFront();
             ExitBut.toFront();
         } else if (event.getSource() == ExitBut) {
-            Platform.exit();
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/proj/FXML/Login.fxml"));
+            Stage stage = new Stage();
+            Scene scene = new Scene(fxmlLoader.load());
+            stage.setTitle("Library Management System");
+            stage.setScene(scene);
+            stage.setResizable(false);
+            ExitBut.getScene().getWindow().hide();
+            stage.show();
         }
     }
 
@@ -365,6 +381,17 @@ public class MemMainController implements Initializable {
                                     checkSearchLabel.setVisible(true);
                                 }
                                 break;
+                            case "Status":
+                                tmp = FXCollections.observableArrayList(CurrentMember.getMember().getCatalog().findBooksByStatus(searchString.toUpperCase()));
+                                if (tmp.size() != 0) {
+                                    CurrentMember.setListOfLibBook(tmp);
+                                    setLibBookTable(CurrentMember.getListOfLibBook());
+                                    checkSearchLabel.setVisible(false);
+                                } else {
+                                    checkSearchLabel.setText("Status doesn't exist");
+                                    checkSearchLabel.setVisible(true);
+                                }
+                                break;
                             default:
                                 break;
                         }
@@ -373,6 +400,7 @@ public class MemMainController implements Initializable {
             } catch (Exception e) {
                 checkSearchLabel.setText("Please select search option");
                 checkSearchLabel.setVisible(true);
+                e.printStackTrace();
             }
         } else if (event.getSource() == cancelBookBut) {
             searchTextField.setText("");
@@ -417,9 +445,14 @@ public class MemMainController implements Initializable {
             if (memBookTable.getSelectionModel().getSelectedItem() != null) {
                 BookItem lostBook = memBookTable.getSelectionModel().getSelectedItem();
                 Notification notification = CurrentMember.getMember().getNotificationBox().findNotification(lostBook.getId());
+                if (lostBook.getStatus() == BookStatus.LOST) {
+                    alertInfo.setContentText("You have already reported the loss of this book");
+                    alertInfo.showAndWait();
+                    return;
+                }
                 if (notification.getDueDate().isAfter(LocalDate.now())) {
                     int daysBetween = Period.between(LocalDate.now(), notification.getDueDate()).getDays();
-                    alertConfirm.setContentText("You have " + daysBetween + " days to find the book before being blacklisted." +
+                    alertConfirm.setContentText("You have " + daysBetween + " days to find the book." +
                             "\nDo you still want to report the loss of this book?");
                     Optional<ButtonType> type = alertConfirm.showAndWait();
                     if (type.isPresent()) {
@@ -432,9 +465,15 @@ public class MemMainController implements Initializable {
                             alertInfo.showAndWait();
                         }
                     }
+                } else {
+                    int daysBetween = Period.between(notification.getDueDate(), LocalDate.now()).getDays();
+                    CurrentMember.getMember().updateBook(lostBook.getId(), 13, "LOST");
+                    alertInfo.setContentText("You have lost " + Math.min(50 + daysBetween, CurrentMember.getMember().getPoint()) + " points for report after the due date!");
+                    CurrentLibrarian.getLibrarian().updatePoint(CurrentMember.getMember().getId(), Math.max(0, CurrentMember.getMember().getPoint() - 50 - daysBetween));
+                    alertInfo.showAndWait();
+                        }
+                    }
                 }
             }
-        }
     }
 
-}
