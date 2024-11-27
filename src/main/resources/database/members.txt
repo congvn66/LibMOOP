@@ -1,7 +1,0 @@
-cong;BLACKLISTED;congdz;0;0
-duc;ACTIVE;ducdz;4;89
-cuong;ACTIVE;cuongdz;3;11
-khoa;ACTIVE;taodeotaodau;0;12
-bruh;ACTIVE;vv;1;18
-
-admin;ACTIVE;admin;0;98

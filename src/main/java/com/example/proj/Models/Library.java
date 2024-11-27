@@ -7,7 +7,7 @@ public class Library {
     // Constructor
     public Library(String name) {
         this.name = name;
-        this.catalog = new Catalog();
+        //this.catalog = new Catalog();
     }
 
     public void displayLibraryInfo() {

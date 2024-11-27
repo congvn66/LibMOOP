@@ -329,12 +329,12 @@ public class CmdLine {
                     String authorName = this.scanner.nextLine();
                     System.out.println("Author's description: ");
                     String authorDes = this.scanner.nextLine();
-                    System.out.println("Id: ");
-                    String id = this.scanner.nextLine();
-                    if (this.currentLibrarian.getCatalog().findBookById(id.trim()) != null) {
-                        System.out.println("existed id :(");
-                        break;
-                    }
+                    //System.out.println("Id: ");
+                    //String id = "default";
+//                    if (this.currentLibrarian.getCatalog().findBookById(id.trim()) != null) {
+//                        System.out.println("existed id :(");
+//                        break;
+//                    }
                     System.out.println("Is your book is a reference? (Y for Yes, N for No)");
                     String ref = this.scanner.nextLine();
                     Boolean isReferenceOnly;
@@ -390,9 +390,11 @@ public class CmdLine {
                     int number = Integer.parseInt(s.trim());
                     System.out.println("Rack: ");
                     String location = this.scanner.nextLine();
+                    System.out.println("Image name: ");
+                    String imageName = this.scanner.nextLine();
                     BookItem addin = new BookItem(ISBN, titleOfBook, subjectdelta, publisher, language, noOfPage, authorName,
-                            authorDes, id, isReferenceOnly, price, bookFormat, bookStatus, dateOfPurchase, dateOfPublication, number,
-                            location);
+                            authorDes, null, isReferenceOnly, price, bookFormat, bookStatus, dateOfPurchase, dateOfPublication, number,
+                            location, imageName);
                     System.out.println("Adding a new book...");
                     this.currentLibrarian.addBookItem(addin);
                     System.out.println("Book added successfully!");
@@ -539,6 +541,11 @@ public class CmdLine {
                             System.out.println("Location to change:");
                             String newLocation = this.scanner.nextLine();
                             this.currentLibrarian.updateBook(idBookToUpdate, 17, newLocation);
+                            break;
+                        case 18:
+                            System.out.println("Location to change:");
+                            String newImage = this.scanner.nextLine();
+                            this.currentLibrarian.updateBook(idBookToUpdate, 18, newImage);
                             break;
                         default:
                             System.out.println("Invalid field selected.");

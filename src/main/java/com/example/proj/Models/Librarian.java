@@ -173,9 +173,18 @@ public class Librarian extends Account{
     }
 
     public void addBookItem(BookItem bookItem) {
-        this.getCatalog().addBookItem(bookItem, false);
-        this.getCatalog().writeBookItemToDatabase(bookItem);
+        int generatedId = this.getCatalog().writeBookItemToDatabaseAndReturnId(bookItem);
+
+        if (generatedId != -1) {
+            bookItem.setId(String.valueOf(generatedId));
+            this.getCatalog().addBookItem(bookItem, false);
+            System.out.println("Book item added to catalog with ID: " + generatedId);
+        } else {
+            System.out.println("Failed to add book item to catalog due to database error.");
+        }
     }
+
+
 
     public void blockMemberDatabase(String id) {
         String updateQuery = "UPDATE members SET accountStatus = ? WHERE id = ?";

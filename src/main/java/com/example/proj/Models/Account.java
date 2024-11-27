@@ -28,11 +28,7 @@ public abstract class Account {
     }
 
     public Catalog getCatalog() {
-        if (catalog == null) {
-            catalog = new Catalog();
-            catalog.loadCatalogFromDatabase();
-        }
-        return catalog;
+        return Catalog.getInstance();
     }
 
     public void setId(String id) {
