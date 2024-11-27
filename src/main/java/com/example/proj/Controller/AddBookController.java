@@ -252,6 +252,7 @@ public class AddBookController implements Initializable {
             BookFormat bookFormat = addBookFormatChoiceBox.getValue();
             String bookLocation = addBookLocationText.getText();
 
+
             if (!title.equals("")) {
                 checkTitle.setVisible(false);
             } else {
