@@ -181,6 +181,7 @@ public class BookItem extends Book {
         System.out.println("Status: " + status);
         System.out.println("Date of Purchase: " + dateOfPurchase);
         System.out.println("Publication Date: " + publicationDate);
+        System.out.println("Image name (or url): " + imgName);
         System.out.println("\n");
     }
 

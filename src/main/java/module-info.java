@@ -4,9 +4,10 @@ module com.example.proj {
     requires javafx.graphics;
     requires jdk.compiler;
     requires java.net.http;
-    requires com.google.gson;
+
     requires java.sql;
     requires java.desktop;
+    requires org.json;
 
 
     opens com.example.proj to javafx.fxml;
