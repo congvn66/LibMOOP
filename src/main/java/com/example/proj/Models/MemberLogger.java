@@ -171,49 +171,4 @@ public class MemberLogger {
         return "";
     }
 
-
-
-
-    public void generateMemberLog(String membersFilePath, String memberId) {
-        BufferedReader reader = null;
-        boolean memberExists = false;
-        try {
-            reader = new BufferedReader(new FileReader(membersFilePath));
-            String line;
-
-            while ((line = reader.readLine()) != null) {
-                String[] memberDetails = line.split(";");
-
-                if (memberDetails[0].equals(memberId)) {
-                    memberExists = true;
-                    break;
-                }
-            }
-
-            if (memberExists) {
-                String memberLogFilePath = "src/main/resources/database/" + memberId + ".txt";
-
-                File memberLogFile = new File(memberLogFilePath);
-                if (!memberLogFile.exists()) {
-                    memberLogFile.createNewFile();
-                    System.out.println("Log file created for member: " + memberId);
-                } else {
-                    System.out.println("Log file loaded for member: " + memberId);
-                }
-            } else {
-                System.out.println("Member " + memberId + " does not exist in the member list.");
-            }
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        } finally {
-            try {
-                if (reader != null) {
-                    reader.close();
-                }
-            } catch (IOException ex) {
-                ex.printStackTrace();
-            }
-        }
-    }
 }

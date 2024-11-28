@@ -43,7 +43,7 @@ public class Authentication {
     private void loadLibrariansFromDatabase() {
         String sql = "SELECT id, accountStatus, password FROM librarians";
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              Statement statement = connection.createStatement();
              ResultSet resultSet = statement.executeQuery(sql)) {
 

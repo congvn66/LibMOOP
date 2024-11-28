@@ -13,7 +13,6 @@ import java.util.*;
 import java.util.Date;
 
 public class Catalog {
-    private String filePath;
     private Date creationDate;
     private SimpleIntegerProperty totalBooks;
     private Map<String, List<BookItem>> bookTitles;
@@ -23,15 +22,10 @@ public class Catalog {
     private Map<String, BookItem> bookId;
     private Map<String, ObservableList<BookItem>> bookStatus;
 
-    private static Catalog instance;
+    private static Catalog instance = null;
 
     // Constructor
     private Catalog() {
-        File file = new File("src/main/resources/database/real_books.txt");
-        if (file.exists()) {
-            String absolute = file.getAbsolutePath();
-            this.filePath = absolute;
-        }
         this.creationDate = new Date(); // Ngày tạo là ngày hiện tại
         this.totalBooks = new SimpleIntegerProperty(0);
         this.bookTitles = new LinkedHashMap<>();
@@ -112,13 +106,10 @@ public class Catalog {
 
     public void loadCatalogFromDatabase() {
         long startTime = System.currentTimeMillis();
-        String jdbcURL = "jdbc:mysql://localhost:3306/shibalib";
-        String username = "root";
-        String password = "";
 
         String query = "SELECT * FROM bookitem";
 
-        try (Connection connection = DriverManager.getConnection(jdbcURL, username, password);
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query);
              ResultSet resultSet = statement.executeQuery()) {
 
@@ -202,7 +193,7 @@ public class Catalog {
 
         int generatedId = -1;
 
-        try (Connection connection = DriverManager.getConnection(jdbcURL, dbUsername, dbPassword);
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(sql, Statement.RETURN_GENERATED_KEYS)) {
 
             // Set parameters
@@ -242,41 +233,6 @@ public class Catalog {
         return generatedId; // Return the generated ID
     }
 
-
-    public void writeBookItemToFile(BookItem bookItem) {
-        SimpleDateFormat dateFormat = new SimpleDateFormat("yyyy-MM-dd");
-
-        String filePath = this.filePath;
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
-            File file = new File(filePath);
-            if (file.length() > 0) {
-                writer.newLine();
-            }
-            writer.write(bookItem.getISBN() + ";" +
-                    bookItem.getTitle() + ";" +
-                    bookItem.getSubject() + ";" +
-                    bookItem.getPublisher() + ";" +
-                    bookItem.getLanguage() + ";" +
-                    bookItem.getNumberOfPage() + ";" +
-                    bookItem.getAuthor().getName() + ";" +
-                    bookItem.getAuthor().getDescription() + ";" +
-                    bookItem.getId() + ";" +
-                    bookItem.getIsReferenceOnly() + ";" +
-                    bookItem.getPrice() + ";" +
-                    bookItem.getFormat() + ";" +
-                    bookItem.getStatus() + ";" +
-                    dateFormat.format(bookItem.getDateOfPurchase()) + ";" +
-                    dateFormat.format(bookItem.getPublicationDate()) + ";" +
-                    bookItem.getRack().getNumber() + ";" +
-                    bookItem.getRack().getLocationIdentifier());
-
-            //writer.newLine();
-        } catch (IOException e) {
-            System.out.println("Error writing to file: " + e.getMessage());
-        }
-    }
-
     public BookItem findBookById(String id) {
         return bookId.get(id);
     }
@@ -299,6 +255,10 @@ public class Catalog {
             }
         }
         return matchingBooks;
+    }
+
+    public void clear() {
+        instance = null;
     }
 
     public List<BookItem> findBooksBySubject(String subject) {
@@ -398,7 +358,7 @@ public class Catalog {
                 return;
         }
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
 
@@ -676,7 +636,7 @@ public class Catalog {
     private void removeBookFromDatabase(String id) {
         String query = "DELETE FROM bookitem WHERE id = ?";
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement statement = connection.prepareStatement(query)) {
 
             statement.setString(1, id);
@@ -691,42 +651,6 @@ public class Catalog {
 
         } catch (SQLException e) {
             System.out.println("Error deleting the book from the database: " + e.getMessage());
-        }
-    }
-
-
-    private void removeBookFromFile(String id) {
-        File inputFile = new File(this.filePath);
-        File tempFile = new File("temp_book_items.txt");
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(inputFile));
-             BufferedWriter writer = new BufferedWriter(new FileWriter(tempFile))) {
-
-            String currentLine;
-
-            while ((currentLine = reader.readLine()) != null) {
-                String[] fields = currentLine.split(";");
-                String idt = fields[8];
-
-                if (idt.equals(id)) {
-                    continue;
-                }
-
-                writer.write(currentLine);
-                writer.newLine();
-            }
-
-
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        if (!inputFile.delete()) {
-            System.out.println("Could not delete the original file");
-            return;
-        }
-        if (!tempFile.renameTo(inputFile)) {
-            System.out.println("Could not rename the temp file to the original file");
-            return;
         }
     }
 

@@ -118,7 +118,7 @@ public class Member extends Account{
             case "LEND":
                 if (this.getStatus() == AccountStatus.BLACKLISTED) {
                     returnString = "You have been banned!";
-                    System.out.println(returnString);
+                    //System.out.println(returnString);
                     break;
                 }
                 if (book.getStatus() == BookStatus.AVAILABLE && !book.getIsReferenceOnly()) {
