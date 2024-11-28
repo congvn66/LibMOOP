@@ -1,0 +1,32 @@
+#finalAddBookBut {
+-fx-background-color: #2ed573;
+-fx-background-radius: 20;
+-fx-border-color: black;
+-fx-border-radius: 20;
+}
+#finalAddBookBut: hover {
+-fx-text-fill: white;
+-fx-scale-x: 1.1;
+-fx-scale-y: 1.1;
+}
+#finalAddBookBut: pressed {
+-fx-text-fill: black;
+-fx-scale-x: 0.9;
+-fx-scale-y: 0.9;
+}
+#backToLibMainBut {
+-fx-background-color: #e74c3c;
+-fx-background-radius: 20;
+-fx-border-color: black;
+-fx-border-radius: 20;
+}
+#backToLibMainBut:hover {
+-fx-text-fill: white;
+-fx-scale-x: 1.1;
+-fx-scale-y: 1.1;
+}
+#backToLibMainBut: pressed {
+-fx-text-fill: black;
+-fx-scale-x: 0.9;
+-fx-scale-y: 0.9;
+}

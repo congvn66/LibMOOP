@@ -303,16 +303,30 @@ public class MemMainController implements Initializable {
         notificationVBox.setSpacing(10);
     }
 
+    private void disableMainButton(Button[] list, Button x, boolean backToMain) {
+        for (Button i : list) {
+            if (i.equals(x) && !backToMain) {
+                i.setDisable(true);
+            } else {
+                i.setDisable(false);
+            }
+        }
+    }
+
     public void setMainTab(ActionEvent event) throws IOException {
+        Button[] listOfMainBut = {bookManageBut, myBookManageBut};
         if (event.getSource() == bookManageBut) {
             BookManagementTab.toFront();
             backBut.toFront();
+            disableMainButton(listOfMainBut, bookManageBut, false);
         } else if (event.getSource() == myBookManageBut) {
             MemBookTab.toFront();
             backBut.toFront();
+            disableMainButton(listOfMainBut, myBookManageBut, false);
         } else if (event.getSource() == backBut) {
             MainTab.toFront();
             ExitBut.toFront();
+            disableMainButton(listOfMainBut, myBookManageBut, true);
         } else if (event.getSource() == ExitBut) {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/proj/FXML/Login.fxml"));
             Stage stage = new Stage();

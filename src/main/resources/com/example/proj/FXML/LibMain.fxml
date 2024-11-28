@@ -84,7 +84,7 @@
                         <Font name="Book Antiqua Bold" size="28.0" />
                      </font>
                   </Label>
-                  <ImageView fitHeight="139.0" fitWidth="143.0" layoutX="58.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true" AnchorPane.bottomAnchor="3.3999999999999773" AnchorPane.leftAnchor="58.0" AnchorPane.rightAnchor="1333.0" AnchorPane.topAnchor="43.0">
+                  <ImageView fitHeight="139.0" fitWidth="143.0" layoutX="100.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true" scaleX="1.5" scaleY="1.5">
                      <image>
                         <Image url="@../../../../asset/logo.png" />
                      </image>

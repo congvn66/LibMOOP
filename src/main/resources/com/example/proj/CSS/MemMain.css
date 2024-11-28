@@ -1,0 +1,59 @@
+#bookManageBut, #myBookManageBut, #searchBookBut, #watchBookBut, #renewBookBut, #returnBookBut {
+-fx-background-color: #2ecc71;
+-fx-background-radius: 50;
+-fx-border-color: black;
+-fx-border-radius: 50;
+-fx-border-width: 3;
+}
+#bookManageBut:hover, #myBookManageBut:hover, #searchBookBut:hover, #watchBookBut:hover, #renewBookBut:hover, #returnBookBut:hover {
+-fx-text-fill: white;
+-fx-scale-x: 1.05;
+-fx-scale-y: 1.05;
+}
+#bookManageBut:pressed, #myBookManageBut:pressed, #searchBookBut:pressed, #watchBookBut:pressed, #renewBookBut:pressed, #returnBookBut:pressed {
+-fx-text-fill: black;
+-fx-scale-x: 0.9;
+-fx-scale-y: 0.9;
+}
+#bookManageBut:disabled, #myBookManageBut:disabled {
+-fx-background-color: white;
+-fx-background-radius: 50;
+-fx-border-color: #2ecc71;
+-fx-border-radius: 50;
+-fx-border-width: 3;
+-fx-opacity: 1;
+}
+#ExitBut, #backBut, #memLostBookBut {
+-fx-background-color: red;
+-fx-background-radius: 50;
+-fx-border-color: black;
+-fx-border-radius: 50;
+-fx-border-width: 3;
+}
+#ExitBut:hover, #backBut:hover, #memLostBookBut:hover {
+-fx-text-fill: white;
+-fx-scale-x: 1.05;
+-fx-scale-y: 1.05;
+}
+#ExitBut:pressed, #backBut:pressed, #memLostBookBut:pressed {
+-fx-text-fill: black;
+-fx-scale-x: 0.9;
+-fx-scale-y: 0.9;
+}
+#memCancelBookBut, #cancelBookBut {
+-fx-background-color: yellow;
+-fx-background-radius: 50;
+-fx-border-color: black;
+-fx-border-radius: 50;
+-fx-border-width: 3;
+}
+#memCancelBookBut:hover, #cancelBookBut:hover {
+-fx-text-fill: white;
+-fx-scale-x: 1.05;
+-fx-scale-y: 1.05;
+}
+#memCancelBookBut:pressed, #cancelBookBut:pressed {
+-fx-text-fill: black;
+-fx-scale-x: 0.9;
+-fx-scale-y: 0.9;
+}
