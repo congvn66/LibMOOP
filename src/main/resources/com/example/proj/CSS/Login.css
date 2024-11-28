@@ -3,12 +3,16 @@
     -fx-scale-x: 1.1;
     -fx-scale-y: 1.1;
 }
-#buttonLogin, #registerButton, #continueQuestion, #continueNewPass, #continueName, #signUpButton, #loginInReg {
+#buttonLogin, #continueQuestion, #continueNewPass, #continueName, #signUpButton, #loginInReg {
 -fx-background-color: #2ffd02;
 -fx-background-radius: 20;
 -fx-border-color: black;
 -fx-border-radius: 20;
 -fx-border-width: 2;
+}
+#registerButton {
+-fx-background-color: #2ffd02;
+-fx-background-radius: 20;
 }
 #buttonLogin:pressed, #registerButton:pressed, #continueQuestion:pressed, #continueNewPass:pressed, #continueName:pressed, #signUpButton:pressed, #loginInReg:pressed {
 -fx-text-fill: black;

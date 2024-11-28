@@ -6,6 +6,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.TextArea?>
 <?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
@@ -14,198 +16,83 @@
    <children>
       <AnchorPane fx:id="addBookAnchorPane" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #7efff5;">
          <children>
-            <ChoiceBox fx:id="addIsRefOnlyChoiceBox" layoutX="577.0" layoutY="90.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-radius: 15; -fx-border-color: black; -fx-border-radius: 15;" />
-            <ChoiceBox fx:id="addBookStatusChoiceBox" layoutX="576.0" layoutY="148.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-radius: 15; -fx-border-color: black; -fx-border-radius: 15;" />
-            <TextField fx:id="addBookNumberText" layoutX="575.0" layoutY="453.0" onAction="#setAddBookTab" prefHeight="40.0" prefWidth="139.0" promptText="Enter Number" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+            <ChoiceBox fx:id="addIsRefOnlyChoiceBox" layoutX="705.0" layoutY="80.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-radius: 15; -fx-border-color: black; -fx-border-radius: 15;" />
+            <ChoiceBox fx:id="addBookStatusChoiceBox" layoutX="704.0" layoutY="138.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-radius: 15; -fx-border-color: black; -fx-border-radius: 15;" />
+            <TextField fx:id="addBookNumberText" layoutX="619.0" layoutY="444.0" onAction="#setAddBookTab" prefHeight="40.0" prefWidth="139.0" promptText="Enter Number" style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: black;">
                <font>
                   <Font name="Book Antiqua" size="18.0" />
                </font>
             </TextField>
-            <TextField fx:id="addBookLocationText" layoutX="575.0" layoutY="513.0" onAction="#setAddBookTab" prefHeight="40.0" prefWidth="139.0" promptText="Enter Location" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+            <TextField fx:id="addBookLocationText" layoutX="619.0" layoutY="504.0" onAction="#setAddBookTab" prefHeight="40.0" prefWidth="139.0" promptText="Enter Location" style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: black;">
                <font>
                   <Font name="Book Antiqua" size="18.0" />
                </font>
             </TextField>
-            <TextField fx:id="addPriceText" layoutX="577.0" layoutY="269.0" onAction="#setAddBookTab" prefHeight="40.0" prefWidth="128.0" promptText="Enter Price" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+            <TextField fx:id="addPriceText" layoutX="705.0" layoutY="259.0" onAction="#setAddBookTab" prefHeight="40.0" prefWidth="128.0" promptText="Enter Price" style="-fx-background-radius: 10; -fx-border-radius: 10; -fx-border-color: black;">
                <font>
                   <Font name="Book Antiqua" size="18.0" />
                </font>
             </TextField>
-            <TextField fx:id="addIdText" layoutX="577.0" layoutY="26.0" onAction="#setAddBookTab" prefHeight="40.0" prefWidth="128.0" promptText="Enter ID" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
-               <font>
-                  <Font name="Book Antiqua" size="18.0" />
-               </font>
-            </TextField>
-            <TextField fx:id="addISBNText" layoutX="65.0" layoutY="30.0" onAction="#setAddBookTab" prefHeight="40.0" prefWidth="128.0" promptText="Enter ISBN" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
-               <font>
-                  <Font name="Book Antiqua" size="18.0" />
-               </font>
-            </TextField>
-            <TextField fx:id="addTitleText" layoutX="65.0" layoutY="87.0" onAction="#setAddBookTab" prefHeight="40.0" prefWidth="128.0" promptText="Enter Title" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
-               <font>
-                  <Font name="Book Antiqua" size="18.0" />
-               </font>
-            </TextField>
-            <TextField fx:id="addSubjectText" layoutX="89.0" layoutY="148.0" onAction="#setAddBookTab" prefHeight="40.0" prefWidth="128.0" promptText="Enter Subject" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
-               <font>
-                  <Font name="Book Antiqua" size="18.0" />
-               </font>
-            </TextField>
-            <TextField fx:id="addPublisherText" layoutX="103.0" layoutY="205.0" onAction="#setAddBookTab" prefHeight="40.0" prefWidth="150.0" promptText="Enter Publisher" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
-               <font>
-                  <Font name="Book Antiqua" size="18.0" />
-               </font>
-            </TextField>
-            <TextField fx:id="addLanguageText" layoutX="103.0" layoutY="260.0" onAction="#setAddBookTab" prefHeight="40.0" prefWidth="150.0" promptText="Enter Language" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
-               <font>
-                  <Font name="Book Antiqua" size="18.0" />
-               </font>
-            </TextField>
-            <TextField fx:id="addNumberOfPageText" layoutX="146.0" layoutY="315.0" onAction="#setAddBookTab" prefHeight="40.0" prefWidth="214.0" promptText="Enter Number Of Pages" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
-               <font>
-                  <Font name="Book Antiqua" size="18.0" />
-               </font>
-            </TextField>
-            <TextField fx:id="addAuthorNameText" layoutX="81.0" layoutY="380.0" onAction="#setAddBookTab" prefHeight="40.0" prefWidth="194.0" promptText="Enter Author's Name" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
-               <font>
-                  <Font name="Book Antiqua" size="18.0" />
-               </font>
-            </TextField>
-            <TextArea fx:id="addAuthorDescText" layoutX="11.0" layoutY="454.0" prefHeight="135.0" prefWidth="438.0" promptText="Enter Author's Description" style="-fx-border-color: black;" />
-            <DatePicker fx:id="addDateOfPurchasesPicker" layoutX="577.0" layoutY="338.0" onAction="#setAddBookTab" style="-fx-border-color: black;" />
-            <DatePicker fx:id="addPublicationDatePicker" layoutX="577.0" layoutY="390.0" onAction="#setAddBookTab" style="-fx-border-color: black;" />
-            <Label layoutY="36.0" text="ISBN: ">
+            <TextArea fx:id="addAuthorDescText" layoutX="20.0" layoutY="440.0" prefHeight="135.0" prefWidth="438.0" promptText="Enter Author's Description" style="-fx-border-color: black;" />
+            <DatePicker fx:id="addDateOfPurchasesPicker" layoutX="705.0" layoutY="328.0" onAction="#setAddBookTab" style="-fx-border-color: black;" />
+            <DatePicker fx:id="addPublicationDatePicker" layoutX="705.0" layoutY="380.0" onAction="#setAddBookTab" style="-fx-border-color: black;" />
+            <Label layoutX="529.0" layoutY="328.0" text="Date Of Purchase:">
                <font>
                   <Font name="Book Antiqua Bold" size="20.0" />
                </font>
             </Label>
-            <Label layoutY="93.0" text="Title:">
+            <Label layoutX="532.0" layoutY="377.0" text="Publication Date:">
                <font>
                   <Font name="Book Antiqua Bold" size="20.0" />
                </font>
             </Label>
-            <Label layoutY="151.0" text="Subject:">
+            <Label layoutX="643.0" layoutY="266.0" text="Price:">
                <font>
                   <Font name="Book Antiqua Bold" size="20.0" />
                </font>
             </Label>
-            <Label layoutY="210.0" text="Publisher:">
+            <Label layoutX="20.0" layoutY="410.0" text="Author's Description:">
                <font>
                   <Font name="Book Antiqua Bold" size="20.0" />
                </font>
             </Label>
-            <Label layoutY="265.0" text="Language:">
+            <Label layoutX="528.0" layoutY="510.0" text="Location:">
                <font>
                   <Font name="Book Antiqua Bold" size="20.0" />
                </font>
             </Label>
-            <Label layoutY="320.0" text="Pages Number:">
+            <Label layoutX="529.0" layoutY="450.0" text="Number:">
                <font>
                   <Font name="Book Antiqua Bold" size="20.0" />
                </font>
             </Label>
-            <Label layoutY="385.0" text="Author:">
+            <Label layoutX="619.0" layoutY="205.0" text="Format:">
                <font>
                   <Font name="Book Antiqua Bold" size="20.0" />
                </font>
             </Label>
-            <Label layoutX="401.0" layoutY="338.0" text="Date Of Purchase:">
+            <Label layoutX="631.0" layoutY="145.0" text="Status:">
                <font>
                   <Font name="Book Antiqua Bold" size="20.0" />
                </font>
             </Label>
-            <Label layoutX="404.0" layoutY="387.0" text="Publication Date:">
+            <Label layoutX="547.0" layoutY="87.0" text="Reference Only:">
                <font>
                   <Font name="Book Antiqua Bold" size="20.0" />
                </font>
             </Label>
-            <Label layoutX="515.0" layoutY="276.0" text="Price:">
-               <font>
-                  <Font name="Book Antiqua Bold" size="20.0" />
-               </font>
-            </Label>
-            <Label layoutX="5.0" layoutY="427.0" text="Author's Description:">
-               <font>
-                  <Font name="Book Antiqua Bold" size="20.0" />
-               </font>
-            </Label>
-            <Label layoutX="484.0" layoutY="519.0" text="Location:">
-               <font>
-                  <Font name="Book Antiqua Bold" size="20.0" />
-               </font>
-            </Label>
-            <Label layoutX="485.0" layoutY="459.0" text="Number:">
-               <font>
-                  <Font name="Book Antiqua Bold" size="20.0" />
-               </font>
-            </Label>
-            <Label layoutX="491.0" layoutY="215.0" text="Format:">
-               <font>
-                  <Font name="Book Antiqua Bold" size="20.0" />
-               </font>
-            </Label>
-            <Label layoutX="503.0" layoutY="155.0" text="Status">
-               <font>
-                  <Font name="Book Antiqua Bold" size="20.0" />
-               </font>
-            </Label>
-            <Label layoutX="419.0" layoutY="97.0" text="Reference Only:">
-               <font>
-                  <Font name="Book Antiqua Bold" size="20.0" />
-               </font>
-            </Label>
-            <Label layoutX="532.0" layoutY="33.0" text="ID: ">
-               <font>
-                  <Font name="Book Antiqua Bold" size="20.0" />
-               </font>
-            </Label>
-            <Button fx:id="finalAddBookBut" layoutX="780.0" layoutY="458.0" mnemonicParsing="false" onAction="#setAddBookTab" prefHeight="53.0" prefWidth="102.0" style="-fx-background-color: #4cd137; -fx-background-radius: 50; -fx-border-color: black; -fx-border-radius: 50;" text="Add">
+            <Button fx:id="finalAddBookBut" layoutX="783.0" layoutY="448.0" mnemonicParsing="false" onAction="#setAddBookTab" prefHeight="53.0" prefWidth="102.0" text="Add">
                <font>
                   <Font name="Book Antiqua Bold" size="18.0" />
                </font>
             </Button>
-            <ChoiceBox fx:id="addBookFormatChoiceBox" layoutX="577.0" layoutY="210.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-radius: 15; -fx-border-color: black; -fx-border-radius: 15;" />
-            <Button fx:id="backToLibMainBut" layoutX="780.0" layoutY="525.0" mnemonicParsing="false" onAction="#setAddBookTab" prefHeight="56.0" prefWidth="100.0" style="-fx-background-color: red; -fx-background-radius: 50; -fx-border-color: black; -fx-border-radius: 50; -fx-border-width: 1;" text="Back">
+            <ChoiceBox fx:id="addBookFormatChoiceBox" layoutX="705.0" layoutY="200.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-radius: 15; -fx-border-color: black; -fx-border-radius: 15;" />
+            <Button fx:id="backToLibMainBut" layoutX="783.0" layoutY="515.0" mnemonicParsing="false" onAction="#setAddBookTab" prefHeight="56.0" prefWidth="100.0" text="Back">
                <font>
                   <Font name="Book Antiqua Bold" size="22.0" />
                </font>
             </Button>
-            <Label fx:id="checkLocation" layoutX="577.0" layoutY="553.0" text="checkLocation" textFill="RED" visible="false">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </Label>
-            <Label fx:id="checkISBN" layoutX="65.0" layoutY="70.0" text="checkISBN" textFill="RED" visible="false">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </Label>
-            <Label fx:id="checkTitle" layoutX="65.0" layoutY="130.0" text="checkTitle" textFill="RED" visible="false">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </Label>
-            <Label fx:id="checkSubject" layoutX="88.0" layoutY="188.0" text="checkSubject" textFill="RED" visible="false">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </Label>
-            <Label fx:id="checkAuthorName" layoutX="81.0" layoutY="419.0" text="checkAuthorName" textFill="RED" visible="false">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </Label>
-            <Label fx:id="checkNumberOfPages" layoutX="148.0" layoutY="357.0" text="checkNumberOfPages" textFill="RED" visible="false">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </Label>
-            <Label fx:id="checkLanguage" layoutX="103.0" layoutY="301.0" text="checkLanguage" textFill="RED" visible="false">
-               <font>
-                  <Font size="11.0" />
-               </font>
-            </Label>
-            <Label fx:id="checkPublisher" layoutX="103.0" layoutY="242.0" text="checkPublisher" textFill="RED" visible="false">
+            <Label fx:id="checkLocation" layoutX="621.0" layoutY="544.0" text="checkLocation" textFill="RED" visible="false">
                <font>
                   <Font size="11.0" />
                </font>
@@ -215,44 +102,95 @@
                   <Font size="11.0" />
                </font>
             </Label>
-            <Label fx:id="checkID" layoutX="577.0" layoutY="70.0" text="checkID" textFill="RED" visible="false">
+            <Label fx:id="checkRef" layoutX="705.0" layoutY="120.0" text="checkRef" textFill="RED" visible="false">
                <font>
                   <Font size="11.0" />
                </font>
             </Label>
-            <Label fx:id="checkRef" layoutX="577.0" layoutY="130.0" text="checkRef" textFill="RED" visible="false">
+            <Label fx:id="checkStatus" layoutX="705.0" layoutY="178.0" text="checkStatus" textFill="RED" visible="false">
                <font>
                   <Font size="11.0" />
                </font>
             </Label>
-            <Label fx:id="checkStatus" layoutX="577.0" layoutY="188.0" text="checkStatus" textFill="RED" visible="false">
+            <Label fx:id="checkBookFormat" layoutX="705.0" layoutY="242.0" text="checkBookFormat" textFill="RED" visible="false">
                <font>
                   <Font size="11.0" />
                </font>
             </Label>
-            <Label fx:id="checkBookFormat" layoutX="577.0" layoutY="252.0" text="checkBookFormat" textFill="RED" visible="false">
+            <Label fx:id="checkPrice" layoutX="705.0" layoutY="299.0" text="checkPrice" textFill="RED" visible="false">
                <font>
                   <Font size="11.0" />
                </font>
             </Label>
-            <Label fx:id="checkPrice" layoutX="577.0" layoutY="309.0" text="checkPrice" textFill="RED" visible="false">
+            <Label fx:id="checkDateOfPurchase" layoutX="705.0" layoutY="355.0" text="checkDateOfPurchase" textFill="RED" visible="false">
                <font>
                   <Font size="11.0" />
                </font>
             </Label>
-            <Label fx:id="checkDateOfPurchase" layoutX="577.0" layoutY="365.0" text="checkDateOfPurchase" textFill="RED" visible="false">
+            <Label fx:id="checkPublication" layoutX="705.0" layoutY="414.0" text="checkPublication" textFill="RED" visible="false">
                <font>
                   <Font size="11.0" />
                </font>
             </Label>
-            <Label fx:id="checkPublication" layoutX="577.0" layoutY="424.0" text="checkPublication" textFill="RED" visible="false">
+            <Label fx:id="checkNumber" layoutX="621.0" layoutY="484.0" text="checkNumber" textFill="RED" visible="false">
                <font>
                   <Font size="11.0" />
                </font>
             </Label>
-            <Label fx:id="checkNumber" layoutX="577.0" layoutY="493.0" text="checkNumber" textFill="RED" visible="false">
+            <ImageView fx:id="bookThumbnail" fitHeight="300.0" fitWidth="192.0" layoutX="20.0" layoutY="89.0" pickOnBounds="true" preserveRatio="true"/>
+            <Label fx:id="bookTitleLabel" layoutX="20.0" layoutY="54.0" text="Title">
                <font>
-                  <Font size="11.0" />
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="220.0" layoutY="86.0" text="Publisher">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="220.0" layoutY="130.0" text="Subject">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="220.0" layoutY="177.0" text="Language">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="220.0" layoutY="225.0" text="Page number">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label layoutX="220.0" layoutY="270.0" text="Author">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="authorNameLabel" layoutX="220.0" layoutY="300.0" text="Author">
+               <font>
+                  <Font name="Book Antiqua" size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="bookPageLabel" layoutX="220.0" layoutY="252.0" text="Author">
+               <font>
+                  <Font name="Book Antiqua" size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="bookLanguageLabel" layoutX="220.0" layoutY="207.0" text="Author">
+               <font>
+                  <Font name="Book Antiqua" size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="bookSubjectLabel" layoutX="220.0" layoutY="157.0" text="Author">
+               <font>
+                  <Font name="Book Antiqua" size="14.0" />
+               </font>
+            </Label>
+            <Label fx:id="bookPublisherLabel" layoutX="220.0" layoutY="111.0" text="Author">
+               <font>
+                  <Font name="Book Antiqua" size="14.0" />
                </font>
             </Label>
          </children>
