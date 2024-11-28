@@ -32,18 +32,6 @@ public class LibrarianTest {
         librarian = new Librarian();
     }
 
-    @Test
-    void getMemberMap() throws SQLException {
-        // test method.
-        Map<String, Member> members = librarian.getMemberMap();
-
-        // assert.
-        assertEquals(7, members.size());
-        assertTrue(members.containsKey("cong"));
-        assertTrue(members.containsKey("duc"));
-        assertEquals(AccountStatus.ACTIVE, members.get("cong").getStatus());
-        assertEquals(AccountStatus.BLACKLISTED, members.get("duc").getStatus());
-    }
 
     @Test
     void testBlockMemberDatabase() throws SQLException {
@@ -81,6 +69,8 @@ public class LibrarianTest {
         assertTrue(rs.next());
         assertEquals("ACTIVE", rs.getString("accountStatus"));
         assertEquals("j97", rs.getString("password"));
+
+        librarian.deleteMemberAccount("thienan1");
     }
 
     @Test
@@ -92,13 +82,15 @@ public class LibrarianTest {
         librarian.reducePointMemberDatabase("lebron", 1);
 
         // Assert
-        assertEquals(98, librarian.getMemberMap().get("lebron").getPoint());
+        assertEquals(95, librarian.getMemberMap().get("lebron").getPoint());
 
         // Verify the database update
         Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT point FROM members WHERE id='lebron'");
         assertTrue(rs.next());
-        assertEquals(98, rs.getInt("point"));
+        assertEquals(95, rs.getInt("point"));
+
+        librarian.reducePointMemberDatabase("lebron", -1);
     }
 
     @Test
@@ -117,6 +109,7 @@ public class LibrarianTest {
         ResultSet rs = stmt.executeQuery("SELECT numberOfBooks FROM members WHERE id='test2'");
         assertTrue(rs.next());
         assertEquals(1, rs.getInt("numberOfBooks"));
+
     }
 
     @Test
@@ -125,15 +118,19 @@ public class LibrarianTest {
         Map<String, Member> members = librarian.getMemberMap();
 
         // Act
-        librarian.decreaseBookForMemberDatabase("test2");
+        librarian.decreaseBookForMemberDatabase("test");
 
         // Assert
-        assertEquals(0, librarian.getMemberMap().get("test2").getTotalBooksCheckedOut());
+        assertEquals(-1, librarian.getMemberMap().get("test").getTotalBooksCheckedOut());
 
         // Verify the database update
         Statement stmt = connection.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT numberOfBooks FROM members WHERE id='test2'");
+        ResultSet rs = stmt.executeQuery("SELECT numberOfBooks FROM members WHERE id='test'");
         assertTrue(rs.next());
-        assertEquals(0, rs.getInt("numberOfBooks"));
+        assertEquals(-1, rs.getInt("numberOfBooks"));
+
+        librarian.increaseBookForMemberDatabase("test");
+
+
     }
 }

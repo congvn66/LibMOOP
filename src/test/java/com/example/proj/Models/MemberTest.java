@@ -17,9 +17,8 @@ import static org.junit.jupiter.api.Assertions.*;
 class MemberTest {
 
     private Member member;
-    //private Catalog catalog;
-    //private BookItem book;
     private static Connection connection;
+    private Librarian librarian;
 
     @BeforeAll
     static void setupDatabase() throws SQLException {
@@ -33,10 +32,8 @@ class MemberTest {
 
     @BeforeEach
     public void setUp() {
-        //catalog = new Catalog();
-        member = new Member("cong", AccountStatus.ACTIVE, "congdz", 0, 100);
-        //book = new BookItem("B001", "Effective Java", "Joshua Bloch", 2008, BookStatus.AVAILABLE, false);
-
+        member = new Member("cong", AccountStatus.ACTIVE, "congdz", 0, 100, new Date(111));
+        librarian = new Librarian();
     }
 
     @Test
@@ -73,6 +70,7 @@ class MemberTest {
         // post-check: Book should now be loaned, totalBooksCheckedOut should increment
         assertEquals(BookStatus.LOANED, book.getStatus());
         assertEquals(1, member.getTotalBooksCheckedOut()); // Initially 3, now 4
+        member.basicActions("1001", creationDate, "RETURN");
     }
 
     @Test
@@ -123,6 +121,8 @@ class MemberTest {
 
         // check if book remains loaned after renewal
         assertEquals(BookStatus.LOANED, book.getStatus());
+
+        member.basicActions("1012", creationDate, "RETURN");
     }
 
 }

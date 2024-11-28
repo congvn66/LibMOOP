@@ -62,8 +62,9 @@ public class Member extends Account{
         super(id, status, password);
         this.totalBooksCheckedOut = totalBooksCheckOut;
         //this.getCatalog().loadCatalogFromDatabase();
-        this.point.set(point);
+        this.point = new SimpleIntegerProperty(point);
         this.createDate = java.sql.Date.valueOf(LocalDate.now());
+        //this.logger = new MemberLogger(id);
     }
 
     public int getTotalBooksCheckedOut() {
@@ -95,7 +96,7 @@ public class Member extends Account{
     }
 
     public void addNotificationBox(Notification a) {
-        this.notificationBox.getNotifications().add(a);
+        this.getNotificationBox().getNotifications().add(a);
     }
 
     public void deleteNotificationBox(Notification a) {

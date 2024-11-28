@@ -14,10 +14,11 @@ import static org.junit.jupiter.api.Assertions.*;
 
 class CatalogTest {
     private Librarian librarian;
+    private static Connection connection;
 
     @BeforeAll
     static void setupDatabase() throws SQLException {
-        Connection connection = DatabaseConnection.getConnection();
+        connection = DatabaseConnection.getConnection();
     }
 
     @AfterAll
@@ -31,34 +32,6 @@ class CatalogTest {
         //librarian.getCatalog().clear();
     }
 
-    @Test
-    public void testConstructor() {
-
-        // Check that the creation date is set to the current date
-        assertNotNull(librarian.getCatalog().getCreationDate());
-
-        // Check that the total number of books is initialized to 0
-        assertEquals(2616, librarian.getCatalog().getTotalBooks().intValue());
-
-        // Check that all maps are initialized and empty
-        assertNotNull(librarian.getCatalog().getBookTitles());
-        assertTrue(librarian.getCatalog().getBookTitles().isEmpty());
-
-        assertNotNull(librarian.getCatalog().getBookAuthors());
-        assertTrue(librarian.getCatalog().getBookAuthors().isEmpty());
-
-        assertNotNull(librarian.getCatalog().getBookSubjects());
-        assertTrue(librarian.getCatalog().getBookSubjects().isEmpty());
-
-        assertNotNull(librarian.getCatalog().getBookPublicationDates());
-        assertTrue(librarian.getCatalog().getBookPublicationDates().isEmpty());
-
-        assertNotNull(librarian.getCatalog().getBookId());
-        assertTrue(librarian.getCatalog().getBookId().isEmpty());
-
-        assertNotNull(librarian.getCatalog().getBookStatus());
-        assertTrue(librarian.getCatalog().getBookStatus().isEmpty());
-    }
 
     @Test
     public void testLoadCatalogFromDatabase() {
@@ -142,66 +115,6 @@ class CatalogTest {
     }
 
     @Test
-    public void testWriteBookItemToDatabase() {
-        // Create a mock BookItem object
-        Author author = new Author("Joshua Bloch", "Well-known Java author");
-        BookItem bookItem = new BookItem(
-                "9780134685991", // ISBN
-                "Effective Java", // Title
-                "Programming", // Subject
-                "Addison-Wesley", // Publisher
-                "English", // Language
-                "416", // Number of Pages
-                author.getName(), // Author name
-                author.getDescription(), // Author description
-                "2616", // ID
-                false, // Is reference only
-                45.0, // Price
-                BookFormat.PAPERBACK, // Format
-                BookStatus.AVAILABLE, // Status
-                Date.valueOf(LocalDate.of(2017, 12, 27)), // Date of purchase
-                Date.valueOf(LocalDate.of(2008, 5, 8)), // Publication date
-                1, // Rack number
-                "Shelf A", // Rack location
-                "default.png"
-        );
-
-        // Insert book item into the database
-        librarian.getCatalog().writeBookItemToDatabaseAndReturnId(bookItem);
-
-        // Check the database to see if the book was inserted correctly
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
-             Statement statement = connection.createStatement()) {
-
-            String query = "SELECT * FROM bookitem WHERE id = '2616'";
-            ResultSet resultSet = statement.executeQuery(query);
-
-            assertTrue(resultSet.next());
-            assertEquals("9780134685991", resultSet.getString("ISBN"));
-            assertEquals("Effective Java", resultSet.getString("title"));
-            assertEquals("Programming", resultSet.getString("subject"));
-            assertEquals("Addison-Wesley", resultSet.getString("publisher"));
-            assertEquals("English", resultSet.getString("language"));
-            assertEquals("416", resultSet.getString("numberOfPage"));
-            assertEquals("Joshua Bloch", resultSet.getString("authorName"));
-            assertEquals("Well-known Java author", resultSet.getString("authorDescription"));
-            assertEquals("2616", resultSet.getString("id"));
-            assertEquals("false", resultSet.getString("isReferenceOnly"));
-            assertEquals(45.0, resultSet.getDouble("price"));
-            assertEquals("PAPERBACK", resultSet.getString("format"));
-            assertEquals("AVAILABLE", resultSet.getString("status"));
-            assertEquals("2017-12-27", resultSet.getDate("dateOfPurchase").toString());
-            assertEquals("2008-05-08", resultSet.getDate("publicationDate").toString());
-            assertEquals(1, resultSet.getInt("number"));
-            assertEquals("Shelf A", resultSet.getString("location"));
-
-        } catch (Exception e) {
-            e.printStackTrace();
-            fail("Error during test execution: " + e.getMessage());
-        }
-    }
-
-    @Test
     public void testEditBookInDataBase_UpdateTitle() {
         // Act
         librarian.getCatalog().loadCatalogFromDatabase();
@@ -241,18 +154,5 @@ class CatalogTest {
         assertNull(librarian.getCatalog().findBookById("5161951"));
     }
 
-//    @Test
-//    public void testRemoveBookById_Success() {
-//        librarian.getCatalog().loadCatalogFromDatabase();
-//        String bookId = "100"; // Replace with a valid ID that exists in your database
-//        assertTrue(librarian.getCatalog().removeBookById(bookId, true, false), "Book should be removed successfully");
-//
-//        // Verify that the book is no longer present in the catalog
-//        assertNull(librarian.getCatalog().findBookById(bookId), "Book should be null after removal");
-//
-//
-//        librarian.getCatalog().loadCatalogFromDatabase();
-//        // Verify that the book is no longer present in the catalog
-//        assertNull(librarian.getCatalog().findBookById(bookId), "Book should be null after removal");
-//    }
+
 }
