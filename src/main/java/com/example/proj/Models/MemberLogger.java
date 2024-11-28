@@ -96,9 +96,9 @@ public class MemberLogger {
                         member.setTotalBooksCheckedOut(member.getTotalBooksCheckedOut() - 1);
 
                         if (daysBetween > 15) {
-                            int p = member.getPoint() - 1;
+                            int p = member.getPoint() - ((int)daysBetween - 15);
                             member.setPoint(p);
-                            admin.reducePointMemberDatabase(member.getId());
+                            admin.reducePointMemberDatabase(member.getId(), ((int)daysBetween - 15));
 
                             if (member.getPoint() == 0) {
                                 member.setStatus(AccountStatus.BLACKLISTED);
@@ -143,9 +143,9 @@ public class MemberLogger {
 
                         if (daysBetween > 15) {
                             Librarian admin = new Librarian();
-                            int p = member.getPoint() - 1;
+                            int p = member.getPoint() - ((int)daysBetween - 15);
                             member.setPoint(p);
-                            admin.reducePointMemberDatabase(member.getId());
+                            admin.reducePointMemberDatabase(member.getId(), ((int)daysBetween - 15));
 
                             if (member.getPoint() == 0) {
                                 member.setStatus(AccountStatus.BLACKLISTED);

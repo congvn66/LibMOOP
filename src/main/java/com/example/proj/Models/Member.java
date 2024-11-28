@@ -1,5 +1,7 @@
 package com.example.proj.Models;
 
+import javafx.beans.property.SimpleIntegerProperty;
+
 import java.text.ParseException;
 import java.time.LocalDate;
 import java.util.Date;
@@ -11,21 +13,25 @@ public class Member extends Account{
     private MemberLogger logger;
     private java.sql.Date createDate;
     private NotificationBox notificationBox;
-    private int point;
+    private SimpleIntegerProperty point;
 
     public int getPoint() {
+        return point.get();
+    }
+
+    public SimpleIntegerProperty getPointProperty() {
         return point;
     }
 
     public void setPoint(int point) {
-        this.point = point;
+        this.point.set(point);
     }
 
     public Member() {
         super("none", AccountStatus.NONE, "1234");
         this.totalBooksCheckedOut = 0;
         this.getCatalog().loadCatalogFromDatabase();
-        this.point = 0;
+        this.point.set(0);
         this.createDate = java.sql.Date.valueOf(LocalDate.now());
     }
 
@@ -48,7 +54,7 @@ public class Member extends Account{
         super(id, status, password);
         this.totalBooksCheckedOut = totalBooksCheckedOut;
         this.createDate = createDate;
-        this.point = point;
+        this.point = new SimpleIntegerProperty(point);
         this.logger = new MemberLogger(id);
     }
 
@@ -56,7 +62,7 @@ public class Member extends Account{
         super(id, status, password);
         this.totalBooksCheckedOut = totalBooksCheckOut;
         //this.getCatalog().loadCatalogFromDatabase();
-        this.point = point;
+        this.point.set(point);
         this.createDate = java.sql.Date.valueOf(LocalDate.now());
     }
 
