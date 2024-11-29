@@ -24,12 +24,16 @@ public class QRCodeService {
         return qrCodeService;
     }
 
-    public Image generateQRCode(Book book, int width, int height) throws IOException, WriterException {
-        String qrContent = String.format("Book: %s\nAuthor: %s\nISBN: %s\nPrice: %s",
+    public Image generateQRCode(BookItem book, int width, int height) throws IOException, WriterException {
+        String qrContent = String.format("Title: %s\nAuthor: %s (%s)\nISBN: %s\nPrice: %s $\nLanguage: %s\nNumber of pages: %s\n",
                 book.getTitle(),
-                book.getAuthor(),
+                book.getAuthor().getName(),
+                book.getAuthor().getDescription(),
                 book.getISBN(),
-                book.getPrice());
+                book.getPrice(),
+                book.getLanguage(),
+                book.getNumberOfPage()
+                );
 
         QRCodeWriter qrCodeWriter = new QRCodeWriter();
         BitMatrix bitMatrix = qrCodeWriter.encode(qrContent, BarcodeFormat.QR_CODE, width, height);
@@ -41,16 +45,4 @@ public class QRCodeService {
         return new Image(new ByteArrayInputStream(qrCodeBytes));
     }
 
-    public void saveQRCodeToFile(Book book, String filePath) throws WriterException, IOException {
-        QRCodeWriter qrCodeWriter = new QRCodeWriter();
-        String qrContent = String.format("Book: %s\nAuthor: %s\nISBN: %s\nPrice: %s",
-                book.getTitle(),
-                book.getAuthor(),
-                book.getISBN(),
-                book.getPrice());
-
-        BitMatrix bitMatrix = qrCodeWriter.encode(qrContent, BarcodeFormat.QR_CODE, 300, 300);
-        java.nio.file.Path path = java.nio.file.Paths.get(filePath);
-        MatrixToImageWriter.writeToPath(bitMatrix, "PNG", path);
-    }
 }

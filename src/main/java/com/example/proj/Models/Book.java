@@ -74,7 +74,6 @@ public abstract class Book {
         return this.author;
     }
 
-    // Phương thức abstract, các lớp con cần phải triển khai phương thức này
     public abstract void displayInfo();
 
 

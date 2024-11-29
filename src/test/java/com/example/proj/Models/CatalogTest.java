@@ -1,9 +1,6 @@
 package com.example.proj.Models;
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 import java.sql.*;
 import java.time.LocalDate;
@@ -11,6 +8,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static org.junit.jupiter.api.Assertions.*;
+
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 
 class CatalogTest {
     private Librarian librarian;
@@ -33,13 +32,14 @@ class CatalogTest {
     }
 
 
+    @Order(0)
     @Test
     public void testLoadCatalogFromDatabase() {
         // verify that the catalog is populated with data
         List<BookItem> booksByTitle = librarian.getCatalog().findBooksByTitle("Updated Title");
-        for (BookItem i : booksByTitle) {
-            i.displayInfo();
-        }
+//        for (BookItem i : booksByTitle) {
+//            i.displayInfo();
+//        }
         assertNotNull(booksByTitle);
         assertFalse(booksByTitle.isEmpty());
 
@@ -53,6 +53,7 @@ class CatalogTest {
 
     }
 
+    @Order(1)
     @Test
     public void testAddBookItem() {
         // Create a mock BookItem object
@@ -114,6 +115,7 @@ class CatalogTest {
         librarian.getCatalog().removeBookById(booksByTitle.getFirst().getId(), true, false);
     }
 
+    @Order(2)
     @Test
     public void testEditBookInDataBase_UpdateTitle() {
         // Act
@@ -124,6 +126,7 @@ class CatalogTest {
         assertEquals("Updated Title", librarian.getCatalog().findBookById("1").getTitle());
     }
 
+    @Order(3)
     @Test
     public void testEditBookInDataBase_UpdateISBN() {
         // Act
@@ -134,6 +137,7 @@ class CatalogTest {
         assertEquals("987654321", librarian.getCatalog().findBookById("1").getISBN());
     }
 
+    @Order(4)
     @Test
     public void testEditBookInDataBase_InvalidField() {
         // Act
@@ -144,6 +148,7 @@ class CatalogTest {
         assertEquals("Updated Title", librarian.getCatalog().findBookById("1").getTitle());
     }
 
+    @Order(5)
     @Test
     public void testEditBookInDataBase_BookNotFound() {
         // Act

@@ -4,14 +4,13 @@ package com.example.proj.Models;
 import static org.junit.jupiter.api.Assertions.*;
 
 
-import org.junit.jupiter.api.AfterAll;
-import org.junit.jupiter.api.BeforeAll;
-import org.junit.jupiter.api.BeforeEach;
-import org.junit.jupiter.api.Test;
+import org.junit.jupiter.api.*;
 
 
 import java.sql.*;
 import java.util.Map;
+
+@TestMethodOrder(MethodOrderer.OrderAnnotation.class)
 
 public class LibrarianTest {
     private static Librarian librarian;
@@ -33,6 +32,7 @@ public class LibrarianTest {
     }
 
 
+    @Order(0)
     @Test
     void testBlockMemberDatabase() throws SQLException {
         // arrange
@@ -52,6 +52,7 @@ public class LibrarianTest {
         assertEquals("BLACKLISTED", rs.getString("accountStatus"));
     }
 
+    @Order(1)
     @Test
     void testAddNewMemberDatabase() throws SQLException {
         // Arrange
@@ -73,6 +74,7 @@ public class LibrarianTest {
         librarian.deleteMemberAccount("thienan1");
     }
 
+    @Order(2)
     @Test
     void testReducePointMemberDatabase() throws SQLException {
         // Arrange
@@ -93,25 +95,27 @@ public class LibrarianTest {
         librarian.reducePointMemberDatabase("lebron", -1);
     }
 
+    @Order(3)
     @Test
     void testIncreaseBookForMemberDatabase() throws SQLException {
         // Arrange
         Map<String, Member> members = librarian.getMemberMap();
 
         // Act
-        librarian.increaseBookForMemberDatabase("test2");
+        librarian.increaseBookForMemberDatabase("test");
 
         // Assert
-        assertEquals(1, librarian.getMemberMap().get("test2").getTotalBooksCheckedOut());
+        assertEquals(1, librarian.getMemberMap().get("test").getTotalBooksCheckedOut());
 
         // Verify the database update
         Statement stmt = connection.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT numberOfBooks FROM members WHERE id='test2'");
+        ResultSet rs = stmt.executeQuery("SELECT numberOfBooks FROM members WHERE id='test'");
         assertTrue(rs.next());
         assertEquals(1, rs.getInt("numberOfBooks"));
 
     }
 
+    @Order(4)
     @Test
     void testDecreaseBookForMemberDatabase() throws SQLException {
         // Arrange
@@ -121,15 +125,15 @@ public class LibrarianTest {
         librarian.decreaseBookForMemberDatabase("test");
 
         // Assert
-        assertEquals(-1, librarian.getMemberMap().get("test").getTotalBooksCheckedOut());
+        assertEquals(0, librarian.getMemberMap().get("test").getTotalBooksCheckedOut());
 
         // Verify the database update
         Statement stmt = connection.createStatement();
         ResultSet rs = stmt.executeQuery("SELECT numberOfBooks FROM members WHERE id='test'");
         assertTrue(rs.next());
-        assertEquals(-1, rs.getInt("numberOfBooks"));
+        assertEquals(0, rs.getInt("numberOfBooks"));
 
-        librarian.increaseBookForMemberDatabase("test");
+        //librarian.increaseBookForMemberDatabase("test");
 
 
     }
