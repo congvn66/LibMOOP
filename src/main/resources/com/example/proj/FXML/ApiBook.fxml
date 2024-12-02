@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<AnchorPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="250.0" prefWidth="600.0" style="-fx-background-color: #7efff5;" stylesheets="@../CSS/ApiBook.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.proj.Controller.BookFromApiController">
+   <children>
+      <ImageView fx:id="bookThumbnail" fitHeight="200.0" fitWidth="128.0" layoutX="20.0" layoutY="20.0" pickOnBounds="true" preserveRatio="true" />
+      <VBox layoutX="150.0" layoutY="20.0" prefHeight="200.0" prefWidth="438.0" spacing="5.0">
+         <children>
+            <Label fx:id="bookTitleLabel" prefHeight="26.0" prefWidth="438.0" text="Title" wrapText="true">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label text="Subject">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="bookSubjectLabel" text="Author">
+               <font>
+                  <Font name="Book Antiqua" size="14.0" />
+               </font>
+            </Label>
+            <Label text="Language">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="bookLanguageLabel" text="Author">
+               <font>
+                  <Font name="Book Antiqua" size="14.0" />
+               </font>
+            </Label>
+            <Label text="Author">
+               <font>
+                  <Font name="Book Antiqua Bold" size="20.0" />
+               </font>
+            </Label>
+            <Label fx:id="authorNameLabel" text="Author">
+               <font>
+                  <Font name="Book Antiqua" size="14.0" />
+               </font>
+            </Label>
+         </children>
+      </VBox>
+      <Button fx:id="watchBook" layoutX="450.0" layoutY="110.0" mnemonicParsing="false" onAction="#setBookFromApiTab" prefHeight="40.0" prefWidth="100.0" text="Watch">
+         <font>
+            <Font name="Book Antiqua Bold" size="18.0" />
+         </font>
+      </Button>
+   </children>
+</AnchorPane>
