@@ -17,11 +17,14 @@ import javafx.scene.chart.BarChart;
 import javafx.scene.chart.XYChart;
 import javafx.scene.control.*;
 import javafx.scene.control.cell.PropertyValueFactory;
+import javafx.scene.image.Image;
+import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import java.sql.Date;
@@ -205,6 +208,18 @@ public class LibMainController implements Initializable {
     @FXML
     private BarChart<String, Number> diaryGraph;
 
+    @FXML
+    private Button addImageBut;
+
+    @FXML
+    private ImageView bookThumbnail;
+
+    private File importedFile;
+
+    private ImageImportService imageImportService;
+
+    private Alert confirmationAlert;
+
     public void setMemberTable(ObservableList a) {
         accountIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         accountStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
@@ -303,6 +318,8 @@ public class LibMainController implements Initializable {
         diaryChoiceBox.getItems().addAll(diaryChoice);
         SpinnerValueFactory<Integer> integerSpinnerValueFactory = new SpinnerValueFactory.IntegerSpinnerValueFactory(0, 100, 0, 1);
         addPointSpinner.setValueFactory(integerSpinnerValueFactory);
+        setConfirmationAlert();
+        imageImportService = new ImageImportService();
         memberTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 statusChoiceBox.setValue(newValue.getStatus());
@@ -321,6 +338,14 @@ public class LibMainController implements Initializable {
                 isRefOnlyChoiceBox.setValue(newValue.getIsReferenceOnly());
                 priceTextField.setText(String.valueOf(newValue.getPrice()));
                 locationTextField.setText(newValue.getRack().getLocationIdentifier());
+                addImageBut.setVisible(true);
+                if (newValue.checkURL()) {
+                    bookThumbnail.setImage(new Image(newValue.getImgName()));
+                    addImageBut.setDisable(true);
+                } else {
+                    bookThumbnail.setImage(new Image(getClass().getResource(newValue.generateImagePathFromImageName(newValue.getImgName())).toExternalForm()));
+                    addImageBut.setDisable(false);
+                }
                 checkBookUpdateLabel.setVisible(false);
             } else {
                 updateIdTextField.setText("");
@@ -329,9 +354,18 @@ public class LibMainController implements Initializable {
                 isRefOnlyChoiceBox.setValue(null);
                 priceTextField.setText("");
                 locationTextField.setText("");
+                addImageBut.setVisible(false);
+                bookThumbnail.setImage(null);
             }
         });
     }
+
+    public void setConfirmationAlert() {
+        confirmationAlert = new Alert(Alert.AlertType.CONFIRMATION);
+        confirmationAlert.setContentText("There are already file with the same name in the book store \nDo you still want to replace it?");
+        confirmationAlert.getButtonTypes().setAll(ButtonType.YES, ButtonType.CANCEL);
+    }
+
     private void disableMainButton(Button[] list, Button x, boolean backToMain) {
         for (Button i : list) {
             if (i.equals(x) && !backToMain) {
@@ -509,6 +543,7 @@ public class LibMainController implements Initializable {
                     updates.add(String.valueOf(bookStatusChoiceBox.getValue()));
                     updates.add(numberTextField.getText());
                     updates.add(locationTextField.getText());
+                    updates.add(importedFile != null ? importedFile.getName() : bookTable.getSelectionModel().getSelectedItem().getImgName());
                 } catch (NullPointerException n) {
                     legitUpdate = false;
                     checkBookUpdateLabel.setText("Please choose all categories.");
@@ -517,11 +552,14 @@ public class LibMainController implements Initializable {
                 if (legitUpdate) {
                     checkBookUpdateLabel.setVisible(false);
                     int j = 0;
-                    for (Integer i : new Integer[]{10, 11, 13, 16, 17}) {
+                    for (Integer i : new Integer[]{10, 11, 13, 16, 17, 18}) {
                         CurrentLibrarian.getLibrarian().updateBook(updateIdTextField.getText(), i, updates.get(j));
                         j++;
                     }
                     CurrentLibrarian.updateBookObservableList(bookTable.getSelectionModel().getSelectedItem());
+                    if (importedFile != null) {
+                        imageImportService.moveImageToFolder(importedFile);
+                    }
                 }
             }
         } else if (event.getSource() == cancelBookBut) {
@@ -537,16 +575,42 @@ public class LibMainController implements Initializable {
                 CurrentLibrarian.deleteBookObservableList(bookTable.getSelectionModel().getSelectedItem());
             }
         } else if (event.getSource() == addBookBut) {
-            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/proj/FXML/AddBook.fxml"));
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/proj/FXML/ApiSearchBook.fxml"));
             Stage stage = new Stage();
             Scene scene = new Scene(fxmlLoader.load());
             stage.setTitle("Library Management System");
             stage.setScene(scene);
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);
-            stage.initStyle(StageStyle.UNDECORATED);
             stage.show();
-            AddBookController.setStage(stage);
+        } else if (event.getSource() == addImageBut) {
+            importedFile = imageImportService.importImage((Stage)addImageBut.getScene().getWindow());
+            if (importedFile != null) {
+                if (!imageImportService.movableImageToFolder(importedFile)) {
+                    if (confirmationAlertTab()) {
+                        setBookThumbnail(importedFile);
+                    } else {
+                        importedFile = null;
+                    }
+                } else {
+                    setBookThumbnail(importedFile);
+                }
+            }
         }
+    }
+
+    public boolean confirmationAlertTab() {
+        Optional<ButtonType> type = confirmationAlert.showAndWait();
+        if (type.isPresent()) {
+            if (type.get() == ButtonType.YES) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    public void setBookThumbnail(File fileImage) {
+        bookThumbnail.setImage(new Image(fileImage.toURI().toString()));
     }
 
     public XYChart.Series<String, Number> getListOfTotalLogs(LinkedHashMap<Date, ObservableList<Log>> totalLog, Date startDate, Date endDate) {

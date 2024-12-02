@@ -1,0 +1,16 @@
+#watchBook {
+-fx-background-color: #4cd137;
+-fx-background-radius: 50;
+-fx-border-color: black;
+-fx-border-radius: 50;
+}
+#watchBook:hover {
+-fx-text-fill: white;
+-fx-scale-x: 1.1;
+-fx-scale-y: 1.1;
+}
+#watchBook: pressed {
+-fx-text-fill: black;
+-fx-scale-x: 0.9;
+-fx-scale-y: 0.9;
+}

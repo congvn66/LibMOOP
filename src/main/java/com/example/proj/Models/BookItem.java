@@ -1,5 +1,8 @@
 package com.example.proj.Models;
 
+import java.net.MalformedURLException;
+import java.net.URISyntaxException;
+import java.net.URL;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
@@ -64,10 +67,19 @@ public class BookItem extends Book {
         this.imgName = imgName;
     }
 
+    public boolean checkURL() {
+        try {
+            new URL(imgName).toURI();
+            return true;
+        } catch (MalformedURLException | URISyntaxException m) {
+            return false;
+        }
+    }
+
     public String generateImagePathFromImageName(String imgName) {
-        String basePath = "src/main/resources/asset/book/";
+        String basePath = "/asset/book/";
         if (imgName == null || imgName.trim().isEmpty()) {
-            imgName = "default.png";
+            imgName = "image.png";
         }
         return basePath + imgName;
     }

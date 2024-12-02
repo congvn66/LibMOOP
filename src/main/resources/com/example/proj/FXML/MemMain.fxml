@@ -120,50 +120,6 @@
                   </Button>
                </children>
             </AnchorPane>
-            <AnchorPane fx:id="BookManagementTab" layoutX="278.0" layoutY="185.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #7efff5;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="278.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="185.0">
-               <children>
-                  <TableView fx:id="bookTable" editable="true" layoutY="80.0" prefHeight="400.0" prefWidth="1242.0">
-                     <columns>
-                        <TableColumn fx:id="bookIdColumn" prefWidth="101.60000765323639" resizable="false" sortable="false" style="-fx-border-color: black;" text="ID" />
-                        <TableColumn fx:id="bookTitleColumn" prefWidth="95.1999740600586" resizable="false" sortable="false" style="-fx-border-color: black;" text="Title" />
-                        <TableColumn fx:id="bookSubjectColumn" prefWidth="102.66659545898438" resizable="false" sortable="false" style="-fx-border-color: black;" text="Subject" />
-                        <TableColumn fx:id="bookRefColumn" prefWidth="90.13330078125" resizable="false" sortable="false" style="-fx-border-color: black;" text="ReferenceOnly" />
-                        <TableColumn fx:id="bookStatusColumn" prefWidth="103.46673583984375" resizable="false" sortable="false" style="-fx-border-color: black;" text="Status" />
-                        <TableColumn fx:id="bookPriceColumn" prefWidth="67.19998168945312" resizable="false" sortable="false" style="-fx-border-color: black;" text="Price" />
-                        <TableColumn fx:id="bookAuthorColumn" prefWidth="153.60003662109375" resizable="false" sortable="false" style="-fx-border-color: black;" text="Author" />
-                        <TableColumn fx:id="bookAuthorDesColumn" prefWidth="341.5999755859375" resizable="false" sortable="false" style="-fx-border-color: black;" text="AuthorDescription" />
-                        <TableColumn fx:id="bookNumberColumn" prefWidth="92.533447265625" resizable="false" sortable="false" style="-fx-border-color: black;" text="Number" />
-                        <TableColumn fx:id="bookLocationColumn" prefWidth="88.0" resizable="false" sortable="false" style="-fx-border-color: black;" text="Location" />
-                     </columns>
-                  </TableView>
-                  <Label fx:id="checkSearchLabel" layoutX="365.0" layoutY="50.0" text="ID doesn't exist" textFill="RED" visible="false">
-                     <font>
-                        <Font size="16.0" />
-                     </font>
-                  </Label>
-                  <Button id="watchBookBut" fx:id="watchBookBut" layoutX="300.0" layoutY="500.0" mnemonicParsing="false" onAction="#setBookManagementTab" prefHeight="84.0" prefWidth="157.0" text="Watch Book">
-                     <font>
-                        <Font name="Book Antiqua Bold" size="22.0" />
-                     </font>
-                  </Button>
-                  <Button id="cancelBookBut" fx:id="cancelBookBut" layoutX="717.0" layoutY="500.0" mnemonicParsing="false" onAction="#setBookManagementTab" prefHeight="84.0" prefWidth="139.0" text="Cancel">
-                     <font>
-                        <Font name="Book Antiqua Bold" size="22.0" />
-                     </font>
-                  </Button>
-                  <ChoiceBox fx:id="searchOptionChoiceBox" layoutX="178.0" layoutY="13.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-radius: 15; -fx-border-color: black; -fx-border-radius: 15;" />
-                  <TextField fx:id="searchTextField" layoutX="361.0" layoutY="11.0" onAction="#setBookManagementTab" prefHeight="40.0" prefWidth="428.0" promptText="Search" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
-                     <font>
-                        <Font name="Book Antiqua" size="18.0" />
-                     </font>
-                  </TextField>
-                  <Button id="searchBookBut" fx:id="searchBookBut" layoutX="851.0" layoutY="8.0" mnemonicParsing="false" onAction="#setBookManagementTab" prefHeight="48.0" prefWidth="104.0" text="Search">
-                     <font>
-                        <Font name="Book Antiqua Bold" size="22.0" />
-                     </font>
-                  </Button>
-               </children>
-            </AnchorPane>
             <AnchorPane fx:id="MainTab" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="278.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="185.0">
                <children>
                   <AnchorPane prefHeight="613.0" prefWidth="974.0" style="-fx-background-color: #ecf0f1;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="278.4">
@@ -244,6 +200,50 @@
                         <Font name="Book Antiqua Bold" size="36.0" />
                      </font>
                   </Label>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="BookManagementTab" layoutX="278.0" layoutY="185.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #7efff5;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="278.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="185.0">
+               <children>
+                  <TableView fx:id="bookTable" editable="true" layoutY="80.0" prefHeight="400.0" prefWidth="1242.0">
+                     <columns>
+                        <TableColumn fx:id="bookIdColumn" prefWidth="101.60000765323639" resizable="false" sortable="false" style="-fx-border-color: black;" text="ID" />
+                        <TableColumn fx:id="bookTitleColumn" prefWidth="95.1999740600586" resizable="false" sortable="false" style="-fx-border-color: black;" text="Title" />
+                        <TableColumn fx:id="bookSubjectColumn" prefWidth="102.66659545898438" resizable="false" sortable="false" style="-fx-border-color: black;" text="Subject" />
+                        <TableColumn fx:id="bookRefColumn" prefWidth="90.13330078125" resizable="false" sortable="false" style="-fx-border-color: black;" text="ReferenceOnly" />
+                        <TableColumn fx:id="bookStatusColumn" prefWidth="103.46673583984375" resizable="false" sortable="false" style="-fx-border-color: black;" text="Status" />
+                        <TableColumn fx:id="bookPriceColumn" prefWidth="67.19998168945312" resizable="false" sortable="false" style="-fx-border-color: black;" text="Price" />
+                        <TableColumn fx:id="bookAuthorColumn" prefWidth="153.60003662109375" resizable="false" sortable="false" style="-fx-border-color: black;" text="Author" />
+                        <TableColumn fx:id="bookAuthorDesColumn" prefWidth="341.5999755859375" resizable="false" sortable="false" style="-fx-border-color: black;" text="AuthorDescription" />
+                        <TableColumn fx:id="bookNumberColumn" prefWidth="92.533447265625" resizable="false" sortable="false" style="-fx-border-color: black;" text="Number" />
+                        <TableColumn fx:id="bookLocationColumn" prefWidth="88.0" resizable="false" sortable="false" style="-fx-border-color: black;" text="Location" />
+                     </columns>
+                  </TableView>
+                  <Label fx:id="checkSearchLabel" layoutX="365.0" layoutY="50.0" text="ID doesn't exist" textFill="RED" visible="false">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Button id="watchBookBut" fx:id="watchBookBut" layoutX="300.0" layoutY="500.0" mnemonicParsing="false" onAction="#setBookManagementTab" prefHeight="84.0" prefWidth="157.0" text="Watch Book">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="22.0" />
+                     </font>
+                  </Button>
+                  <Button id="cancelBookBut" fx:id="cancelBookBut" layoutX="717.0" layoutY="500.0" mnemonicParsing="false" onAction="#setBookManagementTab" prefHeight="84.0" prefWidth="139.0" text="Cancel">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="22.0" />
+                     </font>
+                  </Button>
+                  <ChoiceBox fx:id="searchOptionChoiceBox" layoutX="178.0" layoutY="13.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-radius: 15; -fx-border-color: black; -fx-border-radius: 15;" />
+                  <TextField fx:id="searchTextField" layoutX="361.0" layoutY="11.0" onAction="#setBookManagementTab" prefHeight="40.0" prefWidth="428.0" promptText="Search" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+                     <font>
+                        <Font name="Book Antiqua" size="18.0" />
+                     </font>
+                  </TextField>
+                  <Button id="searchBookBut" fx:id="searchBookBut" layoutX="851.0" layoutY="8.0" mnemonicParsing="false" onAction="#setBookManagementTab" prefHeight="48.0" prefWidth="104.0" text="Search">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="22.0" />
+                     </font>
+                  </Button>
                </children>
             </AnchorPane>
          </children>

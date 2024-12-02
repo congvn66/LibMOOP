@@ -284,9 +284,9 @@ public class GoogleBookApi {
     private static String getImageUrl(JSONObject bookInfo) {
         if (bookInfo.has("imageLinks")) {
             JSONObject imageLinks = bookInfo.getJSONObject("imageLinks");
-            return imageLinks.optString("thumbnail", "default.png");
+            return imageLinks.optString("thumbnail", "image.png");
         }
-        return "default.png";
+        return "image.png";
     }
 
 
@@ -300,17 +300,17 @@ public class GoogleBookApi {
 
         System.out.println("-------------------------------------------");
 
-        List<BookItem> books = getBookDetailsByTitle("Harry Potter");
+        List<BookItem> books = getBookDetailsByTitle("harry potter");
         for (BookItem book1 : books) {
             book1.displayInfo();
         }
 
         System.out.println("-------------------------------------------");
 
-        List<BookItem> books2 = getBookDetailsByAuthor("J. K. Rowling");
-        for (BookItem book2 : books2) {
-            book2.displayInfo();
-        }
+//        List<BookItem> books2 = getBookDetailsByAuthor("J. K. Rowling");
+//        for (BookItem book2 : books2) {
+//            book2.displayInfo();
+//        }
     }
 }
 

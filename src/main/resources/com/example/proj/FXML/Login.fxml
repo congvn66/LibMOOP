@@ -15,6 +15,56 @@
    <children>
       <AnchorPane maxHeight="400.0" minHeight="400.0" prefHeight="400.0" stylesheets="@../CSS/Login.css">
          <children>
+            <AnchorPane fx:id="RegisterTab" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #206627;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Button id="loginInReg" fx:id="loginInReg" layoutX="95.0" layoutY="308.0" mnemonicParsing="false" onAction="#registerTab" prefHeight="59.0" prefWidth="118.0" text="Login">
+                     <font>
+                        <Font name="Times New Roman Bold" size="24.0" />
+                     </font>
+                  </Button>
+                  <Label layoutX="7.0" layoutY="32.0" prefHeight="74.0" prefWidth="286.0" text="Library Management System" textFill="WHITE">
+                     <font>
+                        <Font name="Times New Roman Bold" size="22.0" />
+                     </font>
+                  </Label>
+                  <Hyperlink layoutX="83.0" layoutY="277.0" style="-fx-background-radius: 20;" text="Already have an account?">
+                     <font>
+                        <Font name="Arial Italic" size="12.0" />
+                     </font>
+                  </Hyperlink>
+                  <AnchorPane fx:id="LoginTab1" layoutX="327.0" layoutY="38.0" prefHeight="325.0" prefWidth="246.0" style="-fx-background-radius: 20; -fx-background-color: white;">
+                     <children>
+                        <Label layoutX="18.0" layoutY="32.0" text="Register Account">
+                           <font>
+                              <Font name="Times New Roman Bold" size="28.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="nameReg" layoutX="8.0" layoutY="94.0" onAction="#registerTab" prefHeight="43.0" prefWidth="230.0" promptText="Name" style="-fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 2;">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </TextField>
+                        <Button id="signUpButton" fx:id="signUp" layoutX="118.0" layoutY="256.0" mnemonicParsing="false" onAction="#registerTab" prefHeight="47.0" prefWidth="102.0" text="Sign up">
+                           <font>
+                              <Font name="Times New Roman Bold" size="21.0" />
+                           </font>
+                        </Button>
+                        <Label fx:id="nameTakenReg" layoutX="24.0" layoutY="206.0" text="This name is already taken" textFill="RED" visible="false" />
+                        <Label fx:id="emptyTextReg" layoutX="24.0" layoutY="206.0" text="Please fill in" textFill="RED" visible="false" />
+                        <PasswordField fx:id="passWordReg" layoutX="8.0" layoutY="163.0" onAction="#registerTab" prefHeight="43.0" prefWidth="230.0" promptText="Password" style="-fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 2;">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </PasswordField>
+                     </children>
+                  </AnchorPane>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="75.0" layoutY="106.0" pickOnBounds="true" preserveRatio="true" scaleX="1.75" scaleY="1.75">
+                     <image>
+                        <Image url="@../../../../asset/logo.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </AnchorPane>
             <AnchorPane minHeight="400.0" prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: #206627;">
                <children>
                   <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="75.0" layoutY="106.0" pickOnBounds="true" preserveRatio="true" scaleX="1.75" scaleY="1.75">
@@ -135,56 +185,6 @@
                         <Button id="exitLogin" fx:id="exit" layoutX="14.0" layoutY="263.0" mnemonicParsing="false" onAction="#LoginTab" text="Exit" />
                      </children>
                   </AnchorPane>
-               </children>
-            </AnchorPane>
-            <AnchorPane fx:id="RegisterTab" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #206627;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
-               <children>
-                  <Button id="loginInReg" fx:id="loginInReg" layoutX="95.0" layoutY="308.0" mnemonicParsing="false" onAction="#registerTab" prefHeight="59.0" prefWidth="118.0" text="Login">
-                     <font>
-                        <Font name="Times New Roman Bold" size="24.0" />
-                     </font>
-                  </Button>
-                  <Label layoutX="7.0" layoutY="32.0" prefHeight="74.0" prefWidth="286.0" text="Library Management System" textFill="WHITE">
-                     <font>
-                        <Font name="Times New Roman Bold" size="22.0" />
-                     </font>
-                  </Label>
-                  <Hyperlink layoutX="83.0" layoutY="277.0" style="-fx-background-radius: 20;" text="Already have an account?">
-                     <font>
-                        <Font name="Arial Italic" size="12.0" />
-                     </font>
-                  </Hyperlink>
-                  <AnchorPane fx:id="LoginTab1" layoutX="327.0" layoutY="38.0" prefHeight="325.0" prefWidth="246.0" style="-fx-background-radius: 20; -fx-background-color: white;">
-                     <children>
-                        <Label layoutX="18.0" layoutY="32.0" text="Register Account">
-                           <font>
-                              <Font name="Times New Roman Bold" size="28.0" />
-                           </font>
-                        </Label>
-                        <TextField fx:id="nameReg" layoutX="8.0" layoutY="94.0" onAction="#registerTab" prefHeight="43.0" prefWidth="230.0" promptText="Name" style="-fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 2;">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </TextField>
-                        <Button id="signUpButton" fx:id="signUp" layoutX="118.0" layoutY="256.0" mnemonicParsing="false" onAction="#registerTab" prefHeight="47.0" prefWidth="102.0" text="Sign up">
-                           <font>
-                              <Font name="Times New Roman Bold" size="21.0" />
-                           </font>
-                        </Button>
-                        <Label fx:id="nameTakenReg" layoutX="24.0" layoutY="206.0" text="This name is already taken" textFill="RED" visible="false" />
-                        <Label fx:id="emptyTextReg" layoutX="24.0" layoutY="206.0" text="Please fill in" textFill="RED" visible="false" />
-                        <PasswordField fx:id="passWordReg" layoutX="8.0" layoutY="163.0" onAction="#registerTab" prefHeight="43.0" prefWidth="230.0" promptText="Password" style="-fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 2;">
-                           <font>
-                              <Font size="18.0" />
-                           </font>
-                        </PasswordField>
-                     </children>
-                  </AnchorPane>
-                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="75.0" layoutY="106.0" pickOnBounds="true" preserveRatio="true" scaleX="1.75" scaleY="1.75">
-                     <image>
-                        <Image url="@../../../../asset/logo.png" />
-                     </image>
-                  </ImageView>
                </children>
             </AnchorPane>
          </children>

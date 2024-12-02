@@ -188,8 +188,8 @@ public class Catalog {
         String dbUsername = "root";
         String dbPassword = "";
 
-        String sql = "INSERT INTO bookitem (ISBN, title, subject, publisher, language, numberOfPage, authorName, authorDescription, id, isReferenceOnly, price, format, status, dateOfPurchase, publicationDate, number, location) "
-                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
+        String sql = "INSERT INTO bookitem (ISBN, title, subject, publisher, language, numberOfPage, authorName, authorDescription, id, isReferenceOnly, price, format, status, dateOfPurchase, publicationDate, number, location, imgName) "
+                + "VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)";
 
         int generatedId = -1;
 
@@ -214,6 +214,7 @@ public class Catalog {
             statement.setString(15, dateFormat.format(bookItem.getPublicationDate()));
             statement.setInt(16, bookItem.getRack().getNumber());
             statement.setString(17, bookItem.getRack().getLocationIdentifier());
+            statement.setString(18, bookItem.getImgName());
 
             // Execute the insert and retrieve the generated keys
             int rowsInserted = statement.executeUpdate();
@@ -495,6 +496,14 @@ public class Catalog {
                             this.removeBookById(oldBookItem.getId(), false, true);
 
                             oldBookItem.setRack(oldBookItem.getRack().getNumber(), newValue);
+
+                            this.addBookItem(oldBookItem, true);
+                            break;
+
+                        case 18: // imageName
+                            this.removeBookById(oldBookItem.getId(), false, true);
+
+                            oldBookItem.setImgName(newValue);
 
                             this.addBookItem(oldBookItem, true);
                             break;

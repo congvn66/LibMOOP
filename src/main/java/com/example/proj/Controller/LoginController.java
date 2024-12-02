@@ -111,15 +111,19 @@ public class LoginController extends Application {
                     CurrentLibrarian currentLib = new CurrentLibrarian(authentication.checkLoginasLibrarian());
                     wrong.setVisible(false);
                     System.out.println("Librarian logged in");
-                    FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/proj/FXML/LibMain.fxml"));
-                    Stage stage = new Stage();
-                    Scene scene = new Scene(fxmlLoader.load());
+                    try {
+                        FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/proj/FXML/LibMain.fxml"));
+                        Stage stage = new Stage();
+                        Scene scene = new Scene(fxmlLoader.load());
                     stage.setTitle("Library Management System");
                     stage.setScene(scene);
-                    stage.initStyle(StageStyle.UNDECORATED);
-                    stage.setResizable(false);
+//                    stage.initStyle(StageStyle.UNDECORATED);
+//                    stage.setResizable(false);
                     Login.getScene().getWindow().hide();
                     stage.show();
+                    } catch (IOException i) {
+                        i.printStackTrace();
+                    }
                 } else if (authentication.checkLoginMember(librarian) != null) {
                     CurrentLibrarian currentLibrarian = new CurrentLibrarian(librarian);
                     CurrentMember currentMember = new CurrentMember(authentication.checkLoginMember(librarian));

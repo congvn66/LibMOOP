@@ -227,6 +227,7 @@ public class MemMainController implements Initializable {
 
     public void setNotificationVBox(ObservableList<Notification> a) {
         notificationVBox.getChildren().clear();
+        notificationVBox.setSpacing(10);
         for (Notification i : a) {
             Label tmp = new Label(i.toString());
             tmp.setWrapText(true);
@@ -300,7 +301,6 @@ public class MemMainController implements Initializable {
         alertInfo = new Alert(Alert.AlertType.INFORMATION);
         alertConfirm = new Alert(Alert.AlertType.CONFIRMATION);
         alertConfirm.getButtonTypes().setAll(ButtonType.YES, ButtonType.NO);
-        notificationVBox.setSpacing(10);
     }
 
     private void disableMainButton(Button[] list, Button x, boolean backToMain) {
@@ -432,7 +432,6 @@ public class MemMainController implements Initializable {
                 stage.initStyle(StageStyle.UNDECORATED);
                 stage.setResizable(false);
                 stage.show();
-                WatchBookController.setStage(stage);
             }
         }
     }
