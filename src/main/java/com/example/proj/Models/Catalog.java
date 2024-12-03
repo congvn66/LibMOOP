@@ -265,7 +265,7 @@ public class Catalog {
     public List<BookItem> findBooksBySubject(String subject) {
         return bookSubjects.getOrDefault(subject.toUpperCase(), new ArrayList<>());
     }
-    public ObservableList<BookItem> findBooksByStatus(String bookStatus) {
+    public List<BookItem> findBooksByStatus(String bookStatus) {
         return this.bookStatus.getOrDefault(bookStatus, FXCollections.observableArrayList());
     }
 

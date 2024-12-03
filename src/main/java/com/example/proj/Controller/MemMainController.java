@@ -244,7 +244,7 @@ public class MemMainController implements Initializable {
         CurrentMember.getMember().getCatalog().getTotalBooks().addListener((observable, oldValue, newValue) -> {
             Platform.runLater(() -> {
                 totalBooks.setText(CurrentMember.getMember().getCatalog().getTotalBooks().get() + "/5000");
-                progressBar.setProgress((double)CurrentMember.getMember().getCatalog().getTotalBooks().get() / 5000);
+                progressBar.setProgress((double) CurrentMember.getMember().getCatalog().getTotalBooks().get() / 5000);
                 percentage.setText((double) CurrentMember.getMember().getCatalog().getTotalBooks().get() / 50 + "%");
             });
         });
@@ -284,6 +284,7 @@ public class MemMainController implements Initializable {
                 yourBookNum.setText(String.valueOf(CurrentMember.getMember().getLogger().getMemListOfLog().size()));
             });
         });
+
         welcomeText.setText("Hello " + CurrentMember.getMember().getId());
         setLibBookTable(CurrentMember.getListOfLibBook());
         setMemBookTable(CurrentMember.getListOfMemBook());
@@ -296,7 +297,7 @@ public class MemMainController implements Initializable {
         });
         setNotificationVBox(CurrentMember.getMember().getNotificationBox().getNotifications());
         CurrentMember.getMember().getNotificationBox().getNotifications().addListener((ListChangeListener<Notification>) change -> {
-                setNotificationVBox(CurrentMember.getMember().getNotificationBox().getNotifications());
+            setNotificationVBox(CurrentMember.getMember().getNotificationBox().getNotifications());
         });
         alertInfo = new Alert(Alert.AlertType.INFORMATION);
         alertConfirm = new Alert(Alert.AlertType.CONFIRMATION);
@@ -435,6 +436,7 @@ public class MemMainController implements Initializable {
             }
         }
     }
+
     public void setMemBookTab(ActionEvent event) throws ParseException {
         if (event.getSource() == memCancelBookBut) {
             memBookTable.getSelectionModel().select(null);
@@ -458,35 +460,14 @@ public class MemMainController implements Initializable {
             if (memBookTable.getSelectionModel().getSelectedItem() != null) {
                 BookItem lostBook = memBookTable.getSelectionModel().getSelectedItem();
                 Notification notification = CurrentMember.getMember().getNotificationBox().findNotification(lostBook.getId());
-                if (lostBook.getStatus() == BookStatus.LOST) {
-                    alertInfo.setContentText("You have already reported the loss of this book");
-                    alertInfo.showAndWait();
-                    return;
-                }
-                if (notification.getDueDate().isAfter(LocalDate.now())) {
-                    int daysBetween = Period.between(LocalDate.now(), notification.getDueDate()).getDays();
-                    alertConfirm.setContentText("You have " + daysBetween + " days to find the book." +
-                            "\nDo you still want to report the loss of this book?");
-                    Optional<ButtonType> type = alertConfirm.showAndWait();
-                    if (type.isPresent()) {
-                        if (type.get() == ButtonType.YES) {
-                            CurrentMember.getMember().updateBook(lostBook.getId(), 13, "LOST");
-                            alertInfo.setContentText("You have lost " + Math.min(50, CurrentMember.getMember().getPoint()) + " points for loosing a book!");
-                            System.out.println(CurrentMember.getMember().getPoint());
-                            CurrentLibrarian.getLibrarian().updatePoint(CurrentMember.getMember().getId(), Math.max(0, CurrentMember.getMember().getPoint() - 50));
-                            System.out.println(CurrentMember.getMember().getPoint());
-                            alertInfo.showAndWait();
-                        }
-                    }
-                } else {
-                    int daysBetween = Period.between(notification.getDueDate(), LocalDate.now()).getDays();
-                    CurrentMember.getMember().updateBook(lostBook.getId(), 13, "LOST");
-                    alertInfo.setContentText("You have lost " + Math.min(50 + daysBetween, CurrentMember.getMember().getPoint()) + " points for report after the due date!");
-                    CurrentLibrarian.getLibrarian().updatePoint(CurrentMember.getMember().getId(), Math.max(0, CurrentMember.getMember().getPoint() - 50 - daysBetween));
-                    alertInfo.showAndWait();
-                        }
-                    }
-                }
+                CurrentMember.getMember().updateBook(lostBook.getId(), 13, "LOST");
+                CurrentMember.deleteListOfMemBook(lostBook);
+                CurrentMember.updateListOfLibBook(lostBook);
+                alertInfo.setContentText("You have lost " + Math.min(50, CurrentMember.getMember().getPoint()) + " points for report after the due date!");
+                CurrentLibrarian.getLibrarian().updatePoint(CurrentMember.getMember().getId(), Math.max(0, CurrentMember.getMember().getPoint() - 50));
+                alertInfo.showAndWait();
             }
+        }
     }
+}
 
