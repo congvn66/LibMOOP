@@ -171,6 +171,7 @@ public class AddBookController implements Initializable {
             }
         }
         else if (event.getSource() == finalAddBookBut) {
+            checkBook = true;
             String price = addPriceText.getText();
             checkPriceTab(price);
 
