@@ -3,7 +3,6 @@ package com.example.proj.Models;
 import java.net.MalformedURLException;
 import java.net.URISyntaxException;
 import java.net.URL;
-import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.Objects;
 
@@ -12,23 +11,14 @@ public class BookItem extends Book {
     private boolean isReferenceOnly;
     private Date borrowed;
     private Date dueDate;
-
     private double price;
     private BookFormat format;
     private BookStatus status;
     private Date dateOfPurchase;
     private Date publicationDate;
     private String imgName;
-
-    // CAUTION!!!
     private Rack rack;
 
-
-
-
-
-
-    // Constructor
     public BookItem(String ISBN, String title, String subject, String publisher, String language,
                     String numberOfPage, String authorName, String authorDescription,
                     String id, boolean isReferenceOnly, double price,
@@ -43,7 +33,6 @@ public class BookItem extends Book {
         this.dateOfPurchase = dateOfPurchase;
         this.publicationDate = publicationDate;
         this.imgName = imgName;
-        // CAUTION!!!!!
         this.rack = new Rack(number, location);
     }
 
@@ -66,37 +55,6 @@ public class BookItem extends Book {
     public void setImgName(String imgName) {
         this.imgName = imgName;
     }
-
-    public boolean checkURL() {
-        try {
-            new URL(imgName).toURI();
-            return true;
-        } catch (MalformedURLException | URISyntaxException m) {
-            return false;
-        }
-    }
-
-    public String generateImagePathFromImageName(String imgName) {
-        String basePath = "/asset/book/";
-        if (imgName == null || imgName.trim().isEmpty()) {
-            imgName = "image.png";
-        }
-        return basePath + imgName;
-    }
-
-    public static String generateImageNameFromChosenImage(String imgName) {
-
-        int dotIndex = imgName.lastIndexOf(".");
-        String name = imgName.substring(0, dotIndex);
-        String extension = imgName.substring(dotIndex);
-
-        String timestamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
-
-        String newImgName = name + "_" + timestamp + extension;
-
-        return newImgName;
-    }
-
 
     public void setReferenceOnly(boolean referenceOnly) {
         isReferenceOnly = referenceOnly;
@@ -158,13 +116,6 @@ public class BookItem extends Book {
         this.publicationDate = publicationDate;
     }
 
-    public boolean checkout() {
-        if (status.equals(BookStatus.AVAILABLE) && !isReferenceOnly) {
-            return true;
-        }
-        return false;
-    }
-
     public Rack getRack() {
         return this.rack;
     }
@@ -174,8 +125,44 @@ public class BookItem extends Book {
         this.rack.setLocationIdentifier(locate);
     }
 
+    /**
+     * Checks if the provided string is a valid URL.
+     * This method attempts to create a {@link URL} object from the given string and checks if it is a valid URL format.
+     * If the string is a valid URL, the method returns {@code true}. Otherwise, it returns {@code false}.
+     *
+     * @return {@code true} if the string represents a valid URL, {@code false} if it does not.
+     */
+    public boolean checkURL() {
+        try {
+            new URL(imgName).toURI();
+            return true;
+        } catch (MalformedURLException | URISyntaxException m) {
+            return false;
+        }
+    }
 
+    /**
+     * Generates the file path for an image based on the provided image name.
+     * This method constructs the full file path by appending the image name to a predefined base path.
+     * If the image name is {@code null} or empty, a default image file name ("image.png") is used.
+     *
+     * @param imgName the name of the image file
+     * @return the full file path for the image, including the base path and the image name
+     */
+    public String generateImagePathFromImageName(String imgName) {
+        String basePath = "/asset/book/";
+        if (imgName == null || imgName.trim().isEmpty()) {
+            imgName = "image.png";
+        }
+        return basePath + imgName;
+    }
 
+    /**
+     * Displays detailed information about the book.
+     * This method prints various attributes of the book, including its ISBN, title, subject, publisher, language,
+     * number of pages, author details, price, format, status, date of purchase, publication date, and image name (or URL).
+     * It also prints additional attributes like whether the book is for reference only and its unique ID.
+     */
     @Override
     public void displayInfo() {
         System.out.println("ISBN: " + this.getISBN());
@@ -213,6 +200,6 @@ public class BookItem extends Book {
 
     @Override
     public int hashCode() {
-        return Objects.hash(id); // Ensure to override hashCode whenever equals is overridden
+        return Objects.hash(id);
     }
 }

@@ -9,7 +9,6 @@ public abstract class Book {
     private String numberOfPage;
     private Author author;
 
-    // Constructor
     public Book(String ISBN, String title, String subject, String publisher,
                 String language, String numberOfPage, String authorName, String authorDescription) {
         this.ISBN = ISBN;
@@ -21,7 +20,6 @@ public abstract class Book {
         this.author = new Author(authorName, authorDescription);
     }
 
-    // Getter & Setter
     public String getISBN() {
         return ISBN;
     }
@@ -75,6 +73,5 @@ public abstract class Book {
     }
 
     public abstract void displayInfo();
-
 
 }
