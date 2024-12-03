@@ -88,8 +88,11 @@ public class Librarian extends Account{
     }
 
     public void addMemberRegisterToMap(Member member) {
-        this.memberRegister.computeIfAbsent(member.getCreateDate(), k -> 1);
-        this.memberRegister.computeIfPresent(member.getCreateDate(), (k, v) -> v + 1);
+        if (!memberRegister.containsKey(member.getCreateDate())) {
+            this.memberRegister.put(member.getCreateDate(), 1);
+            return;
+        }
+        this.memberRegister.replace(member.getCreateDate(), this.memberRegister.get(member.getCreateDate()) + 1);
     }
 
     private void loadMembersFromDatabase() {

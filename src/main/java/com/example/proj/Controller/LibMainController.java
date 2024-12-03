@@ -1,6 +1,7 @@
 package com.example.proj.Controller;
 
 import com.example.proj.Models.*;
+import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
@@ -23,6 +24,7 @@ import javafx.scene.layout.AnchorPane;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
+import javafx.util.Duration;
 
 import java.io.File;
 import java.io.IOException;
@@ -214,6 +216,9 @@ public class LibMainController implements Initializable {
     @FXML
     private ImageView bookThumbnail;
 
+    @FXML
+    private Button searchApiBut;
+
     private File importedFile;
 
     private ImageImportService imageImportService;
@@ -254,7 +259,7 @@ public class LibMainController implements Initializable {
     public void initialize(URL url, ResourceBundle resourceBundle) {
         totalBooks.setText(CurrentLibrarian.getLibrarian().getCatalog().getTotalBooks().get() + "/5000");
         progressBar.setProgress((double) CurrentLibrarian.getLibrarian().getCatalog().getBookId().size() / 5000);
-        percentage.setText(String.valueOf((double) CurrentLibrarian.getLibrarian().getCatalog().getBookId().size() / 50 + "%"));
+        percentage.setText((double) CurrentLibrarian.getLibrarian().getCatalog().getBookId().size() / 50 + "%");
         CurrentLibrarian.getLibrarian().getCatalog().getTotalBooks().addListener((observable, oldValue, newValue) -> {
             Platform.runLater(() -> {
                 totalBooks.setText(CurrentLibrarian.getLibrarian().getCatalog().getTotalBooks().get() + "/5000");
@@ -368,11 +373,7 @@ public class LibMainController implements Initializable {
 
     private void disableMainButton(Button[] list, Button x, boolean backToMain) {
         for (Button i : list) {
-            if (i.equals(x) && !backToMain) {
-                i.setDisable(true);
-            } else {
-                i.setDisable(false);
-            }
+            i.setDisable(i.equals(x) && !backToMain);
         }
     }
     public void setMainTab(ActionEvent event) throws IOException {
@@ -574,7 +575,7 @@ public class LibMainController implements Initializable {
                 CurrentLibrarian.getLibrarian().removeBook(bookTable.getSelectionModel().getSelectedItem().getId());
                 CurrentLibrarian.deleteBookObservableList(bookTable.getSelectionModel().getSelectedItem());
             }
-        } else if (event.getSource() == addBookBut) {
+        } else if (event.getSource() == searchApiBut) {
             FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/proj/FXML/ApiSearchBook.fxml"));
             Stage stage = new Stage();
             Scene scene = new Scene(fxmlLoader.load());
@@ -582,6 +583,15 @@ public class LibMainController implements Initializable {
             stage.setScene(scene);
             stage.initModality(Modality.APPLICATION_MODAL);
             stage.setResizable(false);
+            stage.show();
+        } else if (event.getSource() == addBookBut) {
+            FXMLLoader fxmlLoader = new FXMLLoader(getClass().getResource("/com/example/proj/FXML/ManuallyAddBook.fxml"));
+            Stage stage = new Stage();
+            Scene scene = new Scene(fxmlLoader.load());
+            stage.setTitle("Library Management System");
+            stage.setScene(scene);
+            stage.setResizable(false);
+            stage.initModality(Modality.APPLICATION_MODAL);
             stage.show();
         } else if (event.getSource() == addImageBut) {
             importedFile = imageImportService.importImage((Stage)addImageBut.getScene().getWindow());
@@ -602,9 +612,7 @@ public class LibMainController implements Initializable {
     public boolean confirmationAlertTab() {
         Optional<ButtonType> type = confirmationAlert.showAndWait();
         if (type.isPresent()) {
-            if (type.get() == ButtonType.YES) {
-                return true;
-            }
+            return type.get() == ButtonType.YES;
         }
         return false;
     }
@@ -659,42 +667,50 @@ public class LibMainController implements Initializable {
                    diaryCheckEndDateLabel.setText("Please select a date");
                    diaryCheckEndDateLabel.setVisible(true);
                }
-               if (startDate != null && endDate != null && startDate.after(endDate)) {
-                   diaryCheckStartDateLabel.setText("Start date must be before end date");
-                   diaryCheckEndDateLabel.setText("End date must be after start date");
-                   diaryCheckStartDateLabel.setVisible(true);
-                   diaryCheckEndDateLabel.setVisible(true);
-               } else {
-                   try {
-                       if (diaryChoiceBox.getValue().equals("Total Logs")) {
-                           diaryCheckChoiceBox.setVisible(false);
-                           diaryGraph.getData().clear();
-                           diaryGraph.setTitle("Total Logs By Day Graph");
-                           XYChart.Series tmp = getListOfTotalLogs(CurrentLibrarian.getLibrarian().getTotalLogs(), startDate, endDate);
-                           diaryGraph.getData().add(tmp);
-                           diaryGraph.getXAxis().setTickLabelGap(diaryGraph.getWidth() / (tmp.getData().size() + 1));
-                       } else if (diaryChoiceBox.getValue().equals("Total member register")) {
-                           diaryCheckChoiceBox.setVisible(false);
-                           diaryGraph.setTitle("Member Register By Day");
-                           diaryGraph.getData().clear();
-                           diaryGraph.getData().add(getListOfTotalMemberRegister(CurrentLibrarian.getLibrarian().getMemberRegister(), startDate, endDate));
-                       } else if (diaryChoiceBox.getValue().equals("Logs by member")) {
-                               diaryCheckChoiceBox.setVisible(false);
-                               String id = diaryIDText.getText();
-                               if (id.equals("")) {
-                                   diaryCheckIdLabel.setText("Please fill in an ID");
-                                   diaryCheckIdLabel.setVisible(true);
-                               } else if (!CurrentLibrarian.getLibrarian().getMemberLogs().containsKey(id)) {
-                                   diaryCheckIdLabel.setText("ID doesn't exist");
-                                   diaryCheckIdLabel.setVisible(true);
-                               } else {
-                                   diaryGraph.setTitle("Member Logs By Day");
-                                   diaryGraph.getData().clear();
-                                   diaryGraph.getData().add(getListOfMemberLogs(CurrentLibrarian.getLibrarian().getMemberLogs(), id, startDate, endDate));
+               if (startDate != null && endDate != null) {
+                   if (startDate.after(endDate)) {
+                       diaryCheckStartDateLabel.setText("Start date must be before end date");
+                       diaryCheckEndDateLabel.setText("End date must be after start date");
+                       diaryCheckStartDateLabel.setVisible(true);
+                       diaryCheckEndDateLabel.setVisible(true);
+                   } else {
+                       long dateDiff = (endDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000);
+                       if (dateDiff > 29) {
+                       diaryCheckStartDateLabel.setText("Gap between 2 date is equal to \nor over 30 days");
+                       diaryCheckEndDateLabel.setText("Gap between 2 date is equal to \nor over 30 days");
+                       diaryCheckStartDateLabel.setVisible(true);
+                       diaryCheckEndDateLabel.setVisible(true);
+                       } else {
+                           try {
+                               if (diaryChoiceBox.getValue().equals("Total Logs")) {
+                                   diaryCheckChoiceBox.setVisible(false);
+                                   diaryGraph.setTitle("Total Logs By Day Graph");
+                                   XYChart.Series tmp = getListOfTotalLogs(CurrentLibrarian.getLibrarian().getTotalLogs(), startDate, endDate);
+                                   diaryGraph.setData(FXCollections.observableArrayList(tmp));
+                               } else if (diaryChoiceBox.getValue().equals("Total member register")) {
+                                   diaryCheckChoiceBox.setVisible(false);
+                                   diaryGraph.setTitle("Member Register By Day");
+                                   diaryGraph.setData(FXCollections.observableArrayList(getListOfTotalMemberRegister(CurrentLibrarian.getLibrarian().getMemberRegister(), startDate, endDate)));
+                               } else if (diaryChoiceBox.getValue().equals("Logs by member")) {
+                                   diaryCheckChoiceBox.setVisible(false);
+                                   String id = diaryIDText.getText();
+                                   if (id.equals("")) {
+                                       diaryCheckIdLabel.setText("Please fill in an ID");
+                                       diaryCheckIdLabel.setVisible(true);
+                                   } else if (!CurrentLibrarian.getLibrarian().getMemberLogs().containsKey(id)) {
+                                       diaryCheckIdLabel.setText("ID doesn't exist");
+                                       diaryCheckIdLabel.setVisible(true);
+                                   } else {
+                                       diaryGraph.setTitle("Member Logs By Day");
+                                       diaryGraph.setData(FXCollections.observableArrayList(getListOfMemberLogs(CurrentLibrarian.getLibrarian().getMemberLogs(), id, startDate, endDate)));
+                                   }
                                }
+                               PauseTransition pauseTransition = new PauseTransition(Duration.millis(2000));
+                               pauseTransition.play();
+                           } catch (NullPointerException n) {
+                               diaryCheckChoiceBox.setVisible(true);
+                           }
                        }
-                   } catch (NullPointerException n) {
-                       diaryCheckChoiceBox.setVisible(true);
                    }
                }
        }
