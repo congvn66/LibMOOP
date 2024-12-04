@@ -15,6 +15,14 @@ public class Notification {
         this.late = late;
     }
 
+    /**
+     * Retrieves the catalog of books associated with the current member.
+     *
+     * This method checks if the catalog is already initialized. If not, it initializes
+     * the catalog by fetching it from the current member using `CurrentMember.getMember().getCatalog()`.
+     *
+     * @return the catalog associated with the current member.
+     */
     public Catalog getCatalog() {
         if (catalog == null) {
             catalog = CurrentMember.getMember().getCatalog();
@@ -30,6 +38,15 @@ public class Notification {
         return dueDate;
     }
 
+    /**
+     * Returns a string representation of the notification regarding a borrowed book.
+     *
+     * The string will display the title of the book along with the due date. If the book is overdue,
+     * the message will indicate that the book must be returned immediately. If the book is not overdue,
+     * the message will include the due date and the number of days remaining until the book is due.
+     *
+     * @return a string indicating the status of the borrowed book and its due date.
+     */
     public String toString() {
         String title = this.getCatalog().findBookById(this.bookId).getTitle();
         if (this.late) {

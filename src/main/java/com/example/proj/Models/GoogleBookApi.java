@@ -26,6 +26,7 @@ public class GoogleBookApi {
      *         Returns an empty list if no books are found or an exception occurs.
      */
     public static List<BookItem> getBookDetailsByAuthor(String author) {
+        long startTime = System.currentTimeMillis();
         List<BookItem> bookItems = new ArrayList<>();
         try {
             // create url api.
@@ -102,6 +103,11 @@ public class GoogleBookApi {
         } catch (Exception e) {
             e.printStackTrace();
         }
+        long endTime = System.currentTimeMillis();
+
+        long duration = endTime - startTime;
+
+        System.out.println("Time elapsed " + duration + " ms");
         return bookItems;
     }
 
@@ -283,6 +289,8 @@ public class GoogleBookApi {
         return null;
     }
 
+
+
     /**
      * Extracts the primary subject of the book from the JSON object.
      * If no subject is found, returns a default message.
@@ -389,15 +397,16 @@ public class GoogleBookApi {
     }
 
     public static void main(String[] args) {
-        String isbn = "0747532699";
-        BookItem book = getBookDetailsByISBN(isbn);
-        if (book != null) {
-            book.displayInfo();
-        }
+//        String isbn = "0747532699";
+//        BookItem book = getBookDetailsByISBN(isbn);
+//        if (book != null) {
+//            book.displayInfo();
+//        }
 
         System.out.println("-------------------------------------------");
 
-        List<BookItem> books = getBookDetailsByTitle("harry potter");
+        List<BookItem> books = getBookDetailsByAuthor("j k rowling");
+        System.out.println(books.size());
         for (BookItem book1 : books) {
             book1.displayInfo();
         }

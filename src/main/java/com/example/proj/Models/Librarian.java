@@ -187,6 +187,11 @@ public class Librarian extends Account{
         logList.computeIfAbsent(log.getId(), k -> FXCollections.observableList(new ArrayList<Log>())).add(log);
     }
 
+    /**
+     * Adds a new book item to the catalog by writing it to the database and updating the catalog.
+     *
+     * @param bookItem the book item to be added.
+     */
     public void addBookItem(BookItem bookItem) {
         int generatedId = this.getCatalog().writeBookItemToDatabaseAndReturnId(bookItem);
 
@@ -199,8 +204,11 @@ public class Librarian extends Account{
         }
     }
 
-
-
+    /**
+     * Blocks a member by updating their account status to "BLACKLISTED" in the database.
+     *
+     * @param id the ID of the member to be blocked.
+     */
     public void blockMemberDatabase(String id) {
         String updateQuery = "UPDATE members SET accountStatus = ? WHERE id = ?";
 
@@ -224,6 +232,11 @@ public class Librarian extends Account{
         }
     }
 
+    /**
+     * Deletes a member's account from the database.
+     *
+     * @param id the ID of the member to be deleted.
+     */
     public void deleteMemberAccount(String id) {
         String updateQuery = "DELETE FROM members WHERE id = ?";
 
@@ -242,6 +255,13 @@ public class Librarian extends Account{
             System.out.println("Delete member error");
         }
     }
+
+    /**
+     * Changes the status of a member in the database.
+     *
+     * @param id the ID of the member.
+     * @param status the new account status to be set.
+     */
     public void changeMemberStatus(String id, AccountStatus status) {
         String updateQuery = "UPDATE members SET accountStatus = ? WHERE id = ?";
 
@@ -262,7 +282,12 @@ public class Librarian extends Account{
         }
     }
 
-
+    /**
+     * Reduces the points of a member in the database.
+     *
+     * @param id the ID of the member.
+     * @param point the number of points to be reduced.
+     */
     public void reducePointMemberDatabase(String id, int point) {
         String updateQuery = "UPDATE members SET point = point - ? WHERE id = ?";
 
@@ -288,6 +313,12 @@ public class Librarian extends Account{
         }
     }
 
+    /**
+     * Updates the password of a member in the database.
+     *
+     * @param id the ID of the member.
+     * @param password the new password.
+     */
     public void updatePassWord(String id, String password) {
         String updateQuery = "UPDATE members SET password = ? WHERE id = ?";
 
@@ -308,6 +339,13 @@ public class Librarian extends Account{
         }
     }
 
+    /**
+     * Updates the points of a member in the database.
+     * If the new points value is 0, the member's status will be changed to "BLACKLISTED".
+     *
+     * @param id the ID of the member.
+     * @param newPoint the new points value.
+     */
     public void updatePoint(String id, int newPoint) {
         String updateQuery = "UPDATE members SET point = ? WHERE id = ?";
 
@@ -332,6 +370,11 @@ public class Librarian extends Account{
         }
     }
 
+    /**
+     * Adds a new member to the database.
+     *
+     * @param member the member to be added.
+     */
     public void addNewMemberDatabase(Member member) {
         String insertQuery = "INSERT INTO members (id, accountStatus, password, numberOfBooks, point, createDate) VALUES (?, ?, ?, ?, ?, ?)";
 
@@ -355,23 +398,11 @@ public class Librarian extends Account{
         }
     }
 
-    public void addNewMember(Member member) {
-        String filePath = "src/main/resources/database/members.txt";
-        String memberData = member.getId() + ";" +
-                member.getStatus() + ";" +
-                member.getPassword() + ";" +
-                member.getTotalBooksCheckedOut() + ";" +
-                member.getPoint() + ";";
-
-        try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath, true))) {
-            writer.write(memberData);
-            writer.newLine();
-            System.out.println("Member added: " + memberData);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
-
+    /**
+     * Increases the total number of books checked out for a member in the database by 1.
+     *
+     * @param id the ID of the member whose checked-out books count will be increased.
+     */
     public void increaseBookForMemberDatabase(String id) {
         String updateQuery = "UPDATE members SET numberOfBooks = numberOfBooks + 1 WHERE id = ?";
 
@@ -399,6 +430,11 @@ public class Librarian extends Account{
         }
     }
 
+    /**
+     * Decreases the total number of books checked out for a member in the database by 1.
+     *
+     * @param id the ID of the member whose checked-out books count will be decreased.
+     */
     public void decreaseBookForMemberDatabase(String id) {
         String updateQuery = "UPDATE members SET numberOfBooks = numberOfBooks - 1 WHERE id = ?";
 
@@ -426,6 +462,11 @@ public class Librarian extends Account{
         }
     }
 
+    /**
+     * Removes a book from the catalog by its ID and prints the total book count before and after the removal.
+     *
+     * @param id the ID of the book to be removed from the catalog.
+     */
     public void removeBook(String id) {
         System.out.println(this.getCatalog().getTotalBooks().get());
         this.getCatalog().removeBookById(id, true, false);

@@ -2,6 +2,12 @@ package com.example.proj.Models;
 
 import java.sql.Date;
 
+
+/**
+ * Represents a log entry for a member borrowing a book.
+ * This class stores the details of the borrowing action, including the member ID,
+ * the date of borrowing, and the ID of the borrowed book.
+ */
 public class Log {
      private String id;
      private java.sql.Date creationDate;
