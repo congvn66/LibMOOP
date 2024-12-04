@@ -110,7 +110,7 @@ public class Member extends Account{
      * @param a the notification to be removed from the notification box.
      */
     public void deleteNotificationBox(Notification a) {
-        for (Notification i : this.notificationBox.getNotifications()) {
+        for (Notification i : this.getNotificationBox().getNotifications()) {
             if (a.getBookId().equals(i.getBookId())) {
                 this.notificationBox.getNotifications().remove(i);
                 return;
@@ -174,6 +174,7 @@ public class Member extends Account{
         System.out.println("Password: " + this.getPassword());
         System.out.println("Total books checked out: " + this.getTotalBooksCheckedOut());
         System.out.println("Points: " + this.getPoint());
+        System.out.println("Creation date: " + this.getCreateDate());
         System.out.println("\n");
     }
 }

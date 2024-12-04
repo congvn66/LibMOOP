@@ -10,7 +10,7 @@ import java.util.*;
 
 public class Librarian extends Account{
 
-    private Map<String, Member> memberMap;
+    private static Map<String, Member> memberMap;
     private LinkedHashMap<Date, ObservableList<Log>> totalLogs;
     private HashMap<String, LinkedHashMap<Date, ObservableList<Log>>> memberLogs;
     private LinkedHashMap<Date, Integer> memberRegister;
@@ -61,15 +61,15 @@ public class Librarian extends Account{
     }
 
     public Map<String,Member> getMemberMap() {
-        if(this.memberMap == null) {
-            this.memberMap = new HashMap<>();
+        if(memberMap == null) {
+            memberMap = new HashMap<>();
             this.loadMembersFromDatabase();
         }
-        return this.memberMap;
+        return memberMap;
     }
 
     private void putMemberInMap(Member member) {
-        this.memberMap.put(member.getId(), member);
+        memberMap.put(member.getId(), member);
     }
 
     /**

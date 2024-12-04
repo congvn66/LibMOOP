@@ -72,11 +72,12 @@ public class MemberLogger {
 
             switch (type.toUpperCase()) {
                 case "LEND":
+                    //System.out.println(id);
                     insertStatement.setString(1, id);  // Sử dụng ID của member
                     insertStatement.setDate(2, new java.sql.Date(date.getTime()));
                     insertStatement.setString(3, bookId);  // Thêm bookId
                     insertStatement.executeUpdate();
-                    member.setTotalBooksCheckedOut(member.getTotalBooksCheckedOut() + 1);
+                    //member.setTotalBooksCheckedOut(member.getTotalBooksCheckedOut() + 1);
                     memListOfLog.add(new Log(id, new java.sql.Date(date.getTime()), bookId));
                     return "You have successfully borrowed this book";
 
@@ -84,6 +85,7 @@ public class MemberLogger {
                     selectStatement.setString(1, member.getId()); // Sử dụng ID của member
                     selectStatement.setString(2, bookId); // Thêm bookId vào điều kiện tìm kiếm
                     ResultSet resultSet = selectStatement.executeQuery();
+
                     if (resultSet.next()) {
                         found = true;
                         Date borrowedDate = resultSet.getDate("creationDate");
@@ -91,7 +93,7 @@ public class MemberLogger {
                         // Update member data
                         Librarian admin = new Librarian();
                         admin.decreaseBookForMemberDatabase(member.getId());
-                        member.updateBook(bookId, 13, String.valueOf(BookStatus.AVAILABLE));
+                        admin.updateBook(bookId, 13, String.valueOf(BookStatus.AVAILABLE));
                         Notification deleteNotification = new Notification(bookId, new java.sql.Date(date.getTime()).toLocalDate(), false);
                         member.deleteNotificationBox(deleteNotification);
                         memListOfLog.remove(new Log(id, new java.sql.Date(borrowedDate.getTime()), bookId));

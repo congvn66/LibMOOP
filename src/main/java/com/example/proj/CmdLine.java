@@ -17,11 +17,6 @@ public class CmdLine {
     private Member currentMember;
 
     public CmdLine() {
-        File file = new File("src/main/resources/database/librarians.txt");
-        if (file.exists()) {
-            String absolute = file.getAbsolutePath();
-            this.filePath = absolute;
-        }
         this.librarianMap = new HashMap<>();
         this.loadLibrariansFromDatabase();
     }
@@ -48,31 +43,6 @@ public class CmdLine {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-    }
-
-    private void LoadLibrarianFromFile() {
-        try (BufferedReader br = new BufferedReader(new FileReader(this.filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] tmp = line.split(";");
-                if (tmp.length != 3) {
-                    continue;
-                }
-                String id = tmp[0].trim();
-                String accountStatus = tmp[1].trim();
-                String password = tmp[2].trim();
-
-                Librarian librarian = new Librarian(id, AccountStatus.valueOf(accountStatus.toUpperCase()), password);
-
-                this.putLibrarianInMap(librarian);
-
-
-            }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -144,13 +114,14 @@ public class CmdLine {
                 System.out.println("4. lend book.");
                 System.out.println("5. return book.");
                 System.out.println("6. renew book.");
-                System.out.println("7. exit.");
+                System.out.println("7. see profile.");
+                System.out.println("8. exit.");
                 System.out.print("Please select an option: ");
 
                 if (scanner.hasNextInt()) {
                     option = scanner.nextInt();
                     scanner.nextLine();
-                    if (option >= 1 && option <= 7) {
+                    if (option >= 1 && option <= 8) {
                         validInput = true;
                     } else {
                         System.out.println("Invalid option. Please enter a number between 1 and 7 :( ");
@@ -221,8 +192,10 @@ public class CmdLine {
                     String d3 = this.scanner.nextLine();
                     System.out.println(this.currentMember.basicActions(idRe, parseDate(d3), "RENEW"));
                     break;
-                    //break;
                 case 7:
+                    this.currentMember.printInfo();
+                    break;
+                case 8:
                     System.out.println("Goodbye!");
                     exit = true;
                     break;
@@ -627,6 +600,7 @@ public class CmdLine {
         String password = scanner.nextLine();
 
         Librarian librarian = new Librarian();
+
         Member member = librarian.getMemberMap().get(id);
 
         if (member == null || !member.getPassword().equals(password)) {
