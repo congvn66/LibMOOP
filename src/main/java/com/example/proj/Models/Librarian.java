@@ -15,32 +15,17 @@ public class Librarian extends Account{
     private HashMap<String, LinkedHashMap<Date, ObservableList<Log>>> memberLogs;
     private LinkedHashMap<Date, Integer> memberRegister;
     private Map<String, ObservableList<Log>> logList;
-    private String filePath;
 
     public Librarian() {
         super("admin", AccountStatus.ACTIVE, "admin");
-        //this.getCatalog().loadCatalogFromDatabase();
-        File file = new File("src/main/resources/database/members.txt");
-        if (file.exists()) {
-            String absolute = file.getAbsolutePath();
-            this.filePath = absolute;
-        }
         this.memberLogs = new HashMap<>();
         this.totalLogs = new LinkedHashMap<>();
         this.memberRegister = new LinkedHashMap<>();
         this.logList = new HashMap<>();
-        //this.memberMap = new HashMap<>();
-        //this.loadMembersFromDatabase();
     }
 
     public Librarian(String id, AccountStatus status, String password) {
         super(id, status, password);
-        //this.getCatalog().loadCatalogFromDatabase();
-        File file = new File("src/main/resources/database/members.txt");
-        if (file.exists()) {
-            String absolute = file.getAbsolutePath();
-            this.filePath = absolute;
-        }
         this.memberLogs = new HashMap<>();
         this.totalLogs = new LinkedHashMap<>();
         this.memberRegister = new LinkedHashMap<>();
@@ -87,21 +72,49 @@ public class Librarian extends Account{
         this.memberMap.put(member.getId(), member);
     }
 
+    /**
+     * Adds a member registration to the `memberRegister` map, which tracks the number
+     * of members registered on specific dates. If the given registration date is not
+     * already in the map, adds it with an initial count of 1. If the date already exists,
+     * increments the count for that date.
+     *
+     * @param member the `Member` object whose registration date will be added to the map.
+     */
     public void addMemberRegisterToMap(Member member) {
+        // if not contain.
         if (!memberRegister.containsKey(member.getCreateDate())) {
             this.memberRegister.put(member.getCreateDate(), 1);
             return;
         }
+        // apply the changes.
         this.memberRegister.replace(member.getCreateDate(), this.memberRegister.get(member.getCreateDate()) + 1);
     }
 
+    /**
+     * Loads members from the database and adds them to the internal maps for member tracking and registration count.
+     * This method retrieves member details from the 'members' table in the 'shibalib' database and processes each
+     * member's information. It creates a `Member` object and adds it to the `memberRegister` map and the member
+     * data map using appropriate methods.
+     * <p>
+     * The method assumes the following columns in the 'members' table:
+     * - id (String)
+     * - accountStatus (String)
+     * - password (String)
+     * - numberOfBooks (int)
+     * - point (int)
+     * - createDate (Date)
+     *
+     */
     private void loadMembersFromDatabase() {
+        // SQL query.
         String query = "SELECT id, accountStatus, password, numberOfBooks, point, createDate FROM members";
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+        // database connection, execution and saving result.
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
+            // get data.
             while (resultSet.next()) {
                 String id = resultSet.getString("id").trim();
                 String accountStatusString = resultSet.getString("accountStatus").trim();
@@ -110,8 +123,8 @@ public class Librarian extends Account{
                 int point = resultSet.getInt("point");
                 Date date = resultSet.getDate("createDate");
 
+                // fetch data in to map.
                 Member member = new Member(id, AccountStatus.valueOf(accountStatusString.toUpperCase()), password, totalBooksCheckedOut, point, date);
-
                 this.putMemberInMap(member);
                 this.addMemberRegisterToMap(member);
             }
@@ -120,46 +133,33 @@ public class Librarian extends Account{
         }
     }
 
-    private void loadMemberFromFile() {
-        try (BufferedReader br = new BufferedReader(new FileReader(this.filePath))) {
-            //System.out.println("yay");
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] tmp = line.split(";");
-                if (tmp.length != 5) {
-                    continue;
-                }
-                String id = tmp[0].trim();
-                String accountStatus = tmp[1].trim();
-                String password = tmp[2].trim();
-                int totalBooksCheckedOut = Integer.parseInt(tmp[3].trim());
-                int point = Integer.parseInt(tmp[4].trim());
-
-                Member member = new Member(id, AccountStatus.valueOf(accountStatus.toUpperCase()), password, totalBooksCheckedOut, point);
-
-                this.putMemberInMap(member);
-
-
-            }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
-        }
-    }
-
+    /**
+     * Loads logs from the database and adds them to the internal map for log tracking.
+     * This method retrieves log data from the 'logs' table in the 'shibalib' database and processes each
+     * log entry. It creates a `Log` object and adds it to the internal map using the `addLogToMap` method.
+     * <p>
+     * The method assumes the following columns in the 'logs' table:
+     * - id (String)
+     * - creationDate (Date)
+     * - bookId (String)
+     *
+     */
     public void loadLogFromDatabase() {
+        // SQL query.
         String query = "SELECT id, creationDate, bookId FROM logs ";
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+        // database connection, execution and saving result.
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query);
              ResultSet resultSet = preparedStatement.executeQuery()) {
 
+            // get data.
             while (resultSet.next()) {
                 String id = resultSet.getString("id").trim();
                 Date creationDate = resultSet.getDate("creationDate");
                 String bookId = resultSet.getString("bookId");
 
+                // fetching stuff.
                 Log log = new Log(id, creationDate, bookId);
                 addLogToMap(log);
             }
@@ -168,6 +168,18 @@ public class Librarian extends Account{
         }
     }
 
+    /**
+     * Adds a log entry to various internal maps that track logs by date and member.
+     * This method updates the following maps:
+     * - `totalLogs`: A map that tracks logs by their creation date.
+     * - `memberLogs`: A map that tracks logs for each member by their ID and creation date.
+     * - `logList`: A map that tracks all logs for each member by their ID.
+     * <p>
+     * The method uses `computeIfAbsent` to ensure that a new list is created if one does not exist for a given key.
+     * Then, it adds the provided log to the appropriate list based on its creation date or member ID.
+     *
+     * @param log The log entry to be added to the maps.
+     */
     public void addLogToMap(Log log) {
         totalLogs.computeIfAbsent(log.getCreationDate(), k -> FXCollections.observableList(new ArrayList<Log>())).add(log);
         memberLogs.computeIfAbsent(log.getId(), k -> new LinkedHashMap<>());
@@ -192,7 +204,7 @@ public class Librarian extends Account{
     public void blockMemberDatabase(String id) {
         String updateQuery = "UPDATE members SET accountStatus = ? WHERE id = ?";
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
 
             preparedStatement.setString(1, AccountStatus.BLACKLISTED.name());
@@ -215,7 +227,7 @@ public class Librarian extends Account{
     public void deleteMemberAccount(String id) {
         String updateQuery = "DELETE FROM members WHERE id = ?";
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
 
             preparedStatement.setString(1, id);
@@ -233,7 +245,7 @@ public class Librarian extends Account{
     public void changeMemberStatus(String id, AccountStatus status) {
         String updateQuery = "UPDATE members SET accountStatus = ? WHERE id = ?";
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
 
             preparedStatement.setString(1, status.name());
@@ -250,49 +262,11 @@ public class Librarian extends Account{
         }
     }
 
-    public void blockMember(String id) {
-        // lines container.
-        List<String> lines = new ArrayList<>();
-        boolean memberFound = false;
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] fields = line.split(";");
-                if (fields[0].equals(id)) {
-                    fields[1] = "BLACKLISTED";
-                    memberFound = true;
-                    //change in that time.
-                    this.getMemberMap().get(fields[0]).setStatus(AccountStatus.BLACKLISTED);
-                }
-                //put every line in the list.
-                lines.add(String.join(";", fields));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-
-        // write to a new file
-        if (memberFound) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-                for (String line : lines) {
-                    writer.write(line);
-                    writer.newLine();
-                }
-                System.out.println("Member " + id + " has been blocked.");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("Member with ID " + id + " not found.");
-        }
-    }
 
     public void reducePointMemberDatabase(String id, int point) {
         String updateQuery = "UPDATE members SET point = point - ? WHERE id = ?";
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
 
             // Set the parameter for the query
@@ -317,7 +291,7 @@ public class Librarian extends Account{
     public void updatePassWord(String id, String password) {
         String updateQuery = "UPDATE members SET password = ? WHERE id = ?";
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
 
             // Set the parameter for the query
@@ -337,7 +311,7 @@ public class Librarian extends Account{
     public void updatePoint(String id, int newPoint) {
         String updateQuery = "UPDATE members SET point = ? WHERE id = ?";
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(updateQuery);
              ) {
 
@@ -358,50 +332,10 @@ public class Librarian extends Account{
         }
     }
 
-    public void reducePointMember(String id) {
-        // lines container.
-        List<String> lines = new ArrayList<>();
-        boolean memberFound = false;
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] fields = line.split(";");
-                if (fields[0].equals(id)) {
-                    fields[4] = String.valueOf(Integer.parseInt(fields[4]) - 1);
-                    memberFound = true;
-
-                    //change in that time.
-                    int point = this.getMemberMap().get(fields[0]).getPoint() - 1;
-                    this.getMemberMap().get(fields[0]).setPoint(point);
-                }
-                //put every line in the list.
-                lines.add(String.join(";", fields));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // write to a new file
-        if (memberFound) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-                for (String line : lines) {
-                    writer.write(line);
-                    writer.newLine();
-                }
-                System.out.println("Member " + id + " has lost 1 reputation.");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("Member with ID " + id + " not found.");
-        }
-    }
-
     public void addNewMemberDatabase(Member member) {
         String insertQuery = "INSERT INTO members (id, accountStatus, password, numberOfBooks, point, createDate) VALUES (?, ?, ?, ?, ?, ?)";
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(insertQuery)) {
 
             // Set the parameters for the query
@@ -441,7 +375,7 @@ public class Librarian extends Account{
     public void increaseBookForMemberDatabase(String id) {
         String updateQuery = "UPDATE members SET numberOfBooks = numberOfBooks + 1 WHERE id = ?";
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
 
 
@@ -465,50 +399,10 @@ public class Librarian extends Account{
         }
     }
 
-    public void increaseBookForMember(String id) {
-        // lines container.
-        List<String> lines = new ArrayList<>();
-        boolean memberFound = false;
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] fields = line.split(";");
-                if (fields[0].equals(id)) {
-                    fields[3] = String.valueOf(Integer.parseInt(fields[3]) + 1);
-                    memberFound = true;
-
-                    //change in that time.
-                    int nob = this.getMemberMap().get(fields[0]).getTotalBooksCheckedOut() + 1;
-                    this.getMemberMap().get(fields[0]).setTotalBooksCheckedOut(nob);
-                }
-                //put every line in the list.
-                lines.add(String.join(";", fields));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // write to a new file
-        if (memberFound) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-                for (String line : lines) {
-                    writer.write(line);
-                    writer.newLine();
-                }
-                System.out.println("Member " + id + " has borrowed 1 book.");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("Member with ID " + id + " not found.");
-        }
-    }
-
     public void decreaseBookForMemberDatabase(String id) {
         String updateQuery = "UPDATE members SET numberOfBooks = numberOfBooks - 1 WHERE id = ?";
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(updateQuery)) {
 
 
@@ -529,46 +423,6 @@ public class Librarian extends Account{
 
         } catch (SQLException e) {
             System.out.println("Error increasing book count for member: " + e.getMessage());
-        }
-    }
-
-    public void decreaseBookForMember(String id) {
-        // lines container.
-        List<String> lines = new ArrayList<>();
-        boolean memberFound = false;
-
-        try (BufferedReader reader = new BufferedReader(new FileReader(filePath))) {
-            String line;
-            while ((line = reader.readLine()) != null) {
-                String[] fields = line.split(";");
-                if (fields[0].equals(id)) {
-                    fields[3] = String.valueOf(Integer.parseInt(fields[3]) - 1);
-                    memberFound = true;
-
-                    //change in that time.
-                    int nob = this.getMemberMap().get(fields[0]).getTotalBooksCheckedOut() - 1;
-                    this.getMemberMap().get(fields[0]).setTotalBooksCheckedOut(nob);
-                }
-                //put every line in the list.
-                lines.add(String.join(";", fields));
-            }
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-        // write to a new file
-        if (memberFound) {
-            try (BufferedWriter writer = new BufferedWriter(new FileWriter(filePath))) {
-                for (String line : lines) {
-                    writer.write(line);
-                    writer.newLine();
-                }
-                System.out.println("Member " + id + " has returned 1 book.");
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        } else {
-            System.out.println("Member with ID " + id + " not found.");
         }
     }
 
