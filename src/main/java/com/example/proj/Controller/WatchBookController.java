@@ -137,12 +137,16 @@ public class WatchBookController implements Initializable {
                 checkBorrowBookLabel.setText("Book can not be lent");
                 checkBorrowBookLabel.setVisible(true);
             } else {
-                checkBorrowBookLabel.setVisible(false);
-                CurrentMember.getMember().basicActions(bookItem.getId(), Date.valueOf(LocalDate.now()), "LEND");
-                CurrentMember.addListOfMemBook(bookItem);
-                CurrentMember.updateListOfLibBook(bookItem);
-                alert.showAndWait();
-                ((Stage)borrowBookBut.getScene().getWindow()).close();
+                checkBorrowBookLabel.setText(CurrentMember.getMember().basicActions(bookItem.getId(), Date.valueOf(LocalDate.now()), "LEND"));
+                if (checkBorrowBookLabel.getText().equals("You have successfully borrowed this book")) {
+                    checkBorrowBookLabel.setVisible(false);
+                    CurrentMember.addListOfMemBook(bookItem);
+                    CurrentMember.updateListOfLibBook(bookItem);
+                    alert.showAndWait();
+                    ((Stage) borrowBookBut.getScene().getWindow()).close();
+                } else {
+                    checkBorrowBookLabel.setVisible(true);
+                }
             }
         } else if (event.getSource() == backToLibBookBut) {
             ((Stage)backToLibBookBut.getScene().getWindow()).close();

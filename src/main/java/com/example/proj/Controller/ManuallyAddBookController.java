@@ -165,6 +165,7 @@ public class ManuallyAddBookController implements Initializable{
             if (event.getSource() == backToLibMainBut) {
                 ((Stage)backToLibMainBut.getScene().getWindow()).close();
             } else if (event.getSource() == finalAddBookBut) {
+                checkBook = true;
                 String isbn = addISBNText.getText();
                 setCheckISBN(isbn);
                 String numberOfPage = addNumberOfPageText.getText();

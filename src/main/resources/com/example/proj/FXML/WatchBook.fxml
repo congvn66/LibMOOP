@@ -10,7 +10,6 @@
 <?import javafx.scene.layout.StackPane?>
 <?import javafx.scene.text.Font?>
 
-
 <StackPane xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.proj.Controller.WatchBookController">
    <children>
       <AnchorPane prefHeight="640.0" prefWidth="900.0" style="-fx-background-color: #7efff5;" stylesheets="@../CSS/WatchBook.css">
@@ -100,7 +99,7 @@
                   <Font name="Book Antiqua Bold" size="22.0" />
                </font>
             </Button>
-            <Label fx:id="checkBorrowBookLabel" layoutX="550.0" layoutY="560.0" text="Book can not be lent" textFill="RED" visible="false">
+            <Label fx:id="checkBorrowBookLabel" layoutX="550.0" layoutY="590.0" text="Book can not be lent" textFill="RED" visible="false">
                <font>
                   <Font size="14.0" />
                </font>

@@ -3,9 +3,7 @@ package com.example.proj.Controller;
 import com.example.proj.Models.*;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.beans.property.SimpleStringProperty;
 import javafx.collections.FXCollections;
 import javafx.collections.ListChangeListener;
 import javafx.collections.ObservableList;
@@ -21,11 +19,12 @@ import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 import javafx.scene.layout.AnchorPane;
+import javafx.scene.text.Text;
+import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
-import javafx.stage.StageStyle;
+import javafx.util.Callback;
 import javafx.util.Duration;
-
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
@@ -51,10 +50,10 @@ public class LibMainController implements Initializable {
     private AnchorPane MemberManagementTab;
 
     @FXML
-    private TableColumn<Member, String> accountIdColumn;
+    private TableColumn<Member, Object> accountIdColumn;
 
     @FXML
-    private TableColumn<Member, AccountStatus> accountStatusColumn;
+    private TableColumn<Member, Object> accountStatusColumn;
 
     @FXML
     private Button backBut;
@@ -75,7 +74,7 @@ public class LibMainController implements Initializable {
     private Label booksAvailableNum;
 
     @FXML
-    private TableColumn<Member, Integer> booksNumColumn;
+    private TableColumn<Member, Object> booksNumColumn;
 
     @FXML
     private Button cancelBut;
@@ -102,7 +101,7 @@ public class LibMainController implements Initializable {
     private Label percentage;
 
     @FXML
-    private TableColumn<Member, Integer> pointsColumn;
+    private TableColumn<Member, Object> pointsColumn;
 
     @FXML
     private ProgressBar progressBar;
@@ -128,34 +127,34 @@ public class LibMainController implements Initializable {
     @FXML
     private Spinner<Integer> addPointSpinner;
     @FXML
-    private TableColumn<BookItem, String> bookAuthorColumn;
+    private TableColumn<BookItem, Object> bookAuthorColumn;
 
     @FXML
-    private TableColumn<BookItem, String> bookAuthorDesColumn;
+    private TableColumn<BookItem, Object> bookAuthorDesColumn;
 
     @FXML
-    private TableColumn<BookItem, String> bookIdColumn;
+    private TableColumn<BookItem, Object> bookIdColumn;
     @FXML
-    private TableColumn<BookItem, String> bookLocationColumn;
+    private TableColumn<BookItem, Object> bookLocationColumn;
     @FXML
-    private TableColumn<BookItem, Integer> bookNumberColumn;
+    private TableColumn<BookItem, Object> bookNumberColumn;
 
     @FXML
-    private TableColumn<BookItem, Double> bookPriceColumn;
+    private TableColumn<BookItem, Object> bookPriceColumn;
 
     @FXML
-    private TableColumn<BookItem, Boolean> bookRefColumn;
+    private TableColumn<BookItem, Object> bookRefColumn;
     @FXML
-    private TableColumn<BookItem, BookStatus> bookStatusColumn;
+    private TableColumn<BookItem, Object> bookStatusColumn;
 
     @FXML
-    private TableColumn<BookItem, String> bookSubjectColumn;
+    private TableColumn<BookItem, Object> bookSubjectColumn;
 
     @FXML
     private TableView<BookItem> bookTable;
 
     @FXML
-    private TableColumn<BookItem, String> bookTitleColumn;
+    private TableColumn<BookItem, Object> bookTitleColumn;
 
     @FXML
     private ChoiceBox<String> searchOptionChoiceBox;
@@ -226,33 +225,127 @@ public class LibMainController implements Initializable {
     private Alert confirmationAlert;
 
     public void setMemberTable(ObservableList a) {
+        setMemberColumnFormat(accountIdColumn);
         accountIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        setMemberColumnFormat(accountStatusColumn);
         accountStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+        setMemberColumnFormat(booksNumColumn);
         booksNumColumn.setCellValueFactory(new PropertyValueFactory<>("totalBooksCheckedOut"));
+        setMemberColumnFormat(pointsColumn);
         pointsColumn.setCellValueFactory(new PropertyValueFactory<>("point"));
         memberTable.setItems(a);
     }
 
     public void setBookTable(ObservableList a) {
+        setBookColumnFormat(bookIdColumn);
         bookIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        setBookColumnFormat(bookTitleColumn);
         bookTitleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        setBookColumnFormat(bookSubjectColumn);
         bookSubjectColumn.setCellValueFactory(new PropertyValueFactory<>("subject"));
+        setBookColumnFormat(bookRefColumn);
         bookRefColumn.setCellValueFactory(new PropertyValueFactory<>("isReferenceOnly"));
+        setBookColumnFormat(bookStatusColumn);
         bookStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+        setBookColumnFormat(bookPriceColumn);
         bookPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        setBookColumnFormat(bookAuthorColumn);
         bookAuthorColumn.setCellValueFactory(cellData -> {
-            return new SimpleStringProperty(cellData.getValue().getAuthor().getName());
+            return new SimpleObjectProperty<>(cellData.getValue().getAuthor().getName());
         });
+        setBookColumnFormat(bookAuthorDesColumn);
         bookAuthorDesColumn.setCellValueFactory(cellData -> {
-            return new SimpleStringProperty(cellData.getValue().getAuthor().getDescription());
+            return new SimpleObjectProperty<>(cellData.getValue().getAuthor().getDescription());
         });
+        setBookColumnFormat(bookNumberColumn);
         bookNumberColumn.setCellValueFactory(cellData -> {
             return new SimpleObjectProperty<>(cellData.getValue().getRack().getNumber());
         });
+        setBookColumnFormat(bookLocationColumn);
         bookLocationColumn.setCellValueFactory(cellData -> {
-            return new SimpleStringProperty(cellData.getValue().getRack().getLocationIdentifier());
+            return new SimpleObjectProperty<>(cellData.getValue().getRack().getLocationIdentifier());
         });
         bookTable.setItems(a);
+    }
+
+    public void setBookColumnFormat(TableColumn<BookItem, Object> column) {
+        column.setCellFactory(new Callback<TableColumn<BookItem, Object>, TableCell<BookItem, Object>>() {
+            @Override
+            public TableCell<BookItem, Object> call(TableColumn<BookItem, Object> bookItemStringTableColumn) {
+                return new TableCell<BookItem, Object>() {
+                    private final Text text = new Text();
+
+                    {
+                        bookItemStringTableColumn.widthProperty().addListener((observable, oldValue, newValue) -> {
+                            Platform.runLater(() -> {
+                                text.setWrappingWidth(bookItemStringTableColumn.getWidth());
+                            });
+                        });
+                        text.setWrappingWidth(bookItemStringTableColumn.getWidth());
+                        text.setTextAlignment(TextAlignment.CENTER);
+                        setGraphic(text);
+                    }
+
+                    @Override
+                    protected void updateItem(Object item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            text.setText(null);
+                        } else {
+                            if (item instanceof String) {
+                                text.setText((String)item);
+                            } else if (item instanceof Integer) {
+                                text.setText(((Integer)item).toString());
+                            } else if (item instanceof Boolean) {
+                                text.setText(((Boolean)item).toString());
+                            } else if (item instanceof Double) {
+                                text.setText(((Double)item).toString());
+                            } else if (item instanceof BookStatus) {
+                                text.setText(((BookStatus)item).toString());
+                            }
+                        }
+                    }
+                };
+            }
+        });
+    }
+
+    public void setMemberColumnFormat(TableColumn<Member, Object> memberColumn) {
+        memberColumn.setCellFactory(new Callback<TableColumn<Member, Object>, TableCell<Member, Object>>() {
+            @Override
+            public TableCell<Member, Object> call(TableColumn<Member, Object> memberStringTableColumn) {
+                return new TableCell<Member, Object>() {
+                    private final Text text = new Text();
+
+                    {
+                        memberStringTableColumn.widthProperty().addListener((observable, oldValue, newValue) -> {
+                            Platform.runLater(() -> {
+                                text.setWrappingWidth(memberStringTableColumn.getWidth());
+                            });
+                        });
+                        text.setWrappingWidth(memberStringTableColumn.getWidth());
+                        text.setTextAlignment(TextAlignment.CENTER);
+                        setGraphic(text);
+                    }
+
+                    @Override
+                    protected void updateItem(Object item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            text.setText(null);
+                        } else {
+                            if (item instanceof String) {
+                                text.setText((String)item);
+                            } else if (item instanceof Integer) {
+                                text.setText(((Integer)item).toString());
+                            } else if (item instanceof AccountStatus) {
+                                text.setText(((AccountStatus)item).toString());
+                            }
+                        }
+                    }
+                };
+            }
+        });
     }
 
     @Override
@@ -310,7 +403,9 @@ public class LibMainController implements Initializable {
         totalMemNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getMemberMap().size()));
         welcomeText.setText("Hello " + CurrentLibrarian.getLibrarian().getId());
         setMemberTable(CurrentLibrarian.getMemberObservableList());
+        memberTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_NEXT_COLUMN);
         setBookTable(CurrentLibrarian.getBookObservableList());
+        bookTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_NEXT_COLUMN);
         ObservableList<AccountStatus> statusList = FXCollections.observableArrayList(AccountStatus.ACTIVE, AccountStatus.NONE, AccountStatus.BLACKLISTED);
         statusChoiceBox.getItems().addAll(statusList);
         ObservableList<BookStatus> bookStatusList = FXCollections.observableArrayList(BookStatus.AVAILABLE, BookStatus.LOANED, BookStatus.RESERVED, BookStatus.LOST);
@@ -325,6 +420,7 @@ public class LibMainController implements Initializable {
         addPointSpinner.setValueFactory(integerSpinnerValueFactory);
         setConfirmationAlert();
         imageImportService = new ImageImportService();
+        addImageBut.setDisable(true);
         memberTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             if (newValue != null) {
                 statusChoiceBox.setValue(newValue.getStatus());
@@ -343,7 +439,6 @@ public class LibMainController implements Initializable {
                 isRefOnlyChoiceBox.setValue(newValue.getIsReferenceOnly());
                 priceTextField.setText(String.valueOf(newValue.getPrice()));
                 locationTextField.setText(newValue.getRack().getLocationIdentifier());
-                addImageBut.setVisible(true);
                 if (newValue.checkURL()) {
                     bookThumbnail.setImage(new Image(newValue.getImgName()));
                     addImageBut.setDisable(true);
@@ -359,8 +454,8 @@ public class LibMainController implements Initializable {
                 isRefOnlyChoiceBox.setValue(null);
                 priceTextField.setText("");
                 locationTextField.setText("");
-                addImageBut.setVisible(false);
                 bookThumbnail.setImage(null);
+                addImageBut.setDisable(true);
             }
         });
     }
@@ -560,6 +655,7 @@ public class LibMainController implements Initializable {
                     CurrentLibrarian.updateBookObservableList(bookTable.getSelectionModel().getSelectedItem());
                     if (importedFile != null) {
                         imageImportService.moveImageToFolder(importedFile);
+                        importedFile = null;
                     }
                 }
             }
@@ -644,7 +740,7 @@ public class LibMainController implements Initializable {
         XYChart.Series<String, Number> listOfMemberRegister = new XYChart.Series<>();
         Period period = Period.between(startDate.toLocalDate(), endDate.toLocalDate());
         for (int i = 0; i <= period.getDays(); i++) {
-            listOfMemberRegister.getData().add(new XYChart.Data<>(startDate.toLocalDate().plusDays(i).toString(), memberLogs.get(java.sql.Date.valueOf(startDate.toLocalDate().plusDays(i))) != null ? memberLogs.get(java.sql.Date.valueOf(startDate.toLocalDate().plusDays(i))).size() : 0));
+            listOfMemberRegister.getData().add(new XYChart.Data<>(startDate.toLocalDate().plusDays(i).toString(), memberLogs.get(id).get(java.sql.Date.valueOf(startDate.toLocalDate().plusDays(i))) != null ? memberLogs.get(id).get(java.sql.Date.valueOf(startDate.toLocalDate().plusDays(i))).size() : 0));
         }
         return listOfMemberRegister;
     }
@@ -676,8 +772,8 @@ public class LibMainController implements Initializable {
                    } else {
                        long dateDiff = (endDate.getTime() - startDate.getTime()) / (24 * 60 * 60 * 1000);
                        if (dateDiff > 29) {
-                       diaryCheckStartDateLabel.setText("Gap between 2 date is equal to \nor over 30 days");
-                       diaryCheckEndDateLabel.setText("Gap between 2 date is equal to \nor over 30 days");
+                       diaryCheckStartDateLabel.setText("Gap between 2 dates is equal to \nor over 30 days");
+                       diaryCheckEndDateLabel.setText("Gap between 2 dates is equal to \nor over 30 days");
                        diaryCheckStartDateLabel.setVisible(true);
                        diaryCheckEndDateLabel.setVisible(true);
                        } else {

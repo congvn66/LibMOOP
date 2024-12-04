@@ -87,35 +87,20 @@ public class MemberLogger {
                     if (resultSet.next()) {
                         found = true;
                         Date borrowedDate = resultSet.getDate("creationDate");
-                        long daysBetween = (date.getTime() - borrowedDate.getTime()) / (1000 * 60 * 60 * 24);
 
                         // Update member data
                         Librarian admin = new Librarian();
                         admin.decreaseBookForMemberDatabase(member.getId());
-                        member.setTotalBooksCheckedOut(member.getTotalBooksCheckedOut() - 1);
                         member.updateBook(bookId, 13, String.valueOf(BookStatus.AVAILABLE));
+                        Notification deleteNotification = new Notification(bookId, new java.sql.Date(date.getTime()).toLocalDate(), false);
+                        member.deleteNotificationBox(deleteNotification);
+                        memListOfLog.remove(new Log(id, new java.sql.Date(borrowedDate.getTime()), bookId));
 
                         // Delete the log entry for the returned book
                         deleteStatement.setString(1, member.getId());
                         deleteStatement.setDate(2, new java.sql.Date(borrowedDate.getTime()));
                         deleteStatement.setString(3, bookId);
                         deleteStatement.executeUpdate();
-                        Notification deleteNotification = new Notification(bookId, new java.sql.Date(date.getTime()).toLocalDate(), false);
-                        member.deleteNotificationBox(deleteNotification);
-                        memListOfLog.remove(new Log(id, new java.sql.Date(borrowedDate.getTime()), bookId));
-                        member.setTotalBooksCheckedOut(member.getTotalBooksCheckedOut() - 1);
-
-                        if (daysBetween > 15) {
-                            int p = member.getPoint() - ((int)daysBetween - 15);
-                            member.setPoint(p);
-                            admin.reducePointMemberDatabase(member.getId(), ((int)daysBetween - 15));
-
-                            if (member.getPoint() == 0) {
-                                member.setStatus(AccountStatus.BLACKLISTED);
-                                admin.blockMemberDatabase(member.getId());
-                            }
-                            return "Warning: The return date exceeds the allowable 15 days limit!";
-                        }
                         return "You have successfully return this book";
                     }
                     if (!found) {
@@ -149,19 +134,6 @@ public class MemberLogger {
 
                         Notification newNotification = new Notification(bookId, new java.sql.Date(date.getTime()).toLocalDate().plusDays(15), false);
                         member.replaceNotificationBox(newNotification);
-
-                        if (daysBetween > 15) {
-                            Librarian admin = new Librarian();
-                            int p = member.getPoint() - ((int)daysBetween - 15);
-                            member.setPoint(p);
-                            admin.reducePointMemberDatabase(member.getId(), ((int)daysBetween - 15));
-
-                            if (member.getPoint() == 0) {
-                                member.setStatus(AccountStatus.BLACKLISTED);
-                                admin.blockMemberDatabase(member.getId());
-                            }
-                            return "Warning: The renewal date exceeds the allowable 15 days limit.";
-                        }
                         return "You have successfully renew this book";
                     }
                     if (!found) {
@@ -169,7 +141,33 @@ public class MemberLogger {
                     }
                     break;
 
+                case "LOST":
+                    selectStatement.setString(1, member.getId()); // Sử dụng ID của member
+                    selectStatement.setString(2, bookId); // Thêm bookId vào điều kiện tìm kiếm
+                    resultSet = selectStatement.executeQuery();
+                    if (resultSet.next()) {
+                        found = true;
+                        Date borrowedDate = resultSet.getDate("creationDate");
 
+                        // Update member data
+                        Librarian admin = new Librarian();
+                        admin.decreaseBookForMemberDatabase(member.getId());
+                        member.updateBook(bookId, 13, String.valueOf(BookStatus.LOST));
+                        Notification deleteNotification = new Notification(bookId, new java.sql.Date(date.getTime()).toLocalDate(), false);
+                        member.deleteNotificationBox(deleteNotification);
+                        memListOfLog.remove(new Log(id, new java.sql.Date(borrowedDate.getTime()), bookId));
+
+                        // Delete the log entry for the returned book
+                        deleteStatement.setString(1, member.getId());
+                        deleteStatement.setDate(2, new java.sql.Date(borrowedDate.getTime()));
+                        deleteStatement.setString(3, bookId);
+                        deleteStatement.executeUpdate();
+                        return "You have successfully report of the los of this book";
+                    }
+                    if (!found) {
+                        return "You haven't borrowed this book.";
+                    }
+                    break;
                 default:
                     return "Invalid type. Use 'LEND', 'RETURN', or 'RENEW'.";
             }
