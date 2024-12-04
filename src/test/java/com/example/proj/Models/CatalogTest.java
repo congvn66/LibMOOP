@@ -22,7 +22,7 @@ class CatalogTest {
 
     @AfterAll
     static void teardownDatabase() throws SQLException {
-        DatabaseConnection.closeConnection();
+        DatabaseConnection.closeConnection(CatalogTest.connection);
     }
 
     @BeforeEach

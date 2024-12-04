@@ -109,7 +109,7 @@ public class Librarian extends Account{
         // SQL query.
         String query = "SELECT id, accountStatus, password, numberOfBooks, point, createDate FROM members";
 
-        // database connection, execution and saving result.
+        // database connection, execution, and saving result.
         try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query);
              ResultSet resultSet = preparedStatement.executeQuery()) {
@@ -123,8 +123,15 @@ public class Librarian extends Account{
                 int point = resultSet.getInt("point");
                 Date date = resultSet.getDate("createDate");
 
-                // fetch data in to map.
-                Member member = new Member(id, AccountStatus.valueOf(accountStatusString.toUpperCase()), password, totalBooksCheckedOut, point, date);
+                // fetch data into map.
+                Member member = new Member(
+                        id,
+                        AccountStatus.valueOf(accountStatusString.toUpperCase()),
+                        password,
+                        totalBooksCheckedOut,
+                        point,
+                        date
+                );
                 this.putMemberInMap(member);
                 this.addMemberRegisterToMap(member);
             }
@@ -132,6 +139,7 @@ public class Librarian extends Account{
             System.out.println("Error loading members from database: " + e.getMessage());
         }
     }
+
 
     /**
      * Loads logs from the database and adds them to the internal map for log tracking.
