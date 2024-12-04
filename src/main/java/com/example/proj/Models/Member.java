@@ -35,19 +35,19 @@ public class Member extends Account{
         this.createDate = java.sql.Date.valueOf(LocalDate.now());
     }
 
+    /**
+     * Retrieves the notification box for the current member.
+     * If the notification box is not already initialized, it will be created,
+     * and the notifications for the member will be fetched.
+     *
+     * @return the notification box containing the member's notifications.
+     */
     public NotificationBox getNotificationBox() {
         if (this.notificationBox == null) {
             this.notificationBox = new NotificationBox();
             this.notificationBox.getNotificationsForMember(this.getId());
         }
         return this.notificationBox;
-    }
-
-    public void showNotifications() {
-        List<Notification> tmp = this.getNotificationBox().getNotifications();
-        for (Notification m : tmp) {
-            System.out.println(m.toString());
-        }
     }
 
     public Member(String id, AccountStatus status, String password, int totalBooksCheckedOut, int point, java.sql.Date createDate) {
@@ -61,10 +61,8 @@ public class Member extends Account{
     public Member(String id, AccountStatus status, String password, int totalBooksCheckOut, int point) {
         super(id, status, password);
         this.totalBooksCheckedOut = totalBooksCheckOut;
-        //this.getCatalog().loadCatalogFromDatabase();
         this.point = new SimpleIntegerProperty(point);
         this.createDate = java.sql.Date.valueOf(LocalDate.now());
-        //this.logger = new MemberLogger(id);
     }
 
     public int getTotalBooksCheckedOut() {
@@ -86,6 +84,7 @@ public class Member extends Account{
     public MemberLogger getLogger() {
         return logger;
     }
+
     public void replaceNotificationBox(Notification a) {
         for (Notification i : this.notificationBox.getNotifications()) {
             if (a.getBookId().equals(i.getBookId())) {
@@ -95,10 +94,21 @@ public class Member extends Account{
         }
     }
 
+    /**
+     * Adds a new notification to the notification box of the current member.
+     *
+     * @param a the notification to be added to the member's notification box.
+     */
     public void addNotificationBox(Notification a) {
         this.getNotificationBox().getNotifications().add(a);
     }
 
+    /**
+     * Deletes a notification from the notification box of the current member.
+     * The notification is identified and removed based on the book ID.
+     *
+     * @param a the notification to be removed from the notification box.
+     */
     public void deleteNotificationBox(Notification a) {
         for (Notification i : this.notificationBox.getNotifications()) {
             if (a.getBookId().equals(i.getBookId())) {
@@ -108,8 +118,16 @@ public class Member extends Account{
         }
     }
 
+    /**
+     * Performs basic actions related to book lending, returning, and renewing.
+     *
+     * @param id the ID of the book to perform the action on.
+     * @param creationDate the date when the action was performed.
+     * @param type the type of action to perform (LEND, RETURN, RENEW).
+     * @return a message indicating the result of the action.
+     * @throws ParseException if there is an error parsing the date.
+     */
     public String basicActions(String id, Date creationDate, String type) throws ParseException {
-        //this.logger.generateMemberLog("src/main/resources/database/members.txt", this.getId());
         if (this.getCatalog().findBookById(id) == null) {
             return "Book not found.";
         }
@@ -119,7 +137,6 @@ public class Member extends Account{
             case "LEND":
                 if (this.getStatus() == AccountStatus.BLACKLISTED) {
                     returnString = "You have been banned!";
-                    //System.out.println(returnString);
                     break;
                 }
                 if (book.getStatus() == BookStatus.AVAILABLE && !book.getIsReferenceOnly()) {
@@ -132,11 +149,9 @@ public class Member extends Account{
                         addNotificationBox(addNotification);
                     } else {
                         returnString = "You have reached maximum number of books!";
-                        System.out.println(returnString);
                     }
                 } else {
                     returnString = "You can't borrow that book now.";
-                    System.out.println(returnString);
                 }
                 break;
             case "RETURN":

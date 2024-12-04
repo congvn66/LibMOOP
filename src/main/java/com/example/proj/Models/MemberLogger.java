@@ -3,18 +3,11 @@ package com.example.proj.Models;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
-import java.io.*;
 import java.sql.*;
 import java.text.ParseException;
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.util.ArrayList;
 import java.util.Date;
-import java.util.HashMap;
 
 public class MemberLogger {
-    private String filePath;
     private String id;
     private ObservableList<Log> memListOfLog;
 
@@ -24,10 +17,16 @@ public class MemberLogger {
         loadMemListOfBook();
     }
 
+    /**
+     * Loads a list of logs for the current member from the database.
+     * It retrieves records from the `logs` table where the member ID matches the current member's ID.
+     * Each log contains information about the member's borrowed books, including the book ID and the date of borrowing.
+     * The retrieved logs are added to the `memListOfLog` list.
+     */
     public void loadMemListOfBook() {
         String query = "SELECT id, creationDate, bookId FROM logs WHERE id = ?";
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement preparedStatement = connection.prepareStatement(query)) {
              preparedStatement.setString(1, id);
              ResultSet resultSet = preparedStatement.executeQuery();
@@ -49,13 +48,24 @@ public class MemberLogger {
         return memListOfLog;
     }
 
+    /**
+     * Updates the logs for a member based on the type of action (LEND, RETURN, RENEW).
+     * It inserts, deletes, or updates entries in the `logs` table based on the action type and updates the member's status and points accordingly.
+     *
+     * @param member the member who is performing the action.
+     * @param bookId the ID of the book for the action.
+     * @param date the date the action is being performed (borrow, return, or renew).
+     * @param type the type of action (LEND, RETURN, or RENEW).
+     * @return a message indicating the result of the action.
+     * @throws ParseException if there is an error parsing the date.
+     */
     public String updateLog(Member member, String bookId, Date date, String type) throws ParseException {
         String sqlInsert = "INSERT INTO logs (id, creationDate, bookId) VALUES (?, ?, ?)";
         String sqlDelete = "DELETE FROM logs WHERE id = ? AND creationDate = ? AND bookId = ?";
         String sqlSelect = "SELECT creationDate FROM logs WHERE id = ? AND bookId = ?";
         boolean found = false;
 
-        try (Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/shibalib", "root", "");
+        try (Connection connection = DatabaseConnection.getConnection();
              PreparedStatement insertStatement = connection.prepareStatement(sqlInsert);
              PreparedStatement deleteStatement = connection.prepareStatement(sqlDelete);
              PreparedStatement selectStatement = connection.prepareStatement(sqlSelect)) {
@@ -112,7 +122,6 @@ public class MemberLogger {
                         Date borrowedDate = resultSet.getDate("creationDate");
                         long daysBetween = (date.getTime() - borrowedDate.getTime()) / (1000 * 60 * 60 * 24);
 
-                        // Create a query to update the existing log entry's date
                         String sqlUpdate = "UPDATE logs SET creationDate = ? WHERE id = ? AND bookId = ?";
                         try (PreparedStatement updateStatement = connection.prepareStatement(sqlUpdate)) {
                             updateStatement.setDate(1, new java.sql.Date(date.getTime()));
@@ -164,7 +173,7 @@ public class MemberLogger {
             }
 
         } catch (SQLException e) {
-            e.printStackTrace();
+            System.out.println(e.getMessage());
         }
         return "";
     }
