@@ -21,6 +21,7 @@ import javafx.scene.layout.Background;
 import javafx.scene.layout.BackgroundFill;
 import javafx.scene.layout.VBox;
 import javafx.scene.paint.Color;
+import javafx.scene.text.Text;
 import javafx.scene.text.TextAlignment;
 import javafx.stage.Modality;
 import javafx.stage.Stage;
@@ -56,19 +57,19 @@ public class MemMainController implements Initializable {
     private Button backBut;
 
     @FXML
-    private TableColumn<BookItem, String> bookAuthorColumn;
+    private TableColumn<BookItem, Object> bookAuthorColumn;
 
     @FXML
-    private TableColumn<BookItem, String> bookAuthorDesColumn;
+    private TableColumn<BookItem, Object> bookAuthorDesColumn;
 
     @FXML
-    private TableColumn<BookItem, String> bookIdColumn;
+    private TableColumn<BookItem, Object> bookIdColumn;
 
     @FXML
     private Label bookLoanedNum;
 
     @FXML
-    private TableColumn<BookItem, String> bookLocationColumn;
+    private TableColumn<BookItem, Object> bookLocationColumn;
 
     @FXML
     private Label bookLostNum;
@@ -77,28 +78,28 @@ public class MemMainController implements Initializable {
     private Button bookManageBut;
 
     @FXML
-    private TableColumn<BookItem, Integer> bookNumberColumn;
+    private TableColumn<BookItem, Object> bookNumberColumn;
 
     @FXML
-    private TableColumn<BookItem, Double> bookPriceColumn;
+    private TableColumn<BookItem, Object> bookPriceColumn;
 
     @FXML
-    private TableColumn<BookItem, Boolean> bookRefColumn;
+    private TableColumn<BookItem, Object> bookRefColumn;
 
     @FXML
     private Label bookReservedNum;
 
     @FXML
-    private TableColumn<BookItem, BookStatus> bookStatusColumn;
+    private TableColumn<BookItem, Object> bookStatusColumn;
 
     @FXML
-    private TableColumn<BookItem, String> bookSubjectColumn;
+    private TableColumn<BookItem, Object> bookSubjectColumn;
 
     @FXML
     private TableView<BookItem> bookTable;
 
     @FXML
-    private TableColumn<BookItem, String> bookTitleColumn;
+    private TableColumn<BookItem, Object> bookTitleColumn;
 
     @FXML
     private Label booksAvailableNum;
@@ -113,23 +114,23 @@ public class MemMainController implements Initializable {
     private Button myBookManageBut;
 
     @FXML
-    private TableColumn<BookItem, String> memBookAuthorColumn;
+    private TableColumn<BookItem, Object> memBookAuthorColumn;
 
     @FXML
-    private TableColumn<BookItem, String> memBookAuthorDescColumn;
+    private TableColumn<BookItem, Object> memBookAuthorDescColumn;
 
 
     @FXML
-    private TableColumn<BookItem, String> memBookIdColumn;
+    private TableColumn<BookItem, Object> memBookIdColumn;
 
     @FXML
-    private TableColumn<BookItem, String> memBookSubjectColumn;
+    private TableColumn<BookItem, Object> memBookSubjectColumn;
 
     @FXML
     private TableView<BookItem> memBookTable;
 
     @FXML
-    private TableColumn<BookItem, String> memBookTitleColumn;
+    private TableColumn<BookItem, Object> memBookTitleColumn;
 
     @FXML
     private Button memLostBookBut;
@@ -179,50 +180,95 @@ public class MemMainController implements Initializable {
 
 
     public void setLibBookTable(ObservableList a) {
+        setBookColumnFormat(bookIdColumn);
         bookIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        setBookColumnFormat(bookTitleColumn);
         bookTitleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
+        setBookColumnFormat(bookSubjectColumn);
         bookSubjectColumn.setCellValueFactory(new PropertyValueFactory<>("subject"));
+        setBookColumnFormat(bookRefColumn);
         bookRefColumn.setCellValueFactory(new PropertyValueFactory<>("isReferenceOnly"));
+        setBookColumnFormat(bookStatusColumn);
         bookStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+        setBookColumnFormat(bookPriceColumn);
         bookPriceColumn.setCellValueFactory(new PropertyValueFactory<>("price"));
+        setBookColumnFormat(bookAuthorColumn);
         bookAuthorColumn.setCellValueFactory(cellData -> {
-            return new SimpleStringProperty(cellData.getValue().getAuthor().getName());
+            return new SimpleObjectProperty<>(cellData.getValue().getAuthor().getName());
         });
+        setBookColumnFormat(bookAuthorDesColumn);
         bookAuthorDesColumn.setCellValueFactory(cellData -> {
-            return new SimpleStringProperty(cellData.getValue().getAuthor().getDescription());
+            return new SimpleObjectProperty<>(cellData.getValue().getAuthor().getDescription());
         });
+        setBookColumnFormat(bookNumberColumn);
         bookNumberColumn.setCellValueFactory(cellData -> {
             return new SimpleObjectProperty<>(cellData.getValue().getRack().getNumber());
         });
+        setBookColumnFormat(bookLocationColumn);
         bookLocationColumn.setCellValueFactory(cellData -> {
-            return new SimpleStringProperty(cellData.getValue().getRack().getLocationIdentifier());
+            return new SimpleObjectProperty<>(cellData.getValue().getRack().getLocationIdentifier());
         });
         bookTable.setItems(a);
     }
 
     public void setMemBookTable(ObservableList a) {
+        setBookColumnFormat(memBookIdColumn);
         memBookIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
+        setBookColumnFormat(memBookTitleColumn);
         memBookTitleColumn.setCellValueFactory(new PropertyValueFactory<>("title"));
-        memBookTitleColumn.setCellFactory(column -> new TableCell<>() {
-            @Override
-            protected void updateItem(String item, boolean empty) {
-                super.updateItem(item, empty);
-                if (empty) {
-                    setText(null);
-                } else {
-                    setText(item);
-                    setWrapText(true);
-                }
-            }
-        });
+        setBookColumnFormat(memBookSubjectColumn);
         memBookSubjectColumn.setCellValueFactory(new PropertyValueFactory<>("subject"));
+        setBookColumnFormat(memBookAuthorColumn);
         memBookAuthorColumn.setCellValueFactory(cellData -> {
-            return new SimpleStringProperty(cellData.getValue().getAuthor().getName());
+            return new SimpleObjectProperty(cellData.getValue().getAuthor().getName());
         });
+        setBookColumnFormat(memBookAuthorDescColumn);
         memBookAuthorDescColumn.setCellValueFactory(cellData -> {
-            return new SimpleStringProperty(cellData.getValue().getAuthor().getDescription());
+            return new SimpleObjectProperty(cellData.getValue().getAuthor().getDescription());
         });
         memBookTable.setItems(a);
+    }
+
+    public void setBookColumnFormat(TableColumn<BookItem, Object> column) {
+        column.setCellFactory(new Callback<TableColumn<BookItem, Object>, TableCell<BookItem, Object>>() {
+            @Override
+            public TableCell<BookItem, Object> call(TableColumn<BookItem, Object> bookItemStringTableColumn) {
+                return new TableCell<BookItem, Object>() {
+                    private final Text text = new Text();
+
+                    {
+                        bookItemStringTableColumn.widthProperty().addListener((observable, oldValue, newValue) -> {
+                            Platform.runLater(() -> {
+                                text.setWrappingWidth(bookItemStringTableColumn.getWidth());
+                            });
+                        });
+                        text.setWrappingWidth(bookItemStringTableColumn.getWidth());
+                        text.setTextAlignment(TextAlignment.CENTER);
+                        setGraphic(text);
+                    }
+
+                    @Override
+                    protected void updateItem(Object item, boolean empty) {
+                        super.updateItem(item, empty);
+                        if (empty || item == null) {
+                            text.setText(null);
+                        } else {
+                            if (item instanceof String) {
+                                text.setText((String)item);
+                            } else if (item instanceof Integer) {
+                                text.setText(((Integer)item).toString());
+                            } else if (item instanceof Boolean) {
+                                text.setText(((Boolean)item).toString());
+                            } else if (item instanceof Double) {
+                                text.setText(((Double)item).toString());
+                            } else if (item instanceof BookStatus) {
+                                text.setText(((BookStatus)item).toString());
+                            }
+                        }
+                    }
+                };
+            }
+        });
     }
 
     public void setNotificationVBox(ObservableList<Notification> a) {
@@ -287,7 +333,9 @@ public class MemMainController implements Initializable {
 
         welcomeText.setText("Hello " + CurrentMember.getMember().getId());
         setLibBookTable(CurrentMember.getListOfLibBook());
+        bookTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_NEXT_COLUMN);
         setMemBookTable(CurrentMember.getListOfMemBook());
+        memBookTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_NEXT_COLUMN);
         ObservableList<String> searchOptionList = FXCollections.observableArrayList("ID", "Title", "Author", "Subject", "Status");
         searchOptionChoiceBox.getItems().addAll(searchOptionList);
         bookTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
@@ -430,7 +478,7 @@ public class MemMainController implements Initializable {
                 Scene scene = new Scene(fxmlLoader.load());
                 stage.setTitle("Library Management System");
                 stage.setScene(scene);
-                stage.initStyle(StageStyle.UNDECORATED);
+                stage.initModality(Modality.APPLICATION_MODAL);
                 stage.setResizable(false);
                 stage.show();
             }
@@ -459,12 +507,11 @@ public class MemMainController implements Initializable {
         } else if (event.getSource() == memLostBookBut) {
             if (memBookTable.getSelectionModel().getSelectedItem() != null) {
                 BookItem lostBook = memBookTable.getSelectionModel().getSelectedItem();
-                Notification notification = CurrentMember.getMember().getNotificationBox().findNotification(lostBook.getId());
-                CurrentMember.getMember().updateBook(lostBook.getId(), 13, "LOST");
+                CurrentMember.getMember().basicActions(lostBook.getId(), Date.valueOf(LocalDate.now()), "LOST");
                 CurrentMember.deleteListOfMemBook(lostBook);
                 CurrentMember.updateListOfLibBook(lostBook);
                 alertInfo.setContentText("You have lost " + Math.min(50, CurrentMember.getMember().getPoint()) + " points for report after the due date!");
-                CurrentLibrarian.getLibrarian().updatePoint(CurrentMember.getMember().getId(), Math.max(0, CurrentMember.getMember().getPoint() - 50));
+                CurrentLibrarian.getLibrarian().updatePoint(CurrentMember.getMember().getId(), Math.max(CurrentMember.getMember().getPoint() - 50, 0));
                 alertInfo.showAndWait();
             }
         }

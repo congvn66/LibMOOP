@@ -9,6 +9,7 @@ import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
+import javafx.stage.Modality;
 import javafx.stage.Stage;
 import javafx.stage.StageStyle;
 
@@ -117,8 +118,8 @@ public class LoginController extends Application {
                         Scene scene = new Scene(fxmlLoader.load());
                     stage.setTitle("Library Management System");
                     stage.setScene(scene);
-//                    stage.initStyle(StageStyle.UNDECORATED);
-//                    stage.setResizable(false);
+                    stage.initModality(Modality.APPLICATION_MODAL);
+                    stage.setResizable(false);
                     Login.getScene().getWindow().hide();
                     stage.show();
                     } catch (IOException i) {
@@ -135,7 +136,7 @@ public class LoginController extends Application {
                     stage.setTitle("Library Management System");
                     stage.setScene(scene);
                     stage.setResizable(false);
-                    stage.initStyle(StageStyle.UNDECORATED);
+                    stage.initModality(Modality.APPLICATION_MODAL);
                     Login.getScene().getWindow().hide();
                     stage.show();
                 } else {

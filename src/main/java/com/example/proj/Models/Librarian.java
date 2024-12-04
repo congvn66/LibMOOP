@@ -170,7 +170,7 @@ public class Librarian extends Account{
 
     public void addLogToMap(Log log) {
         totalLogs.computeIfAbsent(log.getCreationDate(), k -> FXCollections.observableList(new ArrayList<Log>())).add(log);
-        memberLogs.computeIfAbsent(log.getId(), k -> new LinkedHashMap<>());
+        memberLogs.computeIfAbsent(log.getId(), k -> new LinkedHashMap<>()); //HashMap<String, LinkedHashMap<Date, ObservableList<Log>>> memberLogs
         memberLogs.get(log.getId()).computeIfAbsent(log.getCreationDate(), k -> FXCollections.observableList(new ArrayList<>())).add(log);
         logList.computeIfAbsent(log.getId(), k -> FXCollections.observableList(new ArrayList<Log>())).add(log);
     }

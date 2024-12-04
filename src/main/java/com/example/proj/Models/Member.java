@@ -145,6 +145,8 @@ public class Member extends Account{
             case "RENEW":
                 returnString = this.logger.updateLog(this, book.getId(), creationDate, "RENEW");
                 break;
+            case "LOST":
+                returnString = this.logger.updateLog(this, book.getId(), creationDate, "LOST");
             default:
                 break;
         }
