@@ -100,19 +100,18 @@ class CatalogTest {
         List<BookItem> booksBySubject = librarian.getCatalog().getBookSubjects().get("PROGRAMMING");
         assertNotNull(booksBySubject);
         assertEquals(1, booksBySubject.size());
-        assertEquals("Programming", booksBySubject.getFirst().getSubject());
+        assertEquals("Programming", booksBySubject.get(0).getSubject());
 
         // Check if the publication date was added correctly
         List<BookItem> booksByDate = librarian.getCatalog().getBookPublicationDates().get(Date.valueOf(LocalDate.of(2008, 5, 8)));
         assertNotNull(booksByDate);
         assertEquals(1, booksByDate.size());
-        assertEquals("Effective Java", booksByDate.getFirst().getTitle());
-
+        assertEquals("Effective Java", booksByDate.get(0).getTitle());
 
         // Check if totalBooks was incremented
         assertEquals(librarian.getCatalog().getTotalBooks(), librarian.getCatalog().getTotalBooks());
 
-        librarian.getCatalog().removeBookById(booksByTitle.getFirst().getId(), true, false);
+        librarian.getCatalog().removeBookById(booksByTitle.get(0).getId(), true, false);
     }
 
     @Order(2)

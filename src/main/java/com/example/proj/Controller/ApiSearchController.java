@@ -93,12 +93,12 @@ public class ApiSearchController implements Initializable {
     public List<BookItem> searchAPIByCategory(String type, String searchText) {
         if (type.equals("ISBN")) {
             List<BookItem> bookList = new ArrayList<>();
-            bookList.add(GoogleBookApi.getBookDetailsByISBN(searchText));//OpenLibraryApi.searchBooksByISBN(searchText)
+            bookList.add(OpenLibraryApi.searchBookByIsbn(searchText));
             return bookList;
         } else if (type.equals("Title")) {
-            return GoogleBookApi.getBookDetailsByTitle(searchText);//OpenLibraryApi.searchBooksByTitle(searchText)
+            return OpenLibraryApi.searchBooksByTitle(searchText);
         } else {
-            return GoogleBookApi.getBookDetailsByAuthor(searchText);//OpenLibraryApi.searchBooksByAuthor(searchText)
+            return OpenLibraryApi.searchBooksByAuthor(searchText);
         }
     }
 

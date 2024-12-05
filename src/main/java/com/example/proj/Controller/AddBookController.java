@@ -141,8 +141,10 @@ public class AddBookController implements Initializable {
         informationAlert.setContentText("Book has been added successfully!");
         setConfirmationAlert();
         setBook(bookItem);
+        checkPublicationDate();
         imageImportService = new ImageImportService();
     }
+
 
     public static void setBookItem(BookItem newBookItem) {
         bookItem = newBookItem;
@@ -153,6 +155,7 @@ public class AddBookController implements Initializable {
         confirmationAlert.setContentText("There are already file with the same name in the book store \nDo you still want to replace it?");
         confirmationAlert.getButtonTypes().setAll(ButtonType.YES, ButtonType.CANCEL);
     }
+
     public void setAddBookTab(ActionEvent event) {
         if (event.getSource() == backToApiSearchBut) {
             ((Stage)backToApiSearchBut.getScene().getWindow()).close();
@@ -215,6 +218,7 @@ public class AddBookController implements Initializable {
 
             Date addDateOfPurchasesPicker = java.sql.Date.valueOf(LocalDate.now());
 
+            Date publicationDate = Date.from(addPublicationDatePicker.getValue().atStartOfDay(ZoneId.systemDefault()).toInstant());
             for (Label i : checkList) {
                 if (i.isVisible()) {
                     checkBook = false;
@@ -228,7 +232,7 @@ public class AddBookController implements Initializable {
 
                 BookItem bookItem = new BookItem(this.bookItem.getISBN(), this.bookItem.getTitle(), this.bookItem.getSubject(), this.bookItem.getPublisher()
                         , this.bookItem.getLanguage(), this.bookItem.getNumberOfPage(), this.bookItem.getAuthor().getName(), authorDesc, null, isRef
-                        , Double.parseDouble(price), bookFormat, bookStatus, addDateOfPurchasesPicker, this.bookItem.getPublicationDate(), Integer.parseInt(num),
+                        , Double.parseDouble(price), bookFormat, bookStatus, addDateOfPurchasesPicker, publicationDate, Integer.parseInt(num),
                         bookLocation, importedFile == null ? this.bookItem.getImgName() : importedFile.getName());
                 CurrentLibrarian.getLibrarian().addBookItem(bookItem);
                 CurrentLibrarian.addBookObservableList(bookItem);
@@ -236,6 +240,12 @@ public class AddBookController implements Initializable {
                 informationAlert.showAndWait();
                 ((Stage)backToApiSearchBut.getScene().getWindow()).close();
             }
+        }
+    }
+
+    private void checkPublicationDate() {
+        if (addPublicationDatePicker.getValue() == null) {
+            addPublicationDatePicker.setValue(LocalDate.now());
         }
     }
 

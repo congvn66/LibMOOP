@@ -222,7 +222,8 @@ public class LibMainController implements Initializable {
 
     private Alert confirmationAlert;
 
-    public void setMemberTable(ObservableList a) {
+    private void setMemberTable(ObservableList a) {
+        memberTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_NEXT_COLUMN);
         setMemberColumnFormat(accountIdColumn);
         accountIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         setMemberColumnFormat(accountStatusColumn);
@@ -234,7 +235,8 @@ public class LibMainController implements Initializable {
         memberTable.setItems(a);
     }
 
-    public void setBookTable(ObservableList a) {
+    private void setBookTable(ObservableList a) {
+        bookTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_NEXT_COLUMN);
         setBookColumnFormat(bookIdColumn);
         bookIdColumn.setCellValueFactory(new PropertyValueFactory<>("id"));
         setBookColumnFormat(bookTitleColumn);
@@ -266,7 +268,7 @@ public class LibMainController implements Initializable {
         bookTable.setItems(a);
     }
 
-    public void setBookColumnFormat(TableColumn<BookItem, Object> column) {
+    private void setBookColumnFormat(TableColumn<BookItem, Object> column) {
         column.setCellFactory(new Callback<TableColumn<BookItem, Object>, TableCell<BookItem, Object>>() {
             @Override
             public TableCell<BookItem, Object> call(TableColumn<BookItem, Object> bookItemStringTableColumn) {
@@ -308,7 +310,7 @@ public class LibMainController implements Initializable {
         });
     }
 
-    public void setMemberColumnFormat(TableColumn<Member, Object> memberColumn) {
+    private void setMemberColumnFormat(TableColumn<Member, Object> memberColumn) {
         memberColumn.setCellFactory(new Callback<TableColumn<Member, Object>, TableCell<Member, Object>>() {
             @Override
             public TableCell<Member, Object> call(TableColumn<Member, Object> memberStringTableColumn) {
@@ -342,6 +344,68 @@ public class LibMainController implements Initializable {
                         }
                     }
                 };
+            }
+        });
+    }
+
+    private void addListenerToBookTable() {
+        bookTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                updateIdTextField.setText(newValue.getId());
+                bookStatusChoiceBox.setValue(newValue.getStatus());
+                numberTextField.setText(String.valueOf(newValue.getRack().getNumber()));
+                isRefOnlyChoiceBox.setValue(newValue.getIsReferenceOnly());
+                priceTextField.setText(String.valueOf(newValue.getPrice()));
+                locationTextField.setText(newValue.getRack().getLocationIdentifier());
+                if (newValue.checkURL()) {
+                    bookThumbnail.setImage(new Image(newValue.getImgName()));
+                    addImageBut.setDisable(true);
+                } else {
+                    bookThumbnail.setImage(new Image(getClass().getResource(newValue.generateImagePathFromImageName(newValue.getImgName())).toExternalForm()));
+                    addImageBut.setDisable(false);
+                }
+                checkBookUpdateLabel.setVisible(false);
+            } else {
+                updateIdTextField.setText("");
+                bookStatusChoiceBox.setValue(null);
+                numberTextField.setText("");
+                isRefOnlyChoiceBox.setValue(null);
+                priceTextField.setText("");
+                locationTextField.setText("");
+                bookThumbnail.setImage(null);
+                addImageBut.setDisable(true);
+            }
+        });
+    }
+
+    private void addListenerToDiaryChoiceBox() {
+        diaryChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> {
+            switch (newValue) {
+                case "Total Logs", "Total member register" -> {
+                    diaryIDText.setText("");
+                    diaryIDText.setVisible(false);
+                    diaryCheckIdLabel.setVisible(false);
+                    diaryCheckChoiceBox.setVisible(false);
+                }
+                case "Logs by member" -> {
+                    diaryIDText.setVisible(true);
+                    diaryCheckChoiceBox.setVisible(false);
+                }
+                default -> {
+                }
+            }
+        });
+    }
+
+    private void addListenerToMemberTable() {
+        memberTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            if (newValue != null) {
+                statusChoiceBox.setValue(newValue.getStatus());
+                addPointSpinner.getValueFactory().setValue(newValue.getPoint());
+                checkIdLabel.setVisible(false);
+            } else {
+                statusChoiceBox.setValue(null);
+                addPointSpinner.getValueFactory().setValue(0);
             }
         });
     }
@@ -388,27 +452,10 @@ public class LibMainController implements Initializable {
                 totalMemNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getMemberMap().size()));
             });
         });
-        diaryChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> {
-            switch (newValue) {
-                case "Total Logs", "Total member register" -> {
-                    diaryIDText.setText("");
-                    diaryIDText.setVisible(false);
-                    diaryCheckIdLabel.setVisible(false);
-                    diaryCheckChoiceBox.setVisible(false);
-                }
-                case "Logs by member" -> {
-                    diaryIDText.setVisible(true);
-                    diaryCheckChoiceBox.setVisible(false);
-                }
-                default -> {
-                }
-            }
-        });
+        addListenerToDiaryChoiceBox();
         welcomeText.setText("Hello " + CurrentLibrarian.getLibrarian().getId());
         setMemberTable(CurrentLibrarian.getMemberObservableList());
-        memberTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_NEXT_COLUMN);
         setBookTable(CurrentLibrarian.getBookObservableList());
-        bookTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_NEXT_COLUMN);
         ObservableList<AccountStatus> statusList = FXCollections.observableArrayList(AccountStatus.ACTIVE, AccountStatus.NONE, AccountStatus.BLACKLISTED);
         statusChoiceBox.getItems().addAll(statusList);
         ObservableList<BookStatus> bookStatusList = FXCollections.observableArrayList(BookStatus.AVAILABLE, BookStatus.LOANED, BookStatus.RESERVED, BookStatus.LOST);
@@ -424,43 +471,8 @@ public class LibMainController implements Initializable {
         setConfirmationAlert();
         imageImportService = new ImageImportService();
         addImageBut.setDisable(true);
-        memberTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                statusChoiceBox.setValue(newValue.getStatus());
-                addPointSpinner.getValueFactory().setValue(newValue.getPoint());
-                checkIdLabel.setVisible(false);
-            } else {
-                statusChoiceBox.setValue(null);
-                addPointSpinner.getValueFactory().setValue(0);
-            }
-        });
-        bookTable.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
-            if (newValue != null) {
-                updateIdTextField.setText(newValue.getId());
-                bookStatusChoiceBox.setValue(newValue.getStatus());
-                numberTextField.setText(String.valueOf(newValue.getRack().getNumber()));
-                isRefOnlyChoiceBox.setValue(newValue.getIsReferenceOnly());
-                priceTextField.setText(String.valueOf(newValue.getPrice()));
-                locationTextField.setText(newValue.getRack().getLocationIdentifier());
-                if (newValue.checkURL()) {
-                    bookThumbnail.setImage(new Image(newValue.getImgName()));
-                    addImageBut.setDisable(true);
-                } else {
-                    bookThumbnail.setImage(new Image(getClass().getResource(newValue.generateImagePathFromImageName(newValue.getImgName())).toExternalForm()));
-                    addImageBut.setDisable(false);
-                }
-                checkBookUpdateLabel.setVisible(false);
-            } else {
-                updateIdTextField.setText("");
-                bookStatusChoiceBox.setValue(null);
-                numberTextField.setText("");
-                isRefOnlyChoiceBox.setValue(null);
-                priceTextField.setText("");
-                locationTextField.setText("");
-                bookThumbnail.setImage(null);
-                addImageBut.setDisable(true);
-            }
-        });
+        addListenerToMemberTable();
+        addListenerToBookTable();
     }
 
     public void setConfirmationAlert() {

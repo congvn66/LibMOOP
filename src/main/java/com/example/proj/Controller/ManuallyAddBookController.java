@@ -290,10 +290,10 @@ public class ManuallyAddBookController implements Initializable{
                 checkISBN.setVisible(true);
             } else {
                 long isbnNum = Long.parseLong(addISBNText.getText());
-                if (isbn.length() == 13) {
+                if (isbn.length() == 13 || isbn.length() == 10) {
                     checkISBN.setVisible(false);
                 } else {
-                    checkISBN.setText("ISBN must contains 13 numbers.");
+                    checkISBN.setText("ISBN must contains 10 numbers or 13 numbers.");
                     checkISBN.setVisible(true);
                 }
             }
