@@ -9,8 +9,6 @@ import java.util.Objects;
 public class BookItem extends Book {
     private String id;
     private boolean isReferenceOnly;
-    private Date borrowed;
-    private Date dueDate;
     private double price;
     private BookFormat format;
     private BookStatus status;
@@ -58,22 +56,6 @@ public class BookItem extends Book {
 
     public void setReferenceOnly(boolean referenceOnly) {
         isReferenceOnly = referenceOnly;
-    }
-
-    public Date getBorrowed() {
-        return borrowed;
-    }
-
-    public void setBorrowed(Date borrowed) {
-        this.borrowed = borrowed;
-    }
-
-    public Date getDueDate() {
-        return dueDate;
-    }
-
-    public void setDueDate(Date dueDate) {
-        this.dueDate = dueDate;
     }
 
     public double getPrice() {

@@ -57,9 +57,8 @@ public class MemberLogger {
      * @param date the date the action is being performed (borrow, return, or renew).
      * @param type the type of action (LEND, RETURN, or RENEW).
      * @return a message indicating the result of the action.
-     * @throws ParseException if there is an error parsing the date.
      */
-    public String updateLog(Member member, String bookId, Date date, String type) throws ParseException {
+    public String updateLog(Member member, String bookId, Date date, String type) {
         String sqlInsert = "INSERT INTO logs (id, creationDate, bookId) VALUES (?, ?, ?)";
         String sqlDelete = "DELETE FROM logs WHERE id = ? AND creationDate = ? AND bookId = ?";
         String sqlSelect = "SELECT creationDate FROM logs WHERE id = ? AND bookId = ?";

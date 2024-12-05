@@ -482,9 +482,9 @@ public class Librarian extends Account{
     }
 
     public void printAllMember() {
-        System.out.println(this.memberMap.size());
-        for(String s : this.memberMap.keySet()) {
-            this.memberMap.get(s).printInfo();
+        System.out.println(memberMap.size());
+        for(String s : memberMap.keySet()) {
+            memberMap.get(s).printInfo();
         }
     }
 }
