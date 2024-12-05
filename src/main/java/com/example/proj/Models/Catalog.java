@@ -536,10 +536,10 @@ public class Catalog {
                         case 13: // status
                             // Remove the book by ID and add it back with updated status
                             this.removeBookById(oldBookItem.getId(), false, true);
-
+                            System.out.println(oldBookItem.getStatus());
                             BookStatus newStatus = BookStatus.valueOf(newValue.toUpperCase()); // Assuming newValue corresponds to a valid enum value
                             oldBookItem.setStatus(newStatus);
-
+                            System.out.println(oldBookItem.getStatus());
                             this.addBookItem(oldBookItem, true);
                             break;
 
@@ -694,11 +694,11 @@ public class Catalog {
 
         Thread statusThread = new Thread(() -> {
             BookStatus status = bookToRemove.getStatus();
-            if (bookStatus.get(status) != null) {
-                synchronized (bookStatus.get(status)) {
-                    bookStatus.get(status).remove(bookToRemove);
-                    if (bookStatus.get(status).isEmpty()) {
-                        bookStatus.remove(status);
+            if (bookStatus.get(status.toString()) != null) {
+                synchronized (bookStatus.get(status.toString())) {
+                    bookStatus.get(status.toString()).remove(bookToRemove);
+                    if (bookStatus.get(status.toString()).isEmpty()) {
+                        bookStatus.remove(status.toString());
                     }
                 }
             }

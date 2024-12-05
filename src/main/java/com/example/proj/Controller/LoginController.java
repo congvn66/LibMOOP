@@ -109,7 +109,7 @@ public class LoginController extends Application {
                 Authentication authentication = new Authentication(name_log.getText(), password_log.getText());
                 Librarian librarian = new Librarian();
                 if (authentication.checkLoginasLibrarian() != null) {
-                    CurrentLibrarian currentLib = new CurrentLibrarian(authentication.checkLoginasLibrarian());
+                    CurrentLibrarian currentLibrarian = new CurrentLibrarian(authentication.checkLoginasLibrarian());
                     wrong.setVisible(false);
                     System.out.println("Librarian logged in");
                     try {
