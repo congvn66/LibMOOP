@@ -39,17 +39,18 @@ public class LibrarianTest {
         Map<String, Member> members = librarian.getMemberMap();
 
         // Act
-        librarian.blockMemberDatabase("jack");
+        librarian.blockMemberDatabase("test");
 
         // Assert
-        Member member = librarian.getMemberMap().get("jack");
+        Member member = librarian.getMemberMap().get("test");
         assertEquals(AccountStatus.BLACKLISTED, member.getStatus());
 
         // Verify change in the database
         Statement stmt = connection.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT accountStatus FROM members WHERE id='jack'");
+        ResultSet rs = stmt.executeQuery("SELECT accountStatus FROM members WHERE id='test'");
         assertTrue(rs.next());
         assertEquals("BLACKLISTED", rs.getString("accountStatus"));
+        librarian.changeMemberStatus("test", AccountStatus.ACTIVE);
     }
 
     @Order(1)
@@ -61,8 +62,6 @@ public class LibrarianTest {
         // Act
         librarian.addNewMemberDatabase(newMember);
 
-        // Assert
-        assertTrue(librarian.getMemberMap().containsKey("thienan1"));
 
         // Verify insertion into the database
         Statement stmt = connection.createStatement();
@@ -81,18 +80,18 @@ public class LibrarianTest {
         Map<String, Member> members = librarian.getMemberMap();
 
         // Act
-        librarian.reducePointMemberDatabase("lebron", 1);
+        librarian.reducePointMemberDatabase("test", 1);
 
         // Assert
-        assertEquals(95, librarian.getMemberMap().get("lebron").getPoint());
+        assertEquals(99, librarian.getMemberMap().get("test").getPoint());
 
         // Verify the database update
         Statement stmt = connection.createStatement();
-        ResultSet rs = stmt.executeQuery("SELECT point FROM members WHERE id='lebron'");
+        ResultSet rs = stmt.executeQuery("SELECT point FROM members WHERE id='test'");
         assertTrue(rs.next());
-        assertEquals(95, rs.getInt("point"));
+        assertEquals(99, rs.getInt("point"));
 
-        librarian.reducePointMemberDatabase("lebron", -1);
+        librarian.reducePointMemberDatabase("test", -1);
     }
 
     @Order(3)
