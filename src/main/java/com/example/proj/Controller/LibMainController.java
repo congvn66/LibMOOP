@@ -4,9 +4,7 @@ import com.example.proj.Models.*;
 import javafx.animation.PauseTransition;
 import javafx.application.Platform;
 import javafx.beans.property.SimpleObjectProperty;
-import javafx.collections.FXCollections;
-import javafx.collections.ListChangeListener;
-import javafx.collections.ObservableList;
+import javafx.collections.*;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
 import javafx.fxml.FXMLLoader;
@@ -384,6 +382,12 @@ public class LibMainController implements Initializable {
                 bookLostNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getCatalog().getBookStatus().get(BookStatus.LOST.toString()).size()));
             });
         });
+        totalMemNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getMemberMap().size()));
+        CurrentLibrarian.getMemberObservableList().addListener((ListChangeListener<Member>) change -> {
+            Platform.runLater(() -> {
+                totalMemNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getMemberMap().size()));
+            });
+        });
         diaryChoiceBox.valueProperty().addListener((observable, oldValue, newValue) -> {
             switch (newValue) {
                 case "Total Logs", "Total member register" -> {
@@ -400,7 +404,6 @@ public class LibMainController implements Initializable {
                 }
             }
         });
-        totalMemNum.setText(String.valueOf(CurrentLibrarian.getLibrarian().getMemberMap().size()));
         welcomeText.setText("Hello " + CurrentLibrarian.getLibrarian().getId());
         setMemberTable(CurrentLibrarian.getMemberObservableList());
         memberTable.setColumnResizePolicy(TableView.CONSTRAINED_RESIZE_POLICY_NEXT_COLUMN);
@@ -625,8 +628,8 @@ public class LibMainController implements Initializable {
                     int numberUpdate = Integer.parseInt(numberTextField.getText());
                     String[] location = locationTextField.getText().split(" ");
                     int numberOfRack = Integer.parseInt(location[1]);
-                    if (!locationTextField.getText().contains("Rack")) {
-                        legitUpdate = false;
+                    if (!locationTextField.getText().contains("Rack") || priceUpdate < 0 || numberUpdate < 0 || numberOfRack < 0) {
+                        throw new Exception();
                     }
                 } catch (Exception n) {
                     legitUpdate = false;

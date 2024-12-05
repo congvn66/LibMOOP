@@ -130,7 +130,7 @@ public class Authentication {
     public boolean checkRegisterMember() {
         Librarian librarian = new Librarian();
         Member member = librarian.getMemberMap().get(this.id);
-        if (member != null) {
+        if (member != null || this.librarianMap.containsKey(this.id)) {
             return false;
         }
         return true;

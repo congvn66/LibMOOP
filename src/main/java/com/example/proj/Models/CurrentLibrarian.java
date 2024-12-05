@@ -4,6 +4,8 @@ import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 
 public class CurrentLibrarian {
+
+    private  static CurrentLibrarian currentLibrarian;
     private static Librarian librarian;
     private static ObservableList <Member> memberObservableList;
     private static ObservableList <Member> initialMemberList;
@@ -12,8 +14,19 @@ public class CurrentLibrarian {
 
     private static ObservableList <BookItem> initialBookList;
 
-    public CurrentLibrarian(Librarian librarian) {
-        this.librarian = librarian;
+    public CurrentLibrarian(Librarian lib) {
+        librarian = lib;
+    }
+
+//    public static CurrentLibrarian getInstance() {
+//        if (currentLibrarian == null) {
+//            currentLibrarian = new CurrentLibrarian();
+//        }
+//        return currentLibrarian;
+//    }
+
+    public static void setLibrarian (Librarian lib) {
+        librarian = lib;
     }
 
     public static ObservableList<Member> getMemberObservableList() {

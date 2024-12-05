@@ -2,6 +2,7 @@ package com.example.proj.Controller;
 
 import com.example.proj.Models.BookItem;
 import com.example.proj.Models.GoogleBookApi;
+import com.example.proj.Models.OpenLibraryApi;
 import javafx.concurrent.Task;
 import javafx.event.ActionEvent;
 import javafx.fxml.FXML;
@@ -92,12 +93,12 @@ public class ApiSearchController implements Initializable {
     public List<BookItem> searchAPIByCategory(String type, String searchText) {
         if (type.equals("ISBN")) {
             List<BookItem> bookList = new ArrayList<>();
-            bookList.add(GoogleBookApi.getBookDetailsByISBN(searchText));
+            bookList.add(GoogleBookApi.getBookDetailsByISBN(searchText));//OpenLibraryApi.searchBooksByISBN(searchText)
             return bookList;
         } else if (type.equals("Title")) {
-            return GoogleBookApi.getBookDetailsByTitle(searchText);
+            return GoogleBookApi.getBookDetailsByTitle(searchText);//OpenLibraryApi.searchBooksByTitle(searchText)
         } else {
-            return GoogleBookApi.getBookDetailsByAuthor(searchText);
+            return GoogleBookApi.getBookDetailsByAuthor(searchText);//OpenLibraryApi.searchBooksByAuthor(searchText)
         }
     }
 

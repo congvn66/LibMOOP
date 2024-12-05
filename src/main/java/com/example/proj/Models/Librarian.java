@@ -2,6 +2,7 @@ package com.example.proj.Models;
 
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
+import javafx.collections.ObservableMap;
 
 import java.io.*;
 import java.sql.*;
