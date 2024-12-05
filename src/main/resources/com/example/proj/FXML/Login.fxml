@@ -1,0 +1,193 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.Hyperlink?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.PasswordField?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.text.Font?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="400.0" prefWidth="600.0" stylesheets="@../CSS/Login.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.proj.Controller.LoginController">
+   <children>
+      <AnchorPane maxHeight="400.0" minHeight="400.0" prefHeight="400.0" stylesheets="@../CSS/Login.css">
+         <children>
+            <AnchorPane fx:id="RegisterTab" prefHeight="400.0" prefWidth="600.0" style="-fx-background-color: #206627;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Button id="loginInReg" fx:id="loginInReg" layoutX="95.0" layoutY="308.0" mnemonicParsing="false" onAction="#registerTab" prefHeight="59.0" prefWidth="118.0" text="Login">
+                     <font>
+                        <Font name="Times New Roman Bold" size="24.0" />
+                     </font>
+                  </Button>
+                  <Label layoutX="7.0" layoutY="32.0" prefHeight="74.0" prefWidth="286.0" text="Library Management System" textFill="WHITE">
+                     <font>
+                        <Font name="Times New Roman Bold" size="22.0" />
+                     </font>
+                  </Label>
+                  <Hyperlink layoutX="83.0" layoutY="277.0" style="-fx-background-radius: 20;" text="Already have an account?">
+                     <font>
+                        <Font name="Arial Italic" size="12.0" />
+                     </font>
+                  </Hyperlink>
+                  <AnchorPane fx:id="LoginTab1" layoutX="327.0" layoutY="38.0" prefHeight="325.0" prefWidth="246.0" style="-fx-background-radius: 20; -fx-background-color: white;">
+                     <children>
+                        <Label layoutX="18.0" layoutY="32.0" text="Register Account">
+                           <font>
+                              <Font name="Times New Roman Bold" size="28.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="nameReg" layoutX="8.0" layoutY="94.0" onAction="#registerTab" prefHeight="43.0" prefWidth="230.0" promptText="Name" style="-fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 2;">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </TextField>
+                        <Button id="signUpButton" fx:id="signUp" layoutX="118.0" layoutY="256.0" mnemonicParsing="false" onAction="#registerTab" prefHeight="47.0" prefWidth="102.0" text="Sign up">
+                           <font>
+                              <Font name="Times New Roman Bold" size="21.0" />
+                           </font>
+                        </Button>
+                        <Label fx:id="nameTakenReg" layoutX="24.0" layoutY="206.0" text="This name is already taken" textFill="RED" visible="false" />
+                        <Label fx:id="emptyTextReg" layoutX="24.0" layoutY="206.0" text="Please fill in" textFill="RED" visible="false" />
+                        <PasswordField fx:id="passWordReg" layoutX="8.0" layoutY="163.0" onAction="#registerTab" prefHeight="43.0" prefWidth="230.0" promptText="Password" style="-fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 2;">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </PasswordField>
+                     </children>
+                  </AnchorPane>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="75.0" layoutY="106.0" pickOnBounds="true" preserveRatio="true" scaleX="1.75" scaleY="1.75">
+                     <image>
+                        <Image url="@../../../../asset/logo.png" />
+                     </image>
+                  </ImageView>
+               </children>
+            </AnchorPane>
+            <AnchorPane minHeight="400.0" prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: #206627;">
+               <children>
+                  <ImageView fitHeight="150.0" fitWidth="200.0" layoutX="75.0" layoutY="106.0" pickOnBounds="true" preserveRatio="true" scaleX="1.75" scaleY="1.75">
+                     <image>
+                        <Image url="@../../../../asset/logo.png" />
+                     </image>
+                  </ImageView>
+                  <Hyperlink layoutX="75.0" layoutY="277.0" style="-fx-background-radius: 20;" text="Doesn't have any account?">
+                     <font>
+                        <Font name="Arial Italic" size="12.0" />
+                     </font>
+                  </Hyperlink>
+                  <Label layoutX="6.0" layoutY="32.0" prefHeight="74.0" prefWidth="300.0" text="Library Management System" textFill="WHITE">
+                     <font>
+                        <Font name="Arial Bold" size="21.0" />
+                     </font>
+                  </Label>
+                  <Button id="registerButton" fx:id="regInLogin" layoutX="85.0" layoutY="308.0" mnemonicParsing="false" onAction="#LoginTab" prefHeight="59.0" prefWidth="131.0" text="Register">
+                     <font>
+                        <Font name="Arial Bold" size="24.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+            <AnchorPane layoutX="300.0" minHeight="400.0" prefHeight="400.0" prefWidth="300.0" style="-fx-background-color: #206627;">
+               <children>
+                  <AnchorPane fx:id="questionTest" layoutX="27.0" layoutY="38.0" prefHeight="325.0" prefWidth="246.0" style="-fx-background-radius: 20; -fx-background-color: white;">
+                     <children>
+                        <Label layoutX="35.0" layoutY="30.0" text="Reset password">
+                           <font>
+                              <Font name="Times New Roman Bold" size="28.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="Answer" layoutX="8.0" layoutY="126.0" prefHeight="43.0" prefWidth="230.0" promptText="Enter" style="-fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 2;">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </TextField>
+                        <Button id="continueQuestion" fx:id="answerButton" layoutX="113.0" layoutY="206.0" mnemonicParsing="false" onAction="#questionTestTab" prefHeight="47.0" prefWidth="118.0" stylesheets="@../CSS/Login.css" text="Continue">
+                           <font>
+                              <Font name="Times New Roman Bold" size="21.0" />
+                           </font>
+                        </Button>
+                        <Label layoutX="21.0" layoutY="101.0" text="How many books you have borrowed?" />
+                        <Label fx:id="answerCheck" layoutX="21.0" layoutY="176.0" text="Wrong answer" textFill="RED" visible="false" />
+                        <Button id="backQuestion" fx:id="backToLoginInQuestion" layoutX="14.0" layoutY="211.0" mnemonicParsing="false" onAction="#questionTestTab" text="&lt;- Back" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane fx:id="nameForgotTab" layoutX="27.0" layoutY="38.0" prefHeight="325.0" prefWidth="246.0" style="-fx-background-radius: 20; -fx-background-color: white;">
+                     <children>
+                        <Label layoutX="35.0" layoutY="30.0" text="Reset password">
+                           <font>
+                              <Font name="Times New Roman Bold" size="28.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="nameInForgot" layoutX="8.0" layoutY="126.0" prefHeight="43.0" prefWidth="230.0" promptText="Name" style="-fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 2;">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </TextField>
+                        <Button id="continueName" fx:id="nameForgot" layoutX="113.0" layoutY="206.0" mnemonicParsing="false" onAction="#nameInForgotTab" prefHeight="47.0" prefWidth="118.0" stylesheets="@../CSS/Login.css" text="Continue">
+                           <font>
+                              <Font name="Times New Roman Bold" size="21.0" />
+                           </font>
+                        </Button>
+                        <Label fx:id="idCheck" layoutX="18.0" layoutY="176.0" prefHeight="18.0" prefWidth="198.0" text="Wrong name, try again." textFill="RED" visible="false" />
+                        <Button id="backName" fx:id="backToLoginInName" layoutX="14.0" layoutY="211.0" mnemonicParsing="false" onAction="#nameInForgotTab" text="&lt;- Back" />
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane fx:id="resetPassword" layoutX="27.0" layoutY="38.0" prefHeight="325.0" prefWidth="246.0" style="-fx-background-radius: 20; -fx-background-color: white;">
+                     <children>
+                        <Label layoutX="35.0" layoutY="30.0" text="Reset password">
+                           <font>
+                              <Font name="Times New Roman Bold" size="28.0" />
+                           </font>
+                        </Label>
+                        <Button id="continueNewPass" fx:id="doneSetPass" layoutX="113.0" layoutY="206.0" mnemonicParsing="false" onAction="#resetPasswordTab" prefHeight="47.0" prefWidth="118.0" stylesheets="@../CSS/Login.css" text="Continue">
+                           <font>
+                              <Font name="Times New Roman Bold" size="21.0" />
+                           </font>
+                        </Button>
+                        <Button id="backNewPass" fx:id="backToLoginInReset" layoutX="14.0" layoutY="211.0" mnemonicParsing="false" onAction="#resetPasswordTab" text="&lt;- Back" />
+                        <PasswordField fx:id="setPass" layoutX="8.0" layoutY="126.0" prefHeight="43.0" prefWidth="230.0" promptText="Enter your new password" style="-fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 2;">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </PasswordField>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane fx:id="LoginTab" layoutX="27.0" layoutY="38.0" prefHeight="325.0" prefWidth="246.0" style="-fx-background-radius: 20; -fx-background-color: white;">
+                     <children>
+                        <PasswordField fx:id="password_log" layoutX="8.0" layoutY="163.0" prefHeight="43.0" prefWidth="230.0" promptText="Password" style="-fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 2;">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </PasswordField>
+                        <Label layoutX="25.0" layoutY="30.0" text="Login Account">
+                           <font>
+                              <Font name="Arial Bold" size="28.0" />
+                           </font>
+                        </Label>
+                        <TextField fx:id="name_log" layoutX="8.0" layoutY="94.0" prefHeight="43.0" prefWidth="230.0" promptText="Name" style="-fx-background-radius: 20; -fx-border-color: black; -fx-border-radius: 20; -fx-border-width: 2;">
+                           <font>
+                              <Font size="18.0" />
+                           </font>
+                        </TextField>
+                        <Button id="buttonLogin" fx:id="Login" layoutX="118.0" layoutY="256.0" mnemonicParsing="false" onAction="#LoginTab" prefHeight="47.0" prefWidth="102.0" text="Login">
+                           <font>
+                              <Font name="Arial Bold" size="21.0" />
+                           </font>
+                        </Button>
+                        <Hyperlink id="forgot-link" fx:id="forgot_password" layoutX="114.0" layoutY="227.0" onAction="#LoginTab" text="Forgot the password?">
+                           <font>
+                              <Font name="Arial Italic" size="12.0" />
+                           </font>
+                        </Hyperlink>
+                        <Label fx:id="wrong" layoutX="24.0" layoutY="206.0" prefHeight="18.0" prefWidth="198.0" text="Wrong name or password, try again." textFill="RED" visible="false" />
+                        <Button id="exitLogin" fx:id="exit" layoutX="14.0" layoutY="263.0" mnemonicParsing="false" onAction="#LoginTab" text="Exit" />
+                     </children>
+                  </AnchorPane>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>

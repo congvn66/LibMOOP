@@ -1,0 +1,252 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<?import javafx.scene.control.Button?>
+<?import javafx.scene.control.ChoiceBox?>
+<?import javafx.scene.control.Label?>
+<?import javafx.scene.control.ProgressBar?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.Image?>
+<?import javafx.scene.image.ImageView?>
+<?import javafx.scene.layout.AnchorPane?>
+<?import javafx.scene.layout.StackPane?>
+<?import javafx.scene.layout.VBox?>
+<?import javafx.scene.text.Font?>
+
+<StackPane maxHeight="-Infinity" maxWidth="-Infinity" minHeight="-Infinity" minWidth="-Infinity" prefHeight="800.0" prefWidth="1530.0" stylesheets="@../CSS/MemMain.css" xmlns="http://javafx.com/javafx/22" xmlns:fx="http://javafx.com/fxml/1" fx:controller="com.example.proj.Controller.MemMainController">
+   <children>
+      <AnchorPane>
+         <children>
+            <AnchorPane prefHeight="620.0" prefWidth="278.0" style="-fx-background-color: #18dcff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="1252.0" AnchorPane.topAnchor="185.0">
+               <children>
+                  <Button id="bookManageBut" fx:id="bookManageBut" layoutX="4.0" layoutY="148.0" mnemonicParsing="false" onAction="#setMainTab" prefHeight="84.0" prefWidth="274.0" text="Library" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="100.0">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="22.0" />
+                     </font>
+                  </Button>
+                  <Button id="myBookManageBut" fx:id="myBookManageBut" layoutX="10.0" layoutY="261.0" mnemonicParsing="false" onAction="#setMainTab" prefHeight="84.0" prefWidth="274.0" text="Your Book" AnchorPane.leftAnchor="9.0" AnchorPane.rightAnchor="9.0" AnchorPane.topAnchor="300.0">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="22.0" />
+                     </font>
+                  </Button>
+                  <Button id="backBut" fx:id="backBut" layoutX="11.0" layoutY="498.0" mnemonicParsing="false" onAction="#setMainTab" prefHeight="84.0" prefWidth="274.0" text="Back" AnchorPane.leftAnchor="75.0" AnchorPane.rightAnchor="75.0">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="22.0" />
+                     </font>
+                  </Button>
+                  <Button id="ExitBut" fx:id="ExitBut" layoutX="11.0" layoutY="498.0" mnemonicParsing="false" onAction="#setMainTab" prefHeight="84.0" prefWidth="274.0" text="Exit" AnchorPane.leftAnchor="75.0" AnchorPane.rightAnchor="75.0">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="22.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+            <AnchorPane prefHeight="185.0" prefWidth="1530.0" style="-fx-background-color: #3498db;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+               <children>
+                  <Label layoutX="1335.0" layoutY="121.0" prefHeight="63.0" prefWidth="96.0" text="Member" textAlignment="CENTER" wrapText="true" AnchorPane.bottomAnchor="2.0">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="24.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="welcomeText" layoutX="1313.0" layoutY="89.0" prefHeight="63.0" prefWidth="209.0" text="Hello" textAlignment="CENTER" wrapText="true">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="24.0" />
+                     </font>
+                  </Label>
+                  <ImageView fitHeight="109.0" fitWidth="145.0" layoutX="1309.0" layoutY="17.0" pickOnBounds="true" preserveRatio="true">
+                     <image>
+                        <Image url="@../../../../asset/avatar.png" />
+                     </image>
+                  </ImageView>
+                  <ProgressBar fx:id="progressBar" layoutX="383.0" layoutY="104.0" prefHeight="33.0" prefWidth="732.0" progress="0.56" style="-fx-border-color: black; -fx-border-width: 2;" AnchorPane.leftAnchor="383.0" AnchorPane.rightAnchor="383.0" />
+                  <Label layoutX="465.0" layoutY="18.0" text="Total Books: " AnchorPane.bottomAnchor="97.0" AnchorPane.leftAnchor="465.0" AnchorPane.rightAnchor="772.8000000000002" AnchorPane.topAnchor="18.0">
+                     <font>
+                        <Font name="System Bold" size="48.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="percentage" layoutX="721.0" layoutY="110.0" text="Percentage" AnchorPane.bottomAnchor="53.99999999999999" AnchorPane.leftAnchor="721.0" AnchorPane.rightAnchor="730.4000000000001" AnchorPane.topAnchor="110.4">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="16.0" />
+                     </font>
+                  </Label>
+                  <Label layoutX="39.0" layoutY="6.0" prefHeight="46.0" prefWidth="382.0" text="Library Management System" AnchorPane.leftAnchor="0.0" AnchorPane.topAnchor="5.0">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="28.0" />
+                     </font>
+                  </Label>
+                  <ImageView fitHeight="139.0" fitWidth="143.0" layoutX="100.0" layoutY="43.0" pickOnBounds="true" preserveRatio="true" scaleX="1.5" scaleY="1.5">
+                     <image>
+                        <Image url="@../../../../asset/logo.png" />
+                     </image>
+                  </ImageView>
+                  <Label fx:id="totalBooks" layoutX="762.0" layoutY="15.0" prefHeight="40.0" prefWidth="139.0" text="avaiBookNum" AnchorPane.bottomAnchor="100.19999999999999" AnchorPane.leftAnchor="762.0" AnchorPane.rightAnchor="475.5999999999999" AnchorPane.topAnchor="15.0">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="48.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="BookManagementTab" layoutX="278.0" layoutY="185.0" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #7efff5;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="278.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="185.0">
+               <children>
+                  <TableView fx:id="bookTable" editable="true" layoutY="80.0" prefHeight="400.0" prefWidth="1242.0">
+                     <columns>
+                        <TableColumn fx:id="bookIdColumn" prefWidth="101.60000765323639" sortable="false" style="-fx-border-color: black;" text="ID" />
+                        <TableColumn fx:id="bookTitleColumn" prefWidth="372.53333282470703" sortable="false" style="-fx-border-color: black;" text="Title" />
+                        <TableColumn fx:id="bookSubjectColumn" prefWidth="83.4666748046875" sortable="false" style="-fx-border-color: black;" text="Subject" />
+                        <TableColumn fx:id="bookRefColumn" prefWidth="93.3333740234375" sortable="false" style="-fx-border-color: black;" text="ReferenceOnly" />
+                        <TableColumn fx:id="bookStatusColumn" prefWidth="74.93328857421875" sortable="false" style="-fx-border-color: black;" text="Status" />
+                        <TableColumn fx:id="bookPriceColumn" prefWidth="46.6666259765625" sortable="false" style="-fx-border-color: black;" text="Price" />
+                        <TableColumn fx:id="bookAuthorColumn" prefWidth="110.13330078125" sortable="false" style="-fx-border-color: black;" text="Author" />
+                        <TableColumn fx:id="bookAuthorDesColumn" prefWidth="227.2000732421875" sortable="false" style="-fx-border-color: black;" text="AuthorDescription" />
+                        <TableColumn fx:id="bookNumberColumn" prefWidth="63.199951171875" sortable="false" style="-fx-border-color: black;" text="Number" />
+                        <TableColumn fx:id="bookLocationColumn" prefWidth="69.866455078125" sortable="false" style="-fx-border-color: black;" text="Location" />
+                     </columns>
+                  </TableView>
+                  <Label fx:id="checkSearchLabel" layoutX="365.0" layoutY="50.0" text="ID doesn't exist" textFill="RED" visible="false">
+                     <font>
+                        <Font size="16.0" />
+                     </font>
+                  </Label>
+                  <Button id="watchBookBut" fx:id="watchBookBut" layoutX="300.0" layoutY="500.0" mnemonicParsing="false" onAction="#setBookManagementTab" prefHeight="84.0" prefWidth="157.0" text="Watch Book">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="22.0" />
+                     </font>
+                  </Button>
+                  <Button id="cancelBookBut" fx:id="cancelBookBut" layoutX="717.0" layoutY="500.0" mnemonicParsing="false" onAction="#setBookManagementTab" prefHeight="84.0" prefWidth="139.0" text="Cancel">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="22.0" />
+                     </font>
+                  </Button>
+                  <ChoiceBox fx:id="searchOptionChoiceBox" layoutX="178.0" layoutY="13.0" prefHeight="40.0" prefWidth="135.0" style="-fx-background-radius: 15; -fx-border-color: black; -fx-border-radius: 15;" />
+                  <TextField fx:id="searchTextField" layoutX="361.0" layoutY="11.0" onAction="#setBookManagementTab" prefHeight="40.0" prefWidth="428.0" promptText="Search" style="-fx-background-radius: 20; -fx-border-radius: 20; -fx-border-color: black;">
+                     <font>
+                        <Font name="Book Antiqua" size="18.0" />
+                     </font>
+                  </TextField>
+                  <Button id="searchBookBut" fx:id="searchBookBut" layoutX="851.0" layoutY="8.0" mnemonicParsing="false" onAction="#setBookManagementTab" prefHeight="48.0" prefWidth="104.0" text="Search">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="22.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="MemBookTab" prefHeight="200.0" prefWidth="200.0" style="-fx-background-color: #7efff5;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="278.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="185.0">
+               <children>
+                  <TableView fx:id="memBookTable" editable="true" layoutX="6.0" layoutY="60.0" prefHeight="400.0" prefWidth="1242.0">
+                     <columns>
+                        <TableColumn fx:id="memBookIdColumn" prefWidth="101.60000765323639" sortable="false" style="-fx-border-color: black;" text="ID" />
+                        <TableColumn fx:id="memBookTitleColumn" prefWidth="542.6666946411133" sortable="false" style="-fx-border-color: black;" text="Title" />
+                        <TableColumn fx:id="memBookSubjectColumn" prefWidth="127.7332763671875" sortable="false" style="-fx-border-color: black;" text="Subject" />
+                        <TableColumn fx:id="memBookAuthorColumn" prefWidth="174.6666259765625" sortable="false" style="-fx-border-color: black;" text="Author" />
+                        <TableColumn fx:id="memBookAuthorDescColumn" prefWidth="296.2667236328125" sortable="false" style="-fx-border-color: black;" text="AuthorDescription" />
+                     </columns>
+                  </TableView>
+                  <Button id="renewBookBut" fx:id="renewBookBut" layoutX="150.0" layoutY="500.0" mnemonicParsing="false" onAction="#setMemBookTab" prefHeight="84.0" prefWidth="170.0" text="Renew Book">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="22.0" />
+                     </font>
+                  </Button>
+                  <Button id="memCancelBookBut" fx:id="memCancelBookBut" layoutX="700.0" layoutY="500.0" mnemonicParsing="false" onAction="#setMemBookTab" prefHeight="84.0" prefWidth="157.0" text="Cancel">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="22.0" />
+                     </font>
+                  </Button>
+                  <Button id="returnBookBut" fx:id="returnBookBut" layoutX="420.0" layoutY="500.0" mnemonicParsing="false" onAction="#setMemBookTab" prefHeight="84.0" prefWidth="165.0" text="Return Book">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="22.0" />
+                     </font>
+                  </Button>
+                  <Button id="memLostBookBut" fx:id="memLostBookBut" layoutX="950.0" layoutY="500.0" mnemonicParsing="false" onAction="#setMemBookTab" prefHeight="84.0" prefWidth="151.0" text="Lost Book">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="22.0" />
+                     </font>
+                  </Button>
+               </children>
+            </AnchorPane>
+            <AnchorPane fx:id="MainTab" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="278.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="185.0">
+               <children>
+                  <AnchorPane prefHeight="613.0" prefWidth="974.0" style="-fx-background-color: #ecf0f1;" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="278.4">
+                     <children>
+                        <Label alignment="TOP_CENTER" layoutX="324.8" layoutY="10.0" prefHeight="97.0" prefWidth="313.0" style="-fx-background-color: #18dcff; -fx-background-radius: 30;" text="Your Books:" AnchorPane.bottomAnchor="508.0" AnchorPane.leftAnchor="325.0" AnchorPane.rightAnchor="336.0" AnchorPane.topAnchor="10.0">
+                           <font>
+                              <Font name="System Bold" size="36.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="35.0" layoutY="150.0" prefHeight="91.0" prefWidth="434.0" style="-fx-background-color: #18dcff; -fx-background-radius: 30; -fx-alignment: TOP_CENTER;" text="Books on shelf:">
+                           <font>
+                              <Font name="System Bold" size="36.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="495.0" layoutY="150.0" prefHeight="93.0" prefWidth="433.0" style="-fx-alignment: TOP_CENTER; -fx-background-color: #18dcff; -fx-background-radius: 30;" text="Books reserved:">
+                           <font>
+                              <Font name="System Bold" size="36.0" />
+                           </font>
+                        </Label>
+                        <Label layoutX="35.0" layoutY="377.0" prefHeight="85.0" prefWidth="444.0" style="-fx-alignment: TOP_CENTER; -fx-background-color: #18dcff; -fx-background-radius: 30;" text="Books lost:">
+                           <font>
+                              <Font name="System Bold" size="36.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="booksAvailableNum" alignment="CENTER" layoutX="188.0" layoutY="187.0" prefHeight="40.0" prefWidth="139.0" text="avaiBookNum">
+                           <font>
+                              <Font name="Book Antiqua Bold" size="36.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="bookLostNum" alignment="CENTER" layoutX="194.0" layoutY="411.0" prefHeight="40.0" prefWidth="139.0" text="avaiBookNum">
+                           <font>
+                              <Font name="Book Antiqua Bold" size="36.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="yourBookNum" alignment="CENTER" layoutX="410.0" layoutY="55.0" prefHeight="40.0" prefWidth="139.0" text="avaiBookNum" AnchorPane.bottomAnchor="514.6" AnchorPane.leftAnchor="410.0" AnchorPane.rightAnchor="425.19999999999993" AnchorPane.topAnchor="55.0">
+                           <font>
+                              <Font name="Book Antiqua Bold" size="36.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="bookReservedNum" alignment="CENTER" layoutX="653.0" layoutY="188.0" prefHeight="40.0" prefWidth="139.0" text="avaiBookNum">
+                           <font>
+                              <Font name="Book Antiqua Bold" size="36.0" />
+                           </font>
+                        </Label>
+                        <Label alignment="TOP_CENTER" layoutX="324.0" layoutY="482.0" prefHeight="97.0" prefWidth="313.0" style="-fx-background-color: #18dcff; -fx-background-radius: 30;" text="Your Point:">
+                           <font>
+                              <Font name="System Bold" size="36.0" />
+                           </font>
+                        </Label>
+                        <Label fx:id="memPoint" alignment="CENTER" layoutX="412.0" layoutY="527.0" prefHeight="40.0" prefWidth="139.0" text="memPoint">
+                           <font>
+                              <Font name="Book Antiqua Bold" size="36.0" />
+                           </font>
+                        </Label>
+                     </children>
+                  </AnchorPane>
+                  <AnchorPane layoutX="973.6000061035156" prefHeight="615.0" prefWidth="278.0" style="-fx-background-color: #1abc9c;" AnchorPane.rightAnchor="0.0">
+                     <children>
+                        <VBox layoutX="103.0" layoutY="208.0" prefHeight="620.0" prefWidth="278.0" style="-fx-background-color: #18dcff;" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                           <children>
+                              <Label alignment="CENTER" prefHeight="46.0" prefWidth="279.0" text="Notification">
+                                 <font>
+                                    <Font name="Book Antiqua Bold" size="36.0" />
+                                 </font>
+                              </Label>
+                              <VBox fx:id="notificationVBox" alignment="TOP_CENTER" prefHeight="580.0" prefWidth="278.0" />
+                           </children>
+                        </VBox>
+                     </children>
+                  </AnchorPane>
+                  <Label layoutX="495.0" layoutY="377.0" prefHeight="86.0" prefWidth="441.0" style="-fx-alignment: TOP_CENTER; -fx-background-color: #18dcff; -fx-background-radius: 30;" text="Books loaned:">
+                     <font>
+                        <Font name="System Bold" size="36.0" />
+                     </font>
+                  </Label>
+                  <Label fx:id="bookLoanedNum" alignment="CENTER" layoutX="645.0" layoutY="422.0" prefHeight="40.0" prefWidth="139.0" text="avaiBookNum">
+                     <font>
+                        <Font name="Book Antiqua Bold" size="36.0" />
+                     </font>
+                  </Label>
+               </children>
+            </AnchorPane>
+         </children>
+      </AnchorPane>
+   </children>
+</StackPane>

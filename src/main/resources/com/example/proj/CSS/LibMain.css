@@ -1,0 +1,79 @@
+#memberManageBut, #bookManageBut, #diaryBut, #updateBookBut, #searchBookBut, #searchMemBut, #updateBut, #diarySearchBut {
+-fx-background-color: #2ecc71;
+-fx-background-radius: 50;
+-fx-border-color: black;
+-fx-border-radius: 50;
+-fx-border-width: 3;
+}
+#memberManageBut:hover, #bookManageBut:hover, #diaryBut:hover, #updateBookBut:hover, #searchBookBut:hover, #searchMemBut:hover, #updateBut:hover, #diarySearchBut:hover {
+-fx-text-fill: white;
+-fx-scale-x: 1.05;
+-fx-scale-y: 1.05;
+}
+#memberManageBut:pressed, #bookManageBut:pressed, #diaryBut:pressed, #updateBookBut:pressed, #searchBookBut:pressed, #searchMemBut:pressed, #updateBut:pressed, #diarySearchBut:pressed {
+-fx-text-fill: black;
+-fx-scale-x: 0.9;
+-fx-scale-y: 0.9;
+}
+#memberManageBut:disabled, #bookManageBut:disabled, #diaryBut:disabled {
+-fx-background-color: white;
+-fx-background-radius: 50;
+-fx-border-color: #2ecc71;
+-fx-border-radius: 50;
+-fx-border-width: 3;
+-fx-opacity: 1;
+}
+#ExitBut, #deleteBut, #deleteBookBut, #backBut {
+-fx-background-color: red;
+-fx-background-radius: 50;
+-fx-border-color: black;
+-fx-border-radius: 50;
+-fx-border-width: 3;
+}
+#ExitBut:hover, #deleteBut:hover, #deleteBookBut:hover, #backBut:hover {
+-fx-text-fill: white;
+-fx-scale-x: 1.1;
+-fx-scale-y: 1.1;
+}
+#ExitBut:pressed, #deleteBut:pressed, #deleteBookBut:pressed, #backBut:pressed {
+-fx-text-fill: black;
+-fx-scale-x: 0.9;
+-fx-scale-y: 0.9;
+}
+#cancelBookBut, #cancelBut {
+-fx-background-color: yellow;
+-fx-background-radius: 50;
+-fx-border-color: black;
+-fx-border-radius: 50;
+-fx-border-width: 3;
+}
+#cancelBookBut:hover, #cancelBut:hover {
+-fx-text-fill: white;
+-fx-scale-x: 1.1;
+-fx-scale-y: 1.1;
+}
+#cancelBookBut:pressed, #cancelBut:pressed {
+-fx-text-fill: black;
+-fx-scale-x: 0.9;
+-fx-scale-y: 0.9;
+}
+#addBookBut {
+-fx-background-color: #4cd137;
+-fx-background-radius: 50;
+-fx-border-color: black;
+-fx-border-radius: 50;
+-fx-border-width: 3;
+}
+#addBookBut:hover {
+-fx-text-fill: white;
+-fx-scale-x: 1.1;
+-fx-scale-y: 1.1;
+}
+#addBookBut:pressed {
+-fx-text-fill: black;
+-fx-scale-x: 0.9;
+-fx-scale-y: 0.9;
+}
+.table-cell {
+-fx-alignment: center;
+}

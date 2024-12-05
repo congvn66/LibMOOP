@@ -1,5 +1,7 @@
 package com.example.proj;
 
+import com.example.proj.Models.*;
+
 import java.io.*;
 import java.sql.*;
 import java.text.ParseException;
@@ -15,13 +17,6 @@ public class CmdLine {
     private Member currentMember;
 
     public CmdLine() {
-        File file = new File("src/main/resources/database/librarians.txt");
-        if (file.exists()) {
-            String absolute = file.getAbsolutePath();
-            this.filePath = absolute;
-        }
-        this.currentLibrarian = null;
-        this.currentMember = null;
         this.librarianMap = new HashMap<>();
         this.loadLibrariansFromDatabase();
     }
@@ -48,31 +43,6 @@ public class CmdLine {
             }
         } catch (SQLException e) {
             e.printStackTrace();
-        }
-    }
-
-    private void LoadLibrarianFromFile() {
-        try (BufferedReader br = new BufferedReader(new FileReader(this.filePath))) {
-            String line;
-            while ((line = br.readLine()) != null) {
-                String[] tmp = line.split(";");
-                if (tmp.length != 3) {
-                    continue;
-                }
-                String id = tmp[0].trim();
-                String accountStatus = tmp[1].trim();
-                String password = tmp[2].trim();
-
-                Librarian librarian = new Librarian(id, AccountStatus.valueOf(accountStatus.toUpperCase()), password);
-
-                this.putLibrarianInMap(librarian);
-
-
-            }
-        } catch (FileNotFoundException e) {
-            throw new RuntimeException(e);
-        } catch (IOException e) {
-            throw new RuntimeException(e);
         }
     }
 
@@ -144,13 +114,14 @@ public class CmdLine {
                 System.out.println("4. lend book.");
                 System.out.println("5. return book.");
                 System.out.println("6. renew book.");
-                System.out.println("7. exit.");
+                System.out.println("7. see profile.");
+                System.out.println("8. exit.");
                 System.out.print("Please select an option: ");
 
                 if (scanner.hasNextInt()) {
                     option = scanner.nextInt();
                     scanner.nextLine();
-                    if (option >= 1 && option <= 7) {
+                    if (option >= 1 && option <= 8) {
                         validInput = true;
                     } else {
                         System.out.println("Invalid option. Please enter a number between 1 and 7 :( ");
@@ -205,24 +176,26 @@ public class CmdLine {
                     String idL = this.scanner.nextLine();
                     System.out.println("Creation date: ");
                     String d = this.scanner.nextLine();
-                    this.currentMember.basicActions(idL, parseDate(d), "LEND");
+                    System.out.println(this.currentMember.basicActions(idL, parseDate(d), "LEND"));
                     break;
                 case 5:
                     System.out.println("Id: ");
                     String idR = this.scanner.nextLine();
                     System.out.println("Creation date: ");
                     String d2 = this.scanner.nextLine();
-                    this.currentMember.basicActions(idR, parseDate(d2), "RETURN");
+                    System.out.println(this.currentMember.basicActions(idR, parseDate(d2), "RETURN"));
                     break;
                 case 6:
                     System.out.println("Id: ");
                     String idRe = this.scanner.nextLine();
                     System.out.println("Creation date: ");
                     String d3 = this.scanner.nextLine();
-                    this.currentMember.basicActions(idRe, parseDate(d3), "RENEW");
+                    System.out.println(this.currentMember.basicActions(idRe, parseDate(d3), "RENEW"));
                     break;
-                    //break;
                 case 7:
+                    this.currentMember.printInfo();
+                    break;
+                case 8:
                     System.out.println("Goodbye!");
                     exit = true;
                     break;
@@ -329,12 +302,12 @@ public class CmdLine {
                     String authorName = this.scanner.nextLine();
                     System.out.println("Author's description: ");
                     String authorDes = this.scanner.nextLine();
-                    System.out.println("Id: ");
-                    String id = this.scanner.nextLine();
-                    if (this.currentLibrarian.getCatalog().findBookById(id.trim()) != null) {
-                        System.out.println("existed id :(");
-                        break;
-                    }
+                    //System.out.println("Id: ");
+                    //String id = "default";
+//                    if (this.currentLibrarian.getCatalog().findBookById(id.trim()) != null) {
+//                        System.out.println("existed id :(");
+//                        break;
+//                    }
                     System.out.println("Is your book is a reference? (Y for Yes, N for No)");
                     String ref = this.scanner.nextLine();
                     Boolean isReferenceOnly;
@@ -390,9 +363,11 @@ public class CmdLine {
                     int number = Integer.parseInt(s.trim());
                     System.out.println("Rack: ");
                     String location = this.scanner.nextLine();
+                    System.out.println("Image name: ");
+                    String imageName = this.scanner.nextLine();
                     BookItem addin = new BookItem(ISBN, titleOfBook, subjectdelta, publisher, language, noOfPage, authorName,
-                            authorDes, id, isReferenceOnly, price, bookFormat, bookStatus, dateOfPurchase, dateOfPublication, number,
-                            location);
+                            authorDes, null, isReferenceOnly, price, bookFormat, bookStatus, dateOfPurchase, dateOfPublication, number,
+                            location, imageName);
                     System.out.println("Adding a new book...");
                     this.currentLibrarian.addBookItem(addin);
                     System.out.println("Book added successfully!");
@@ -540,12 +515,17 @@ public class CmdLine {
                             String newLocation = this.scanner.nextLine();
                             this.currentLibrarian.updateBook(idBookToUpdate, 17, newLocation);
                             break;
+                        case 18:
+                            System.out.println("Location to change:");
+                            String newImage = this.scanner.nextLine();
+                            this.currentLibrarian.updateBook(idBookToUpdate, 18, newImage);
+                            break;
                         default:
                             System.out.println("Invalid field selected.");
                             break;
                     }
 
-                    System.out.println("Updating a book...");
+                    //System.out.println("Updating a book...");
                     this.currentLibrarian.getCatalog().displayCatalogInfo();
                     break;
                 case 8:
@@ -620,6 +600,7 @@ public class CmdLine {
         String password = scanner.nextLine();
 
         Librarian librarian = new Librarian();
+
         Member member = librarian.getMemberMap().get(id);
 
         if (member == null || !member.getPassword().equals(password)) {

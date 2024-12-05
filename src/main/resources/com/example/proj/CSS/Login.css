@@ -1,0 +1,40 @@
+#buttonLogin:hover, #registerButton:hover, #continueQuestion:hover, #continueNewPass:hover, #continueName:hover, #signUpButton:hover, #loginInReg:hover {
+    -fx-text-fill: white;
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+#buttonLogin, #continueQuestion, #continueNewPass, #continueName, #signUpButton, #loginInReg {
+-fx-background-color: #2ffd02;
+-fx-background-radius: 20;
+-fx-border-color: black;
+-fx-border-radius: 20;
+-fx-border-width: 2;
+}
+#registerButton {
+-fx-background-color: #2ffd02;
+-fx-background-radius: 20;
+}
+#buttonLogin:pressed, #registerButton:pressed, #continueQuestion:pressed, #continueNewPass:pressed, #continueName:pressed, #signUpButton:pressed, #loginInReg:pressed {
+-fx-text-fill: black;
+-fx-scale-x: 0.9;
+-fx-scale-y: 0.9;
+}
+#exitLogin, #backName, #backQuestion, #backNewPass {
+-fx-background-color: #ff0000;
+-fx-background-radius: 20;
+-fx-border-color: black;
+-fx-border-radius: 20;
+-fx-border-width: 2;
+}
+#exitLogin:hover, #backName:hover, #backQuestion:hover, #backNewPass:hover {
+    -fx-background-color: #ff0000;
+    -fx-text-fill: white;
+    -fx-scale-x: 1.1;
+    -fx-scale-y: 1.1;
+}
+#exitLogin:pressed, #backName:pressed, #backQuestion:pressed, #backNewPass:pressed {
+    -fx-background-color: #ff0000;
+    -fx-text-fill: black;
+    -fx-scale-x: 0.9;
+    -fx-scale-y: 0.9;
+}

@@ -1,0 +1,17 @@
+#searchBookBut {
+-fx-background-color: #2ecc71;
+-fx-background-radius: 50;
+-fx-border-color: black;
+-fx-border-radius: 50;
+-fx-border-width: 3;
+}
+#searchBookBut:hover {
+-fx-text-fill: white;
+-fx-scale-x: 1.1;
+-fx-scale-y: 1.1;
+}
+#searchBookBut: pressed {
+-fx-text-fill: black;
+-fx-scale-x: 0.9;
+-fx-scale-y: 0.9;
+}
